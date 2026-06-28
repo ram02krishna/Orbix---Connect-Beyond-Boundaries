@@ -1,0 +1,419 @@
+"use client";
+
+import * as React from "react";
+import { useState, useRef, useEffect } from "react";
+import { Send, Smile, Paperclip, X, Loader2, Mic, Trash2 } from "lucide-react";
+import { useSocketStore } from "@hooks/useSocketStore";
+import { useAuthStore } from "@hooks/useAuthStore";
+import { useChatStore } from "@hooks/useChatStore";
+import api from "@lib/api";
+
+interface MessageInputProps {
+  chatId: string;
+  onSendMessage: (content: string, type: string, replyToId?: string | null, attachments?: any[]) => Promise<void>;
+  replyingTo: any | null;
+  onCancelReply: () => void;
+}
+
+export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply }: MessageInputProps) {
+  const socket = useSocketStore((state) => state.socket);
+  const user = useAuthStore((state) => state.user);
+  const blockedUserIds = useAuthStore((state) => state.blockedUserIds);
+  const chat = useChatStore((state) => state.chats.find(c => c.id === chatId));
+
+  const [text, setText] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  // Check if we've blocked this user
+  const partner = chat?.type === "DIRECT" ? chat.members.find(m => m.userId !== user?.id) : null;
+  const isBlockedByMe = partner ? blockedUserIds.includes(partner.userId) : false;
+
+  // Audio recording states
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isTypingRef = useRef(false);
+
+  const emojis = ["😀", "😂", "😍", "👍", "🔥", "🎉", "👏", "❤️", "🙌", "🙏", "😮", "😢", "🌟", "💡", "🚀", "✨", "💯", "✅"];
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setText(e.target.value);
+
+    if (!socket || !user) return;
+
+    if (!isTypingRef.current) {
+      isTypingRef.current = true;
+      socket.emit("typing:start", { chatId });
+    }
+
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    typingTimeoutRef.current = setTimeout(() => {
+      isTypingRef.current = false;
+      socket.emit("typing:stop", { chatId });
+    }, 2000);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+      if (isTypingRef.current && socket) {
+        socket.emit("typing:stop", { chatId });
+        isTypingRef.current = false;
+      }
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [chatId, socket]);
+
+  const handleSendText = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!text.trim()) return;
+
+    try {
+      if (isTypingRef.current && socket) {
+        socket.emit("typing:stop", { chatId });
+        isTypingRef.current = false;
+      }
+
+      const content = text;
+      setText("");
+
+      await onSendMessage(content, "TEXT", replyingTo?.id || null);
+      if (replyingTo) onCancelReply();
+    } catch (err) {
+      console.error("Failed to send message:", err);
+    }
+  };
+
+  const handleEmojiClick = (emoji: string) => {
+    setText((prev) => prev + emoji);
+    setShowEmojiPicker(false);
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("chatId", chatId);
+
+    try {
+      const res = await api.post("/media/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const uploadedFile = res.data.data.file;
+
+      let msgType = "FILE";
+      if (file.type.startsWith("image/")) msgType = "IMAGE";
+      else if (file.type.startsWith("video/")) msgType = "VIDEO";
+      else if (file.type.startsWith("audio/")) msgType = "AUDIO";
+
+      const attachment = {
+        fileName: file.name,
+        fileType: msgType,
+        fileSize: file.size,
+        fileUrl: uploadedFile.url,
+        mimeType: file.type,
+        thumbUrl: uploadedFile.thumbUrl || null,
+      };
+
+      await onSendMessage(file.name, msgType, replyingTo?.id || null, [attachment]);
+      if (replyingTo) onCancelReply();
+    } catch (err: any) {
+      console.error("File upload error:", err);
+      alert(err.response?.data?.message || "File upload failed.");
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  // ─── Voice Recording Handlers ──────────────────────────────────────────────
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+        if (audioBlob.size < 1000) {
+          // Discard empty or very short recordings
+          console.warn("Discarding too short audio recording.");
+          return;
+        }
+
+        const file = new File([audioBlob], `voice-message-${Date.now()}.webm`, {
+          type: "audio/webm",
+        });
+        await uploadAudioFile(file);
+
+        // Stop all tracks on the stream to release the mic
+        stream.getTracks().forEach((track) => track.stop());
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+      setRecordingTime(0);
+      timerRef.current = setInterval(() => {
+        setRecordingTime((prev) => prev + 1);
+      }, 1000);
+    } catch (err) {
+      console.error("Error accessing mic:", err);
+      alert("Could not access microphone. Please check your browser permissions.");
+    }
+  };
+
+  const stopAndSendRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      cleanupRecording();
+    }
+  };
+
+  const cancelRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      // Override onstop to just stop stream and discard
+      mediaRecorderRef.current.onstop = () => {
+        mediaRecorderRef.current?.stream.getTracks().forEach((track) => track.stop());
+      };
+      mediaRecorderRef.current.stop();
+      cleanupRecording();
+    }
+  };
+
+  const cleanupRecording = () => {
+    setIsRecording(false);
+    if (timerRef.current) clearInterval(timerRef.current);
+    setRecordingTime(0);
+  };
+
+  const uploadAudioFile = async (file: File) => {
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("chatId", chatId);
+
+    try {
+      const res = await api.post("/media/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const uploadedFile = res.data.data.file;
+
+      const attachment = {
+        fileName: file.name,
+        fileType: "AUDIO",
+        fileSize: file.size,
+        fileUrl: uploadedFile.url,
+        mimeType: file.type,
+        thumbUrl: null,
+      };
+
+      await onSendMessage("Voice Message", "AUDIO", replyingTo?.id || null, [attachment]);
+      if (replyingTo) onCancelReply();
+    } catch (err: any) {
+      console.error("Audio message upload error:", err);
+      alert(err.response?.data?.message || "Failed to upload audio message.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  return (
+    <div className="relative">
+      {isBlockedByMe && (
+        <div className="absolute inset-0 bg-zinc-50 dark:bg-zinc-950 flex flex-col items-center justify-center z-50 rounded-b-2xl border-t border-zinc-200 dark:border-zinc-800 gap-2">
+          <p className="text-zinc-500 font-medium text-sm">
+            You have blocked this user so you can not message, voice call or video call.
+          </p>
+          <button
+            onClick={async () => {
+              try {
+                await api.delete(`/users/block/${partner?.userId}`);
+                useAuthStore.getState().removeBlockedUser(partner!.userId);
+              } catch (err) {
+                console.error("Failed to unblock", err);
+              }
+            }}
+            className="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full text-sm font-medium transition-colors"
+          >
+            Unblock
+          </button>
+        </div>
+      )}
+
+      <div className="p-3 border-t border-[#e9edef]/40 dark:border-[#222e35]/20 bg-white/30 dark:bg-black/15 backdrop-blur-md relative z-20 text-zinc-900 dark:text-zinc-100 select-none">
+
+      {replyingTo && (
+        <div className="flex items-center justify-between p-2.5 mb-3 bg-[#00a884]/10 border border-[#00a884]/20 rounded-lg text-xs">
+          <div className="flex items-start gap-2 border-l-4 border-[#00a884] pl-2.5 py-0.5">
+            <div>
+              <p className="font-bold text-[#00a884]">
+                Replying to {replyingTo.sender.name}
+              </p>
+              <p className="text-[#667781] dark:text-[#8696a0] truncate max-w-[200px] sm:max-w-md mt-0.5">
+                {replyingTo.content}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onCancelReply}
+            className="p-1 rounded-lg hover:bg-zinc-200/50 dark:hover:bg-zinc-700/50 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+          >
+            <X size={14} />
+          </button>
+        </div>
+      )}
+
+      {isRecording ? (
+        <div className="flex items-center gap-2 relative">
+          <div className="flex-1 flex items-center justify-between bg-zinc-150 dark:bg-[#1f2c34] px-4 py-2.5 rounded-xl border border-zinc-200/40 dark:border-white/5">
+            <div className="flex items-center gap-2.5">
+              <span className="h-2.5 w-2.5 rounded-full bg-red-500 animate-pulse inline-block" />
+              <span className="text-xs font-bold text-red-500 uppercase tracking-wider">Recording</span>
+              <span className="text-sm font-semibold text-zinc-650 dark:text-zinc-300 ml-1">
+                {formatDuration(recordingTime)}
+              </span>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={cancelRecording}
+                className="p-1.5 rounded-full hover:bg-red-500/10 text-red-500 transition-colors cursor-pointer flex items-center justify-center"
+                title="Discard recording"
+              >
+                <Trash2 size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={stopAndSendRecording}
+                disabled={uploading}
+                className="p-2 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white transition-colors cursor-pointer flex items-center justify-center disabled:opacity-50"
+                title="Send voice message"
+              >
+                <Send size={14} />
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <form onSubmit={handleSendText} className="flex items-center gap-2 relative">
+
+          <div className="relative flex-shrink-0">
+            <button
+              type="button"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              disabled={uploading}
+              className={`p-2 rounded-full transition-all cursor-pointer ${showEmojiPicker
+                  ? "bg-zinc-200/60 dark:bg-zinc-700/50 text-emerald-500 dark:text-emerald-400"
+                  : "hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 text-[#54656f] dark:text-[#aebac1]"
+                }`}
+              title="Emojis"
+            >
+              <Smile size={19} />
+            </button>
+
+            {showEmojiPicker && (
+              <div className="absolute bottom-14 left-0 p-3 bg-white dark:bg-[#1f2c34] border border-zinc-200 dark:border-white/10 rounded-2xl shadow-2xl z-20 grid grid-cols-6 gap-2 w-48">
+                {emojis.map((emoji) => (
+                  <button
+                    key={emoji}
+                    type="button"
+                    onClick={() => handleEmojiClick(emoji)}
+                    className="hover:scale-125 transition-transform text-lg cursor-pointer"
+                  >
+                    {emoji}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            className="p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 text-[#54656f] dark:text-[#aebac1] transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none flex-shrink-0"
+            title="Attach"
+          >
+            {uploading ? <Loader2 size={19} className="animate-spin text-emerald-500" /> : <Paperclip size={19} />}
+          </button>
+
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileSelect}
+            className="hidden"
+            disabled={uploading}
+          />
+
+          <div className="flex-1">
+            <input
+              type="text"
+              value={text}
+              onChange={handleInputChange}
+              placeholder={uploading ? "Uploading file..." : "Type a message"}
+              disabled={uploading}
+              className="w-full px-4 py-2 rounded-lg border border-[#e9edef]/20 dark:border-white/5 ios-glass-input text-zinc-900 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none transition-all text-sm disabled:opacity-50"
+            />
+          </div>
+
+          {text.trim() || uploading ? (
+            <button
+              type="submit"
+              disabled={!text.trim() || uploading}
+              className="p-2 rounded-full bg-transparent hover:bg-zinc-200/50 dark:hover:bg-[#2a3942] text-[#54656f] dark:text-[#aebac1] transition-all cursor-pointer disabled:opacity-40 disabled:pointer-events-none flex items-center justify-center flex-shrink-0"
+            >
+              <Send size={19} className="text-emerald-500 dark:text-emerald-400" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={startRecording}
+              className="p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-[#2a3942] text-[#54656f] dark:text-[#aebac1] hover:text-emerald-500 transition-all cursor-pointer flex items-center justify-center flex-shrink-0"
+              title="Record voice message"
+            >
+              <Mic size={19} className="text-emerald-500 dark:text-emerald-400" />
+            </button>
+          )}
+        </form>
+      )}
+    </div>
+    </div>
+  );
+}
