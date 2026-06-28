@@ -126,7 +126,7 @@ export function ChatHeader({
                 router.push("/chats");
               }
             }}
-            className="p-1.5 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 text-[#54656f] dark:text-[#aebac1] hover:text-zinc-950 dark:hover:text-white transition-colors cursor-pointer"
+            className="p-2 sm:p-1.5 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] hover:text-zinc-950 dark:hover:text-white transition-colors cursor-pointer"
           >
             <ArrowLeft size={20} />
           </button>
@@ -139,7 +139,7 @@ export function ChatHeader({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery && setSearchQuery(e.target.value)}
                 placeholder="Search messages..."
-                className="w-full pl-9 pr-8 py-1.5 rounded-full border border-[#e9edef]/20 dark:border-white/5 ios-glass-input text-xs text-zinc-900 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none"
+                className="w-full pl-9 pr-8 py-1.5 rounded-full border border-[#e9edef]/20 dark:border-white/5 ios-glass-input text-base md:text-sm text-zinc-900 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none"
                 autoFocus
               />
               {searchQuery && (
@@ -198,7 +198,7 @@ export function ChatHeader({
               <button
                 onClick={() => initiateCall(partner.id, partner.name, partner.avatarUrl, "audio")}
                 disabled={blockedUserIds.includes(partner.id)}
-                className="p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 text-[#54656f] dark:text-[#aebac1] hover:text-zinc-950 dark:hover:text-white transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+                className="p-2.5 sm:p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] hover:text-zinc-950 dark:hover:text-white transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
                 title={blockedUserIds.includes(partner.id) ? "Cannot call blocked user" : "Voice Call"}
               >
                 <Phone size={18} />
@@ -206,7 +206,7 @@ export function ChatHeader({
               <button
                 onClick={() => initiateCall(partner.id, partner.name, partner.avatarUrl, "video")}
                 disabled={blockedUserIds.includes(partner.id)}
-                className="p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 text-[#54656f] dark:text-[#aebac1] hover:text-zinc-950 dark:hover:text-white transition-all cursor-pointer mr-1 disabled:opacity-30 disabled:cursor-not-allowed"
+                className="p-2.5 sm:p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] hover:text-zinc-950 dark:hover:text-white transition-all cursor-pointer mr-1 disabled:opacity-30 disabled:cursor-not-allowed"
                 title={blockedUserIds.includes(partner.id) ? "Cannot call blocked user" : "Video Call"}
               >
                 <Video size={18} />
@@ -220,7 +220,7 @@ export function ChatHeader({
                 if (setIsSearchOpen) setIsSearchOpen(false);
                 if (setSearchQuery) setSearchQuery("");
               }}
-              className="p-1.5 rounded-full hover:bg-zinc-200/55 dark:hover:bg-zinc-700/40 text-red-500 hover:text-red-650 transition-colors cursor-pointer flex items-center justify-center font-bold text-xs"
+              className="p-2 sm:p-1.5 rounded-full hover:bg-zinc-200/55 dark:hover:bg-zinc-700/40 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-red-500 hover:text-red-650 transition-colors cursor-pointer flex items-center justify-center font-bold text-xs"
               title="Close search"
             >
               <X size={18} />
@@ -229,17 +229,17 @@ export function ChatHeader({
             <>
               <button
                 onClick={() => setIsSearchOpen && setIsSearchOpen(true)}
-                className="p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 text-[#54656f] dark:text-[#aebac1] hover:text-zinc-950 dark:hover:text-white transition-all cursor-pointer"
+                className="p-2.5 sm:p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] hover:text-zinc-950 dark:hover:text-white transition-all cursor-pointer"
                 title="Search Messages"
               >
                 <Search size={18} />
               </button>
               <button
                 onClick={onToggleProfile}
-                className={`p-2 rounded-full transition-all cursor-pointer ${
+                className={`p-2.5 sm:p-2 rounded-full transition-all cursor-pointer ${
                   isProfileOpen
                     ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400"
-                    : "hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 text-[#54656f] dark:text-[#aebac1] hover:text-zinc-950 dark:hover:text-white"
+                    : "hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] hover:text-zinc-950 dark:hover:text-white"
                 }`}
                 title="Contact details"
               >
@@ -247,7 +247,7 @@ export function ChatHeader({
               </button>
               <button
                 onClick={handleDeleteChat}
-                className="p-2 rounded-full hover:bg-red-500/10 text-[#54656f] dark:text-[#aebac1] hover:text-red-500 transition-all cursor-pointer"
+                className="p-2.5 sm:p-2 rounded-full hover:bg-red-500/10 active:bg-red-500/20 text-[#54656f] dark:text-[#aebac1] hover:text-red-500 transition-all cursor-pointer"
                 title="Delete Conversation"
               >
                 <Trash2 size={18} />

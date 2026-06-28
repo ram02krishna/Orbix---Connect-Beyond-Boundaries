@@ -14,6 +14,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useStatusStore } from "@hooks/useStatusStore";
 import { StatusCreator } from "../status/StatusCreator";
 import { NewGroupModal } from "./NewGroupModal";
+import { CustomAudioPlayer } from "../chat/CustomAudioPlayer";
+import { cn } from "@lib/utils";
 
 function StatusAvatarRing({ count, viewedCount, size = 44 }: { count: number; viewedCount: number; size?: number }) {
   if (count <= 0) return null;
@@ -109,7 +111,7 @@ const ChatItem = React.memo(function ChatItem({
             )}
           </p>
           {chat.lastMessage && (
-            <span className="text-[11px] font-semibold text-[#667781] dark:text-[#8696a0] flex-shrink-0">
+            <span className={cn("text-[11px] font-semibold flex-shrink-0", preview?.isUnread ? "text-emerald-500 font-bold" : "text-[#667781] dark:text-[#8696a0]")}>
               {formatTime(chat.lastMessage.createdAt)}
             </span>
           )}
@@ -144,6 +146,14 @@ const ChatItem = React.memo(function ChatItem({
             <span className="italic text-[#8696a0]">No messages yet</span>
           )}
         </p>
+        </div>
+        {preview?.isUnread && (
+          <div className="flex flex-col justify-end items-end h-full mt-1.5 ml-2">
+            <span className="bg-[#00b87c] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center shadow-sm">
+              new
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -308,7 +318,8 @@ export function Sidebar() {
     if (!chat.lastMessage) return null;
     const senderId = chat.lastMessage.sender?.id || chat.lastMessage.senderId;
     const isMe = senderId === user?.id && chat.lastMessage.type !== "SYSTEM";
-    const isRead = chat.lastMessage.reads && chat.lastMessage.reads.length > 0;
+    const isReadByMe = chat.lastMessage.reads && chat.lastMessage.reads.some((r: any) => r.userId === user?.id);
+    const isUnread = !isMe && !isReadByMe;
     const type = chat.lastMessage.type;
     
     let content = chat.lastMessage.content;
@@ -317,7 +328,7 @@ export function Sidebar() {
     if (type === "AUDIO") content = "Voice message";
     if (type === "FILE" && (!content || content.startsWith("voice-message-") || content.startsWith("file-"))) content = "Document";
 
-    return { isMe, isRead, type, content };
+    return { isMe, isRead, isUnread, type, content };
   };
 
   const formatTime = useCallback((dateStr: string) => {
@@ -375,28 +386,28 @@ export function Sidebar() {
           <div className="flex items-center gap-1.5">
             <button
               onClick={() => setShowGroupModal(true)}
-              className="p-2 rounded-full text-[#54656f] dark:text-[#aebac1] transition-all cursor-pointer"
+              className="p-2.5 sm:p-2 rounded-full text-[#54656f] dark:text-[#aebac1] transition-all cursor-pointer active:bg-zinc-200/50 dark:active:bg-zinc-700/30"
               title="New Group"
             >
               <Users size={18} />
             </button>
             <button
               onClick={() => setActivePane("status")}
-              className="p-2 rounded-full text-[#54656f] dark:text-[#aebac1] transition-all cursor-pointer"
+              className="p-2.5 sm:p-2 rounded-full text-[#54656f] dark:text-[#aebac1] transition-all cursor-pointer active:bg-zinc-200/50 dark:active:bg-zinc-700/30"
               title="Status Updates"
             >
               <CircleDot size={18} />
             </button>
             <button
               onClick={() => router.push("/settings")}
-              className="p-2 rounded-full text-[#54656f] dark:text-[#aebac1] transition-all cursor-pointer"
+              className="p-2.5 sm:p-2 rounded-full text-[#54656f] dark:text-[#aebac1] transition-all cursor-pointer active:bg-zinc-200/50 dark:active:bg-zinc-700/30"
               title="Settings"
             >
               <Settings size={18} />
             </button>
             <button
               onClick={handleLogout}
-              className="p-2 rounded-full text-[#54656f] dark:text-[#aebac1] transition-all cursor-pointer"
+              className="p-2.5 sm:p-2 rounded-full text-[#54656f] dark:text-[#aebac1] transition-all cursor-pointer active:bg-zinc-200/50 dark:active:bg-zinc-700/30"
               title="Logout"
             >
               <LogOut size={18} />
@@ -408,7 +419,7 @@ export function Sidebar() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setActivePane("chats")}
-              className="p-1.5 rounded-full text-[#54656f] dark:text-[#aebac1] transition-colors cursor-pointer"
+              className="p-2 sm:p-1.5 rounded-full text-[#54656f] dark:text-[#aebac1] transition-colors cursor-pointer active:bg-zinc-200/50 dark:active:bg-zinc-700/30"
             >
               <ChevronLeft size={18} />
             </button>
@@ -416,7 +427,7 @@ export function Sidebar() {
           </div>
           <button
             onClick={() => setShowCreator(true)}
-            className="p-1.5 rounded-full text-[#54656f] dark:text-[#aebac1] transition-colors cursor-pointer flex items-center justify-center"
+            className="p-2 sm:p-1.5 rounded-full text-[#54656f] dark:text-[#aebac1] transition-colors cursor-pointer flex items-center justify-center active:bg-zinc-200/50 dark:active:bg-zinc-700/30"
             title="Post Status"
           >
             <Plus size={18} />
@@ -433,12 +444,12 @@ export function Sidebar() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search or start new chat"
-              className="w-full pl-9 pr-8 py-2 rounded-full ios-glass-input text-sm text-zinc-800 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none"
+              className="w-full pl-9 pr-8 py-2.5 sm:py-2 rounded-full ios-glass-input text-base md:text-sm text-zinc-800 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#667781] transition-colors cursor-pointer"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#667781] transition-colors cursor-pointer p-1 active:bg-zinc-200/50 dark:active:bg-zinc-700/30 rounded-full"
               >
                 <X size={13} />
               </button>

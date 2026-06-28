@@ -30,7 +30,6 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     const socket = io(WS_BASE_URL, {
       auth: { token },
       transports: ["websocket"],
-      reconnectionAttempts: 5,
     });
 
     socket.on("connect", () => {

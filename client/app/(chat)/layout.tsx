@@ -81,10 +81,8 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
 
     void fetchData();
 
-    return () => {
-      disconnectSocket();
     };
-  }, [accessToken, connectSocket, disconnectSocket, setChats, setOnlineStatuses]);
+  }, [accessToken, connectSocket, setChats, setOnlineStatuses]);
 
   if (!mounted || !accessToken) {
     return (

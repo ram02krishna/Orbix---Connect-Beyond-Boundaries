@@ -292,7 +292,7 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
           </div>
           <button
             onClick={onCancelReply}
-            className="p-1 rounded-lg hover:bg-zinc-200/50 dark:hover:bg-zinc-700/50 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+            className="p-1.5 sm:p-1 rounded-lg hover:bg-zinc-200/50 dark:hover:bg-zinc-700/50 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
           >
             <X size={14} />
           </button>
@@ -314,7 +314,7 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
               <button
                 type="button"
                 onClick={cancelRecording}
-                className="p-1.5 rounded-full hover:bg-red-500/10 text-red-500 transition-colors cursor-pointer flex items-center justify-center"
+                className="p-2 sm:p-1.5 rounded-full hover:bg-red-500/10 active:bg-red-500/20 text-red-500 transition-colors cursor-pointer flex items-center justify-center"
                 title="Discard recording"
               >
                 <Trash2 size={16} />
@@ -323,7 +323,7 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
                 type="button"
                 onClick={stopAndSendRecording}
                 disabled={uploading}
-                className="p-2 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white transition-colors cursor-pointer flex items-center justify-center disabled:opacity-50"
+                className="p-2.5 sm:p-2 rounded-full bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white transition-colors cursor-pointer flex items-center justify-center disabled:opacity-50"
                 title="Send voice message"
               >
                 <Send size={14} />
@@ -339,9 +339,9 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
               type="button"
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
               disabled={uploading}
-              className={`p-2 rounded-full transition-all cursor-pointer ${showEmojiPicker
+              className={`p-2.5 sm:p-2 rounded-full transition-all cursor-pointer ${showEmojiPicker
                   ? "bg-zinc-200/60 dark:bg-zinc-700/50 text-emerald-500 dark:text-emerald-400"
-                  : "hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 text-[#54656f] dark:text-[#aebac1]"
+                  : "hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1]"
                 }`}
               title="Emojis"
             >
@@ -368,7 +368,7 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
-            className="p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 text-[#54656f] dark:text-[#aebac1] transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none flex-shrink-0"
+            className="p-2.5 sm:p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none flex-shrink-0"
             title="Attach"
           >
             {uploading ? <Loader2 size={19} className="animate-spin text-emerald-500" /> : <Paperclip size={19} />}
@@ -383,21 +383,21 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
           />
 
           <div className="flex-1">
-            <input
-              type="text"
-              value={text}
-              onChange={handleInputChange}
-              placeholder={uploading ? "Uploading file..." : "Type a message"}
-              disabled={uploading}
-              className="w-full px-4 py-2 rounded-lg border border-[#e9edef]/20 dark:border-white/5 ios-glass-input text-zinc-900 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none transition-all text-sm disabled:opacity-50"
-            />
+              <input
+                type="text"
+                value={text}
+                onChange={handleInputChange}
+                placeholder={uploading ? "Uploading file..." : "Type a message"}
+                disabled={uploading}
+                className="w-full px-4 py-2.5 rounded-xl border border-[#e9edef]/20 dark:border-white/5 ios-glass-input text-zinc-900 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none transition-all text-base md:text-sm disabled:opacity-50"
+              />
           </div>
 
           {text.trim() || uploading ? (
             <button
               type="submit"
               disabled={!text.trim() || uploading}
-              className="p-2 rounded-full bg-transparent hover:bg-zinc-200/50 dark:hover:bg-[#2a3942] text-[#54656f] dark:text-[#aebac1] transition-all cursor-pointer disabled:opacity-40 disabled:pointer-events-none flex items-center justify-center flex-shrink-0"
+              className="p-2.5 sm:p-2 rounded-full bg-transparent hover:bg-zinc-200/50 dark:hover:bg-[#2a3942] active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] transition-all cursor-pointer disabled:opacity-40 disabled:pointer-events-none flex items-center justify-center flex-shrink-0"
             >
               <Send size={19} className="text-emerald-500 dark:text-emerald-400" />
             </button>
@@ -405,7 +405,7 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
             <button
               type="button"
               onClick={startRecording}
-              className="p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-[#2a3942] text-[#54656f] dark:text-[#aebac1] hover:text-emerald-500 transition-all cursor-pointer flex items-center justify-center flex-shrink-0"
+              className="p-2.5 sm:p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-[#2a3942] active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] hover:text-emerald-500 transition-all cursor-pointer flex items-center justify-center flex-shrink-0"
               title="Record voice message"
             >
               <Mic size={19} className="text-emerald-500 dark:text-emerald-400" />
