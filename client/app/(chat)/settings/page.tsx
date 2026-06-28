@@ -349,7 +349,7 @@ export default function SettingsPage() {
                       onChange={(e) => setProfileName(e.target.value)}
                       required
                       placeholder="e.g. John Doe"
-                      className="w-full text-sm px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-emerald-500 text-zinc-800 dark:text-zinc-100"
+                      className="w-full text-base sm:text-sm px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-emerald-500 text-zinc-800 dark:text-zinc-100"
                     />
                   </div>
 
@@ -361,7 +361,7 @@ export default function SettingsPage() {
                       onChange={(e) => setProfileUsername(e.target.value)}
                       required
                       placeholder="e.g. johndoe"
-                      className="w-full text-sm px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-emerald-500 text-zinc-800 dark:text-zinc-100"
+                      className="w-full text-base sm:text-sm px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-emerald-500 text-zinc-800 dark:text-zinc-100"
                     />
                   </div>
                 </div>
@@ -373,7 +373,7 @@ export default function SettingsPage() {
                     value={profileAvatar}
                     onChange={(e) => setProfileAvatar(e.target.value)}
                     placeholder="https://example.com/avatar.jpg"
-                    className="w-full text-sm px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-emerald-500 text-zinc-800 dark:text-zinc-100"
+                    className="w-full text-base sm:text-sm px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-emerald-500 text-zinc-800 dark:text-zinc-100"
                   />
                 </div>
 
@@ -384,7 +384,7 @@ export default function SettingsPage() {
                     onChange={(e) => setProfileBio(e.target.value)}
                     placeholder="Tell us about yourself..."
                     rows={3}
-                    className="w-full text-sm px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-emerald-500 text-zinc-800 dark:text-zinc-100 resize-none"
+                    className="w-full text-base sm:text-sm px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-emerald-500 text-zinc-800 dark:text-zinc-100 resize-none"
                   />
                 </div>
               </div>
@@ -581,7 +581,7 @@ export default function SettingsPage() {
                           maxLength={4}
                           placeholder="Set 4-digit PIN"
                           onChange={(e) => setScreenLockPin(e.target.value.replace(/\D/g, ""))}
-                          className="w-full text-sm px-4 py-2.5 pr-10 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-emerald-500 text-zinc-800 dark:text-zinc-100 font-mono tracking-widest text-center"
+                          className="w-full text-base sm:text-sm px-4 py-2.5 pr-10 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-emerald-500 text-zinc-800 dark:text-zinc-100 font-mono tracking-widest text-center"
                         />
                         <button
                           type="button"

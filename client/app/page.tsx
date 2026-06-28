@@ -648,7 +648,7 @@ export default function LandingPage() {
           <div className="w-full h-full rounded-2xl ios-glass-container border border-zinc-200/80 dark:border-[#00b87c]/12 shadow-2xl dark:shadow-[0_25px_80px_rgba(0,0,0,0.7),0_0_40px_rgba(0,184,124,0.05)] flex overflow-hidden relative">
             
             {/* 1. App Sidebar - Small Utility column */}
-            <div className="w-16 bg-zinc-100/90 dark:bg-[#0A100D]/90 border-r border-zinc-200/50 dark:border-white/[0.06] py-6 flex flex-col items-center justify-between flex-shrink-0">
+            <div className="hidden sm:flex w-16 bg-zinc-100/90 dark:bg-[#0A100D]/90 border-r border-zinc-200/50 dark:border-white/[0.06] py-6 flex-col items-center justify-between flex-shrink-0">
               <div className="flex flex-col gap-6 items-center">
                 <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#00b87c] to-[#10B981] flex items-center justify-center shadow-md">
                   <MessageSquare className="w-5 h-5 text-white" />
@@ -688,7 +688,7 @@ export default function LandingPage() {
             </div>
 
             {/* 2. Chats Sidebar - List pane */}
-            <div className="w-64 bg-zinc-50/50 dark:bg-[#0A100D]/50 border-r border-zinc-200/50 dark:border-white/[0.06] flex flex-col flex-shrink-0">
+            <div className="hidden md:flex w-64 bg-zinc-50/50 dark:bg-[#0A100D]/50 border-r border-zinc-200/50 dark:border-white/[0.06] flex-col flex-shrink-0">
               
               {/* Search Bar */}
               <div className="p-4">

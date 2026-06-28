@@ -267,7 +267,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
   };
 
   return (
-    <div className="w-80 flex flex-col h-full ios-glass-panel border-l border-[#e9edef]/40 dark:border-white/5 select-none text-zinc-900 dark:text-[#e9edef] relative z-20 transition-colors duration-300">
+    <div className="w-full sm:w-80 flex flex-col h-full ios-glass-panel border-l border-[#e9edef]/40 dark:border-white/5 select-none text-zinc-900 dark:text-[#e9edef] relative z-20 transition-colors duration-300">
       {/* Header */}
       <div className="p-4 flex items-center justify-between border-b border-[#e9edef]/40 dark:border-white/5 bg-white/30 dark:bg-black/15 backdrop-blur-md">
         <h3 className="text-base font-bold text-[#111b21] dark:text-[#e9edef]">Contact Details</h3>

@@ -43,7 +43,7 @@ export function AuthCard({ children, title, subtitle }: AuthCardProps) {
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="relative w-full max-w-md p-8 rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg z-10"
+        className="relative w-full max-w-md p-6 sm:p-8 rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg z-10"
       >
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">

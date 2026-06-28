@@ -92,7 +92,7 @@ export function CustomAudioPlayer({ src, isSelf = false }: CustomAudioPlayerProp
 
   return (
     <div
-      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl w-full max-w-[270px] select-none border transition-colors ${
+      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl w-full max-w-[240px] sm:max-w-[270px] select-none border transition-colors ${
         isSelf
           ? "bg-black/10 dark:bg-black/20 border-white/10"
           : "bg-black/5 dark:bg-black/15 border-zinc-250/20 dark:border-white/5"

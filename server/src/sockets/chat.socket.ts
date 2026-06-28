@@ -65,31 +65,38 @@ export function registerChatHandlers(io: Server, socket: Socket) {
   });
 
   // ─── WebRTC Voice/Video Calling Signaling ─────────────────────────────────
-  socket.on("call:initiate", async ({ targetUserId, fromUserId, fromUserName, fromUserAvatar, sdp, callType }: any) => {
-    if (!targetUserId) return;
+  socket.on("call:initiate", async (payload: any) => {
+    try {
+      const { targetUserId, fromUserName, fromUserAvatar, sdp, callType } = payload;
+      if (!targetUserId) return;
+      
+      const fromUserId = userId; // Use secure userId from socket
 
-    // Check for blocks
-    const block = await prisma.block.findFirst({
-      where: {
-        OR: [
-          { blockerId: fromUserId, blockedId: targetUserId },
-          { blockerId: targetUserId, blockedId: fromUserId }
-        ]
+      // Check for blocks
+      const block = await prisma.block.findFirst({
+        where: {
+          OR: [
+            { blockerId: fromUserId, blockedId: targetUserId },
+            { blockerId: targetUserId, blockedId: fromUserId }
+          ]
+        }
+      });
+
+      if (block) {
+        // Silently ignore the call initiation (mimics WhatsApp behavior)
+        return;
       }
-    });
 
-    if (block) {
-      // Silently ignore the call initiation (mimics WhatsApp behavior)
-      return;
+      io.to(`user:${targetUserId}`).emit("call:incoming", {
+        fromUserId,
+        fromUserName,
+        fromUserAvatar,
+        sdp,
+        callType
+      });
+    } catch (err) {
+      console.error("Error in call:initiate:", err);
     }
-
-    io.to(`user:${targetUserId}`).emit("call:incoming", {
-      fromUserId,
-      fromUserName,
-      fromUserAvatar,
-      sdp,
-      callType
-    });
   });
 
   socket.on("call:accept", ({ targetUserId, sdp }: any) => {

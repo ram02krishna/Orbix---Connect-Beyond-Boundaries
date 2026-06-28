@@ -111,7 +111,7 @@ export function NewGroupModal({ onClose, onGroupCreated }: NewGroupModalProps) {
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Type group name here..."
                 required
-                className="w-full px-4 py-2.5 rounded-xl border border-zinc-200/60 dark:border-white/5 ios-glass-input text-sm text-zinc-900 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none"
+                className="w-full px-4 py-2.5 rounded-xl border border-zinc-200/60 dark:border-white/5 ios-glass-input text-base sm:text-sm text-zinc-900 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none"
               />
             </div>
             <div>
@@ -123,7 +123,7 @@ export function NewGroupModal({ onClose, onGroupCreated }: NewGroupModalProps) {
                 value={photoUrl}
                 onChange={(e) => setPhotoUrl(e.target.value)}
                 placeholder="https://example.com/avatar.jpg"
-                className="w-full px-4 py-2.5 rounded-xl border border-zinc-200/60 dark:border-white/5 ios-glass-input text-sm text-zinc-900 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none"
+                className="w-full px-4 py-2.5 rounded-xl border border-zinc-200/60 dark:border-white/5 ios-glass-input text-base sm:text-sm text-zinc-900 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none"
               />
             </div>
           </div>
@@ -159,7 +159,7 @@ export function NewGroupModal({ onClose, onGroupCreated }: NewGroupModalProps) {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search username (min 2 chars)"
-                className="w-full pl-9 pr-8 py-2 rounded-xl border border-zinc-200/60 dark:border-white/5 ios-glass-input text-xs text-zinc-800 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none"
+                className="w-full pl-9 pr-8 py-2.5 sm:py-2 rounded-xl border border-zinc-200/60 dark:border-white/5 ios-glass-input text-base sm:text-xs text-zinc-800 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none"
               />
               {searchQuery && (
                 <button

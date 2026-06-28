@@ -29,6 +29,10 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const [isStarred, setIsStarred] = useState(false);
+  const [showOptionsMobile, setShowOptionsMobile] = useState(false);
+  
+  const touchTimerRef = React.useRef<NodeJS.Timeout | null>(null);
+  const bubbleRef = React.useRef<HTMLDivElement>(null);
 
   // Lightbox viewer states
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -62,6 +66,26 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
       window.dispatchEvent(new Event("starred-messages-updated"));
     }
   };
+
+  useEffect(() => {
+    if (showOptionsMobile) {
+      const handleGlobalClick = (e: MouseEvent | TouchEvent) => {
+        if (bubbleRef.current && !bubbleRef.current.contains(e.target as Node)) {
+          setShowOptionsMobile(false);
+          setShowReactionPicker(false);
+        }
+      };
+      const timeout = setTimeout(() => {
+        document.addEventListener("mousedown", handleGlobalClick);
+        document.addEventListener("touchstart", handleGlobalClick);
+      }, 100);
+      return () => {
+        clearTimeout(timeout);
+        document.removeEventListener("mousedown", handleGlobalClick);
+        document.removeEventListener("touchstart", handleGlobalClick);
+      };
+    }
+  }, [showOptionsMobile]);
 
   const handleSaveEdit = async () => {
     if (!editVal.trim() || editVal === message.content) return;
@@ -99,6 +123,20 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
     onReact(message.id, "❤️");
   };
 
+  const handleTouchStart = () => {
+    if (isDeleted || message.id.startsWith("temp-")) return;
+    touchTimerRef.current = setTimeout(() => {
+      setShowOptionsMobile(true);
+    }, 500); // 500ms long press
+  };
+
+  const handleTouchEndOrMove = () => {
+    if (touchTimerRef.current) {
+      clearTimeout(touchTimerRef.current);
+      touchTimerRef.current = null;
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 15, scale: 0.96 }}
@@ -110,7 +148,7 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
       )}
     >
 
-      <div className={cn("flex flex-col max-w-[78%]", isSelf ? "items-end" : "items-start")}>
+      <div className={cn("flex flex-col max-w-[85%] sm:max-w-[75%]", isSelf ? "items-end" : "items-start")}>
         {!isSelf && (
           <span className="text-[13px] font-bold text-emerald-600 dark:text-emerald-400 pl-2 mb-1">
             {message.sender.name}
@@ -118,7 +156,11 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
         )}
 
         <div
+          ref={bubbleRef}
           onDoubleClick={handleDoubleClick}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEndOrMove}
+          onTouchMove={handleTouchEndOrMove}
           className={cn(
             isMediaOnly
               ? "p-1 rounded-2xl relative border shadow-[0_2px_4px_rgba(0,0,0,0.04)] overflow-hidden"
@@ -144,7 +186,8 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
             <div
               className={cn(
                 "absolute top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 flex items-center gap-1.5 bg-white dark:bg-zinc-900/90 border border-zinc-200 dark:border-white/5 backdrop-blur-md rounded-xl p-1 shadow-lg transition-all z-30 select-none",
-                isSelf ? "right-full mr-3" : "left-full ml-3"
+                isSelf ? "right-full mr-3" : "left-full ml-3",
+                showOptionsMobile && "opacity-100"
               )}
             >
               <div className="relative">

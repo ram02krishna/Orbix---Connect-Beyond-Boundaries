@@ -281,7 +281,7 @@ export default function ChatDetailPage({ params }: { params: Promise<{ chatId: s
       </div>
 
       {isProfileOpen && (
-        <div className="w-80 flex-shrink-0 h-full border-l border-[#e9edef]/60 dark:border-[#222e35]/30 relative z-20 shadow-2xl">
+        <div className="absolute inset-0 sm:relative sm:w-80 flex-shrink-0 h-full border-l border-[#e9edef]/60 dark:border-[#222e35]/30 z-30 shadow-2xl bg-white dark:bg-[#111b21]">
           <ProfilePanel
             chatId={chatId}
             onClose={() => setIsProfileOpen(false)}

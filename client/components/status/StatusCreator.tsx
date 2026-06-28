@@ -97,7 +97,7 @@ export function StatusCreator({ onClose }: StatusCreatorProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="w-full max-w-md rounded-3xl ios-glass-panel overflow-hidden border border-white/20 shadow-2xl flex flex-col bg-white/20 dark:bg-black/35 backdrop-blur-xl relative">
+      <div className="w-full max-w-[95%] sm:max-w-md rounded-3xl ios-glass-panel overflow-hidden border border-white/20 shadow-2xl flex flex-col bg-white/20 dark:bg-black/35 backdrop-blur-xl relative">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-white/10">
           <h3 className="text-base font-bold text-zinc-900 dark:text-white">Create Status Update</h3>
@@ -212,7 +212,7 @@ export function StatusCreator({ onClose }: StatusCreatorProps) {
                 onChange={(e) => setCaption(e.target.value)}
                 placeholder="Add a caption..."
                 maxLength={100}
-                className="w-full px-4 py-2.5 rounded-full ios-glass-input text-xs text-zinc-800 dark:text-white focus:outline-none"
+                className="w-full px-4 py-2.5 rounded-full ios-glass-input text-base sm:text-xs text-zinc-800 dark:text-white focus:outline-none"
               />
             </div>
           )}
