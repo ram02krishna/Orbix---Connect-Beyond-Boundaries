@@ -1,4 +1,13 @@
 {
+  "/_not-found/page": "app/_not-found/page.js",
+  "/(auth)/forgot-password/page": "app/(auth)/forgot-password/page.js",
   "/(auth)/signup/page": "app/(auth)/signup/page.js",
-  "/page": "app/page.js"
+  "/(auth)/verify-email/page": "app/(auth)/verify-email/page.js",
+  "/(auth)/login/page": "app/(auth)/login/page.js",
+  "/(auth)/verify-phone/page": "app/(auth)/verify-phone/page.js",
+  "/page": "app/page.js",
+  "/(chat)/chats/[chatId]/page": "app/(chat)/chats/[chatId]/page.js",
+  "/(chat)/chats/page": "app/(chat)/chats/page.js",
+  "/(chat)/profile/page": "app/(chat)/profile/page.js",
+  "/(chat)/settings/page": "app/(chat)/settings/page.js"
 }

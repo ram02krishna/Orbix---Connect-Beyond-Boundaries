@@ -146,15 +146,14 @@ const ChatItem = React.memo(function ChatItem({
             <span className="italic text-[#8696a0]">No messages yet</span>
           )}
         </p>
-        </div>
-        {preview?.isUnread && (
-          <div className="flex flex-col justify-end items-end h-full mt-1.5 ml-2">
-            <span className="bg-[#00b87c] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center shadow-sm">
-              new
-            </span>
-          </div>
-        )}
       </div>
+      {preview?.isUnread && (
+        <div className="flex flex-col justify-center items-end ml-2">
+          <span className="bg-[#00b87c] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center shadow-sm">
+            new
+          </span>
+        </div>
+      )}
     </div>
   );
 });
@@ -318,6 +317,7 @@ export function Sidebar() {
     if (!chat.lastMessage) return null;
     const senderId = chat.lastMessage.sender?.id || chat.lastMessage.senderId;
     const isMe = senderId === user?.id && chat.lastMessage.type !== "SYSTEM";
+    const isRead = chat.lastMessage.reads && chat.lastMessage.reads.length > 0;
     const isReadByMe = chat.lastMessage.reads && chat.lastMessage.reads.some((r: any) => r.userId === user?.id);
     const isUnread = !isMe && !isReadByMe;
     const type = chat.lastMessage.type;

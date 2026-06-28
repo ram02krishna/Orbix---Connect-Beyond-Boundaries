@@ -80,8 +80,6 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
     };
 
     void fetchData();
-
-    };
   }, [accessToken, connectSocket, setChats, setOnlineStatuses]);
 
   if (!mounted || !accessToken) {
