@@ -242,7 +242,7 @@ export default function ChatDetailPage({ params }: { params: Promise<{ chatId: s
   return (
     <div className="flex-1 flex h-full min-w-0 bg-[#f9fafb] dark:bg-[#030906] text-zinc-900 dark:text-zinc-100 relative overflow-hidden transition-colors duration-300">
 
-      <div className="absolute top-1/4 left-1/3 h-[500px] w-[500px] rounded-full bg-emerald-500/8 dark:bg-emerald-500/5 blur-[120px] pointer-events-none z-0 blob-glow-1" />
+      <div className="absolute top-1/4 left-1/3 h-[500px] w-[500px] rounded-full bg-blue-500/8 dark:bg-blue-500/5 blur-[120px] pointer-events-none z-0 blob-glow-1" />
       <div className="absolute bottom-10 right-10 h-[500px] w-[500px] rounded-full bg-brand-primary/8 dark:bg-brand-primary/4 blur-[120px] pointer-events-none z-0 blob-glow-2" />
 
       <div className="flex-1 flex flex-col h-full min-w-0 bg-white/30 dark:bg-[#111b21]/30 backdrop-blur-3xl relative z-10 border-r border-[#e9edef]/40 dark:border-[#222e35]/15">

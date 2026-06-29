@@ -106,7 +106,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
   const isRootChats = pathname === "/chats";
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#eff3f1] dark:bg-[#020705] text-zinc-900 dark:text-zinc-100 relative select-none transition-colors duration-300">
+    <div className="flex h-screen w-screen overflow-hidden bg-[#eff3f1] dark:bg-[#000000] text-zinc-900 dark:text-zinc-100 relative select-none transition-colors duration-300">
       {/* Global WebRTC Call Interface */}
       <CallOverlay />
 
@@ -114,7 +114,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
       <StatusViewer />
 
       {/* Shifting Colorful Gradients for Liquid Glass depth */}
-      <div className="absolute top-[-10%] left-[-15%] h-[650px] w-[650px] rounded-full bg-emerald-500/12 dark:bg-emerald-500/8 blur-[110px] pointer-events-none z-0 blob-glow-1" />
+      <div className="absolute top-[-10%] left-[-15%] h-[650px] w-[650px] rounded-full bg-blue-500/12 dark:bg-blue-500/8 blur-[110px] pointer-events-none z-0 blob-glow-1" />
       <div className="absolute bottom-[-10%] right-[-15%] h-[650px] w-[650px] rounded-full bg-purple-500/10 dark:bg-purple-500/8 blur-[110px] pointer-events-none z-0 blob-glow-2" />
       <div className="absolute top-1/4 right-[10%] h-[550px] w-[550px] rounded-full bg-cyan-500/10 dark:bg-cyan-500/6 blur-[110px] pointer-events-none z-0 blob-glow-1" />
       <div className="absolute bottom-1/4 left-[10%] h-[550px] w-[550px] rounded-full bg-pink-500/8 dark:bg-pink-500/5 blur-[110px] pointer-events-none z-0 blob-glow-2" />

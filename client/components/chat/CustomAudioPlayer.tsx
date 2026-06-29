@@ -105,8 +105,8 @@ export function CustomAudioPlayer({ src, isSelf = false }: CustomAudioPlayerProp
         disabled={loading}
         className={`h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 cursor-pointer transition-all active:scale-95 disabled:opacity-50 ${
           isSelf
-            ? "bg-white text-emerald-600 hover:bg-white/95 hover:shadow-md"
-            : "bg-emerald-500 hover:bg-emerald-600 text-white"
+            ? "bg-white text-blue-600 hover:bg-white/95 hover:shadow-md"
+            : "bg-blue-500 hover:bg-blue-600 text-white"
         }`}
       >
         {loading ? (
@@ -129,13 +129,13 @@ export function CustomAudioPlayer({ src, isSelf = false }: CustomAudioPlayerProp
             onChange={handleSeek}
             disabled={loading || duration === 0}
             className={`w-full h-1 rounded-lg appearance-none cursor-pointer focus:outline-none ${
-              isSelf ? "accent-white bg-white/20" : "accent-emerald-500 bg-zinc-250 dark:bg-zinc-700"
+              isSelf ? "accent-white bg-white/20" : "accent-blue-500 bg-zinc-250 dark:bg-zinc-700"
             }`}
             style={{
               background: `linear-gradient(to right, ${
-                isSelf ? "#ffffff" : "#10b981"
+                isSelf ? "#ffffff" : "#00D8E3"
               } 0%, ${
-                isSelf ? "#ffffff" : "#10b981"
+                isSelf ? "#ffffff" : "#00D8E3"
               } ${progressPercentage}%, ${
                 isSelf ? "rgba(255, 255, 255, 0.2)" : "rgba(120, 120, 120, 0.2)"
               } ${progressPercentage}%, ${
@@ -146,7 +146,7 @@ export function CustomAudioPlayer({ src, isSelf = false }: CustomAudioPlayerProp
         </div>
         <div
           className={`flex items-center justify-between text-[10px] font-semibold leading-none ${
-            isSelf ? "text-emerald-100/90" : "text-zinc-500 dark:text-zinc-400"
+            isSelf ? "text-blue-100/90" : "text-zinc-500 dark:text-zinc-400"
           }`}
         >
           <span>{formatTime(currentTime)}</span>

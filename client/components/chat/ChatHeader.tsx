@@ -175,8 +175,8 @@ export function ChatHeader({
                       typing...
                     </span>
                   ) : isOnline ? (
-                    <span className="flex items-center gap-1.5 text-xs font-bold text-emerald-500">
-                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse inline-block" />
+                    <span className="flex items-center gap-1.5 text-xs font-bold text-blue-500">
+                      <span className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse inline-block" />
                       Online
                     </span>
                   ) : (
@@ -238,7 +238,7 @@ export function ChatHeader({
                 onClick={onToggleProfile}
                 className={`p-2.5 sm:p-2 rounded-full transition-all cursor-pointer ${
                   isProfileOpen
-                    ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400"
+                    ? "bg-blue-500/20 text-blue-600 dark:text-blue-400"
                     : "hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] hover:text-zinc-950 dark:hover:text-white"
                 }`}
                 title="Contact details"

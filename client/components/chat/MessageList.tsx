@@ -53,7 +53,7 @@ export function MessageList({
     doodle: {},
     emerald: {
       backgroundColor: "rgba(6, 78, 59, 0.15)",
-      backgroundImage: "radial-gradient(rgba(16, 185, 129, 0.12) 1.5px, transparent 0)",
+      backgroundImage: "radial-gradient(rgba(0, 216, 227, 0.12) 1.5px, transparent 0)",
       backgroundSize: "28px 28px"
     },
     midnight: {
@@ -152,8 +152,8 @@ export function MessageList({
           style={wallpaperStyles[customWallpaper]}
         >
           <div className="flex justify-center mb-4">
-            <span className="flex items-center gap-2 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-white/80 dark:bg-[#1f2c34]/80 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm border border-[#e9edef]/15 dark:border-white/5 animate-pulse uppercase tracking-wider">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" />
+            <span className="flex items-center gap-2 text-[10px] font-bold text-blue-600 dark:text-blue-400 bg-white/80 dark:bg-[#1f2c34]/80 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm border border-[#e9edef]/15 dark:border-white/5 animate-pulse uppercase tracking-wider">
+              <span className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-ping" />
               Syncing history...
             </span>
           </div>
@@ -171,7 +171,7 @@ export function MessageList({
             {/* Outgoing Bubble Shimmer */}
             <div className="flex gap-3 items-end justify-end ml-auto w-full max-w-[65%] animate-pulse">
               <div className="flex flex-col gap-1.5 w-full items-end">
-                <div className="h-10 w-full bg-emerald-500/10 dark:bg-emerald-550/5 border border-emerald-500/10 rounded-2xl rounded-tr-none" />
+                <div className="h-10 w-full bg-blue-500/10 dark:bg-blue-550/5 border border-blue-500/10 rounded-2xl rounded-tr-none" />
               </div>
             </div>
 
@@ -187,7 +187,7 @@ export function MessageList({
             {/* Outgoing Bubble Shimmer */}
             <div className="flex gap-3 items-end justify-end ml-auto w-full max-w-[50%] animate-pulse">
               <div className="flex flex-col gap-1.5 w-full items-end">
-                <div className="h-12 w-full bg-emerald-500/10 dark:bg-emerald-550/5 border border-emerald-500/10 rounded-2xl rounded-tr-none" />
+                <div className="h-12 w-full bg-blue-500/10 dark:bg-blue-550/5 border border-blue-500/10 rounded-2xl rounded-tr-none" />
               </div>
             </div>
           </div>
@@ -201,7 +201,7 @@ export function MessageList({
         style={wallpaperStyles[customWallpaper]}
       >
         <div className="bg-white/90 dark:bg-[#1f2c34]/90 px-6 py-5 rounded-xl border border-[#e9edef] dark:border-[#222e35]/30 shadow-[0_1.5px_1px_rgba(0,0,0,0.06)] flex flex-col items-center">
-          <MessageSquareOff size={30} className="text-emerald-500/70 dark:text-emerald-400/70 mb-2" />
+          <MessageSquareOff size={30} className="text-blue-500/70 dark:text-blue-400/70 mb-2" />
           <p className="text-sm font-bold text-[#111b21] dark:text-[#e9edef]">No messages yet</p>
           <p className="text-xs text-[#667781] dark:text-[#8696a0] text-center max-w-xs mt-1 leading-relaxed">
             Send a message below to start the conversation in real-time.
@@ -239,8 +239,8 @@ export function MessageList({
     >
       {loadingMore && (
         <div className="flex justify-center py-2 select-none">
-          <span className="flex items-center gap-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-white/70 dark:bg-[#1f2c34]/70 backdrop-blur-md px-3 py-1.5 rounded-full shadow border border-[#e9edef]/20 dark:border-white/5 animate-fade-in">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-550 animate-ping" />
+          <span className="flex items-center gap-2 text-xs font-semibold text-blue-600 dark:text-blue-400 bg-white/70 dark:bg-[#1f2c34]/70 backdrop-blur-md px-3 py-1.5 rounded-full shadow border border-[#e9edef]/20 dark:border-white/5 animate-fade-in">
+            <span className="h-1.5 w-1.5 rounded-full bg-blue-550 animate-ping" />
             Loading previous messages...
           </span>
         </div>

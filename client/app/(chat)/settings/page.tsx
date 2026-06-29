@@ -253,7 +253,7 @@ export default function SettingsPage() {
   if (!mounted) {
     return (
       <div className="flex-1 flex items-center justify-center bg-zinc-50 dark:bg-zinc-950">
-        <Loader2 className="animate-spin text-emerald-500" size={32} />
+        <Loader2 className="animate-spin text-blue-500" size={32} />
       </div>
     );
   }
@@ -286,7 +286,7 @@ export default function SettingsPage() {
             onClick={() => { setActiveTab("profile"); setError(""); setSuccessMsg(""); }}
             className={`flex items-center justify-center md:justify-start gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all cursor-pointer whitespace-nowrap w-full ${
               activeTab === "profile"
-                ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/10"
+                ? "bg-blue-500 text-white shadow-md shadow-blue-500/10"
                 : "text-zinc-600 dark:text-zinc-400 hover:bg-black/5 dark:hover:bg-white/5"
             }`}
           >
@@ -298,7 +298,7 @@ export default function SettingsPage() {
             onClick={() => { setActiveTab("notifications"); setError(""); setSuccessMsg(""); }}
             className={`flex items-center justify-center md:justify-start gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all cursor-pointer whitespace-nowrap w-full ${
               activeTab === "notifications"
-                ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/10"
+                ? "bg-blue-500 text-white shadow-md shadow-blue-500/10"
                 : "text-zinc-600 dark:text-zinc-400 hover:bg-black/5 dark:hover:bg-white/5"
             }`}
           >
@@ -310,7 +310,7 @@ export default function SettingsPage() {
             onClick={() => { setActiveTab("security"); setError(""); setSuccessMsg(""); }}
             className={`flex items-center justify-center md:justify-start gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all cursor-pointer whitespace-nowrap w-full ${
               activeTab === "security"
-                ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/10"
+                ? "bg-blue-500 text-white shadow-md shadow-blue-500/10"
                 : "text-zinc-600 dark:text-zinc-400 hover:bg-black/5 dark:hover:bg-white/5"
             }`}
           >
@@ -329,7 +329,7 @@ export default function SettingsPage() {
             </div>
           )}
           {successMsg && (
-            <div className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-sm text-emerald-400 font-semibold animate-pulse-slow">
+            <div className="p-4 rounded-xl border border-blue-500/20 bg-blue-500/10 text-sm text-blue-400 font-semibold animate-pulse-slow">
               {successMsg}
             </div>
           )}
@@ -349,7 +349,7 @@ export default function SettingsPage() {
                       onChange={(e) => setProfileName(e.target.value)}
                       required
                       placeholder="e.g. John Doe"
-                      className="w-full text-base sm:text-sm px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-emerald-500 text-zinc-800 dark:text-zinc-100"
+                      className="w-full text-base sm:text-sm px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-800 dark:text-zinc-100"
                     />
                   </div>
 
@@ -361,7 +361,7 @@ export default function SettingsPage() {
                       onChange={(e) => setProfileUsername(e.target.value)}
                       required
                       placeholder="e.g. johndoe"
-                      className="w-full text-base sm:text-sm px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-emerald-500 text-zinc-800 dark:text-zinc-100"
+                      className="w-full text-base sm:text-sm px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-800 dark:text-zinc-100"
                     />
                   </div>
                 </div>
@@ -373,7 +373,7 @@ export default function SettingsPage() {
                     value={profileAvatar}
                     onChange={(e) => setProfileAvatar(e.target.value)}
                     placeholder="https://example.com/avatar.jpg"
-                    className="w-full text-base sm:text-sm px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-emerald-500 text-zinc-800 dark:text-zinc-100"
+                    className="w-full text-base sm:text-sm px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-800 dark:text-zinc-100"
                   />
                 </div>
 
@@ -384,13 +384,13 @@ export default function SettingsPage() {
                     onChange={(e) => setProfileBio(e.target.value)}
                     placeholder="Tell us about yourself..."
                     rows={3}
-                    className="w-full text-base sm:text-sm px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-emerald-500 text-zinc-800 dark:text-zinc-100 resize-none"
+                    className="w-full text-base sm:text-sm px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-800 dark:text-zinc-100 resize-none"
                   />
                 </div>
               </div>
 
               <div className="flex justify-end">
-                <Button type="submit" disabled={savingProfile} className="bg-emerald-500 hover:bg-emerald-600 font-semibold px-6 py-2.5 cursor-pointer text-sm">
+                <Button type="submit" disabled={savingProfile} className="bg-blue-500 hover:bg-blue-600 font-semibold px-6 py-2.5 cursor-pointer text-sm">
                   {savingProfile ? (
                     <>
                       <Loader2 className="animate-spin mr-1.5" size={15} />
@@ -421,12 +421,12 @@ export default function SettingsPage() {
                   <Button
                     type="button"
                     onClick={handleRequestPermission}
-                    className="bg-emerald-500 hover:bg-emerald-600 text-xs font-bold px-4 py-2 cursor-pointer"
+                    className="bg-blue-500 hover:bg-blue-600 text-xs font-bold px-4 py-2 cursor-pointer"
                   >
                     Enable Notifications
                   </Button>
                 ) : (
-                  <span className="text-xs font-bold bg-emerald-500/25 text-emerald-600 dark:text-emerald-400 px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 select-none">
+                  <span className="text-xs font-bold bg-blue-500/25 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 select-none">
                     <Check size={13} /> Active
                   </span>
                 )}
@@ -443,7 +443,7 @@ export default function SettingsPage() {
                   onClick={handleToggleNotifications}
                   disabled={permissionStatus !== "granted"}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer focus:outline-none disabled:opacity-50 ${
-                    notificationsEnabled && permissionStatus === "granted" ? "bg-emerald-500" : "bg-zinc-300 dark:bg-zinc-800"
+                    notificationsEnabled && permissionStatus === "granted" ? "bg-blue-500" : "bg-zinc-300 dark:bg-zinc-800"
                   }`}
                 >
                   <span
@@ -464,7 +464,7 @@ export default function SettingsPage() {
                   type="button"
                   onClick={handleToggleSound}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer focus:outline-none ${
-                    notificationsSound ? "bg-emerald-500" : "bg-zinc-300 dark:bg-zinc-800"
+                    notificationsSound ? "bg-blue-500" : "bg-zinc-300 dark:bg-zinc-800"
                   }`}
                 >
                   <span
@@ -485,7 +485,7 @@ export default function SettingsPage() {
                   type="button"
                   onClick={handleTogglePreview}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer focus:outline-none ${
-                    notificationsPreview ? "bg-emerald-500" : "bg-zinc-300 dark:bg-zinc-800"
+                    notificationsPreview ? "bg-blue-500" : "bg-zinc-300 dark:bg-zinc-800"
                   }`}
                 >
                   <span
@@ -516,7 +516,7 @@ export default function SettingsPage() {
                     type="button"
                     onClick={handleToggleReadReceipts}
                     className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer focus:outline-none ${
-                      readReceipts ? "bg-emerald-500" : "bg-zinc-300 dark:bg-zinc-800"
+                      readReceipts ? "bg-blue-500" : "bg-zinc-300 dark:bg-zinc-800"
                     }`}
                   >
                     <span
@@ -561,7 +561,7 @@ export default function SettingsPage() {
                       type="button"
                       onClick={handleToggleScreenLock}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer focus:outline-none ${
-                        enableScreenLock ? "bg-emerald-500" : "bg-zinc-300 dark:bg-zinc-800"
+                        enableScreenLock ? "bg-blue-500" : "bg-zinc-300 dark:bg-zinc-800"
                       }`}
                     >
                       <span
@@ -581,7 +581,7 @@ export default function SettingsPage() {
                           maxLength={4}
                           placeholder="Set 4-digit PIN"
                           onChange={(e) => setScreenLockPin(e.target.value.replace(/\D/g, ""))}
-                          className="w-full text-base sm:text-sm px-4 py-2.5 pr-10 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-emerald-500 text-zinc-800 dark:text-zinc-100 font-mono tracking-widest text-center"
+                          className="w-full text-base sm:text-sm px-4 py-2.5 pr-10 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-800 dark:text-zinc-100 font-mono tracking-widest text-center"
                         />
                         <button
                           type="button"
@@ -609,7 +609,7 @@ export default function SettingsPage() {
                       setSuccessMsg(val ? "2FA Setup simulated: Secondary OTP required on next login." : "2FA settings disabled.");
                     }}
                     className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer focus:outline-none ${
-                      twoFactor ? "bg-emerald-500" : "bg-zinc-300 dark:bg-zinc-800"
+                      twoFactor ? "bg-blue-500" : "bg-zinc-300 dark:bg-zinc-800"
                     }`}
                   >
                     <span
@@ -670,7 +670,7 @@ export default function SettingsPage() {
                         className="flex items-center justify-between p-4.5 rounded-xl border border-zinc-200/50 dark:border-white/5 bg-white dark:bg-zinc-900/20 shadow-sm"
                       >
                         <div className="flex items-center gap-4">
-                          <div className="flex items-center justify-center h-11 w-11 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-emerald-500 flex-shrink-0">
+                          <div className="flex items-center justify-center h-11 w-11 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-blue-500 flex-shrink-0">
                             {session.deviceType === "MOBILE" ? <Smartphone size={20} /> : <Monitor size={20} />}
                           </div>
 
@@ -678,7 +678,7 @@ export default function SettingsPage() {
                             <p className="text-sm font-bold text-zinc-900 dark:text-zinc-200 flex items-center gap-2">
                               {session.deviceName || "Web Client"}
                               {session.isCurrent && (
-                                <span className="text-[10px] bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded font-bold uppercase tracking-wider">
+                                <span className="text-[10px] bg-blue-500/20 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded font-bold uppercase tracking-wider">
                                   Current
                                 </span>
                               )}
@@ -751,7 +751,7 @@ function CustomSelect({ value, onChange, options }: CustomSelectProps) {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between text-sm px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-emerald-500 text-zinc-800 dark:text-zinc-250 font-bold cursor-pointer select-none"
+        className="w-full flex items-center justify-between text-sm px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-800 dark:text-zinc-250 font-bold cursor-pointer select-none"
       >
         <span>{selectedOption ? selectedOption.label : "Select..."}</span>
         <svg
@@ -774,9 +774,9 @@ function CustomSelect({ value, onChange, options }: CustomSelectProps) {
                 onChange(opt.value);
                 setIsOpen(false);
               }}
-              className={`w-full text-left text-sm px-4 py-2 hover:bg-emerald-500/10 hover:text-emerald-500 transition-colors ${
+              className={`w-full text-left text-sm px-4 py-2 hover:bg-blue-500/10 hover:text-blue-500 transition-colors ${
                 opt.value === value
-                  ? "text-emerald-500 bg-emerald-500/5 font-bold"
+                  ? "text-blue-500 bg-blue-500/5 font-bold"
                   : "text-zinc-700 dark:text-zinc-300"
               }`}
             >

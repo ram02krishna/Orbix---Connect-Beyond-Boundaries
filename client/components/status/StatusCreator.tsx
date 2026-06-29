@@ -14,7 +14,7 @@ interface StatusCreatorProps {
 const GRADIENTS = [
   "bg-gradient-to-tr from-[#9c27b0] to-[#e040fb]", // Purple Glow
   "bg-gradient-to-tr from-[#ff5252] to-[#ff4081]", // Pink Passion
-  "bg-gradient-to-tr from-[#00b87c] to-[#05c46b]", // Emerald Glass
+  "bg-gradient-to-tr from-[#06A0F8] to-[#05c46b]", // Emerald Glass
   "bg-gradient-to-tr from-[#ff9f43] to-[#ff6b6b]", // Sunset
   "bg-gradient-to-tr from-[#00bcd4] to-[#2196f3]", // Neon Ocean
   "bg-zinc-800", // Dark Minimal
@@ -115,7 +115,7 @@ export function StatusCreator({ onClose }: StatusCreatorProps) {
             onClick={() => setMode("text")}
             className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all duration-200 ${
               mode === "text"
-                ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/25"
+                ? "bg-blue-500 text-white shadow-lg shadow-blue-500/25"
                 : "text-zinc-650 dark:text-zinc-300 hover:bg-white/10"
             }`}
           >
@@ -126,7 +126,7 @@ export function StatusCreator({ onClose }: StatusCreatorProps) {
             onClick={() => setMode("photo")}
             className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all duration-200 ${
               mode === "photo"
-                ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/25"
+                ? "bg-blue-500 text-white shadow-lg shadow-blue-500/25"
                 : "text-zinc-650 dark:text-zinc-300 hover:bg-white/10"
             }`}
           >
@@ -162,7 +162,7 @@ export function StatusCreator({ onClose }: StatusCreatorProps) {
                       onClick={() => setGradientIndex(index)}
                       className={`h-6 w-6 rounded-full border-2 transition-transform duration-200 cursor-pointer ${gradient} ${
                         gradientIndex === index
-                          ? "border-emerald-400 scale-110 shadow-md"
+                          ? "border-blue-400 scale-110 shadow-md"
                           : "border-transparent hover:scale-105"
                       }`}
                     />
@@ -176,9 +176,9 @@ export function StatusCreator({ onClose }: StatusCreatorProps) {
               {!imagePreview ? (
                 <div
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-full min-h-[160px] rounded-2xl border-2 border-dashed border-white/20 hover:border-emerald-500/40 bg-white/5 dark:bg-black/10 flex flex-col items-center justify-center gap-2 cursor-pointer group transition-colors"
+                  className="w-full min-h-[160px] rounded-2xl border-2 border-dashed border-white/20 hover:border-blue-500/40 bg-white/5 dark:bg-black/10 flex flex-col items-center justify-center gap-2 cursor-pointer group transition-colors"
                 >
-                  <div className="h-10 w-10 rounded-full bg-emerald-500/10 dark:bg-emerald-500/5 flex items-center justify-center text-emerald-500 group-hover:scale-110 transition-transform">
+                  <div className="h-10 w-10 rounded-full bg-blue-500/10 dark:bg-blue-500/5 flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
                     <ImageIcon size={20} />
                   </div>
                   <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Click to select photo</span>
@@ -229,7 +229,7 @@ export function StatusCreator({ onClose }: StatusCreatorProps) {
           <button
             onClick={handlePost}
             disabled={uploading}
-            className="flex-1 py-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold shadow-lg shadow-emerald-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-200"
+            className="flex-1 py-2.5 rounded-2xl bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-200"
           >
             {uploading ? (
               <span className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />

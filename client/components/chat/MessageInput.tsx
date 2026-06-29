@@ -269,7 +269,7 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
                 console.error("Failed to unblock", err);
               }
             }}
-            className="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full text-sm font-medium transition-colors"
+            className="px-4 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded-full text-sm font-medium transition-colors"
           >
             Unblock
           </button>
@@ -323,7 +323,7 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
                 type="button"
                 onClick={stopAndSendRecording}
                 disabled={uploading}
-                className="p-2.5 sm:p-2 rounded-full bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white transition-colors cursor-pointer flex items-center justify-center disabled:opacity-50"
+                className="p-2.5 sm:p-2 rounded-full bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white transition-colors cursor-pointer flex items-center justify-center disabled:opacity-50"
                 title="Send voice message"
               >
                 <Send size={14} />
@@ -340,7 +340,7 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
               disabled={uploading}
               className={`p-2.5 sm:p-2 rounded-full transition-all cursor-pointer ${showEmojiPicker
-                  ? "bg-zinc-200/60 dark:bg-zinc-700/50 text-emerald-500 dark:text-emerald-400"
+                  ? "bg-zinc-200/60 dark:bg-zinc-700/50 text-blue-500 dark:text-blue-400"
                   : "hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1]"
                 }`}
               title="Emojis"
@@ -371,7 +371,7 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
             className="p-2.5 sm:p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none flex-shrink-0"
             title="Attach"
           >
-            {uploading ? <Loader2 size={19} className="animate-spin text-emerald-500" /> : <Paperclip size={19} />}
+            {uploading ? <Loader2 size={19} className="animate-spin text-blue-500" /> : <Paperclip size={19} />}
           </button>
 
           <input
@@ -399,16 +399,16 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
               disabled={!text.trim() || uploading}
               className="p-2.5 sm:p-2 rounded-full bg-transparent hover:bg-zinc-200/50 dark:hover:bg-[#2a3942] active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] transition-all cursor-pointer disabled:opacity-40 disabled:pointer-events-none flex items-center justify-center flex-shrink-0"
             >
-              <Send size={19} className="text-emerald-500 dark:text-emerald-400" />
+              <Send size={19} className="text-blue-500 dark:text-blue-400" />
             </button>
           ) : (
             <button
               type="button"
               onClick={startRecording}
-              className="p-2.5 sm:p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-[#2a3942] active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] hover:text-emerald-500 transition-all cursor-pointer flex items-center justify-center flex-shrink-0"
+              className="p-2.5 sm:p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-[#2a3942] active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] hover:text-blue-500 transition-all cursor-pointer flex items-center justify-center flex-shrink-0"
               title="Record voice message"
             >
-              <Mic size={19} className="text-emerald-500 dark:text-emerald-400" />
+              <Mic size={19} className="text-blue-500 dark:text-blue-400" />
             </button>
           )}
         </form>

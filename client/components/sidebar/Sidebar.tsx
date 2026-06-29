@@ -34,7 +34,7 @@ function StatusAvatarRing({ count, viewedCount, size = 44 }: { count: number; vi
     <svg width={size} height={size} className="absolute inset-0 -rotate-90 pointer-events-none">
       {Array.from({ length: count }).map((_, index) => {
         const isViewed = index < viewedCount;
-        const strokeColor = isViewed ? "#9ca3af" : "#10b981"; // grey-400 or emerald-500
+        const strokeColor = isViewed ? "#9ca3af" : "#00D8E3"; // grey-400 or blue-500
         const strokeDashoffset = -index * (dashLength + gapSize);
 
         return (
@@ -88,7 +88,7 @@ const ChatItem = React.memo(function ChatItem({
       onContextMenu={onContextMenu}
       className={`flex items-center gap-3.5 px-4.5 py-3.5 cursor-pointer transition-all duration-200 rounded-xl border border-transparent select-none active:scale-[0.99] ${
         isSelected
-          ? "bg-white/70 dark:bg-[#203c30]/65 border-white/60 dark:border-white/10 shadow-md shadow-emerald-500/5 text-zinc-950 dark:text-white"
+          ? "bg-white/70 dark:bg-[#203c30]/65 border-white/60 dark:border-white/10 shadow-md shadow-blue-500/5 text-zinc-950 dark:text-white"
           : "bg-white/20 dark:bg-white/2 border-zinc-200/30 dark:border-white/5 shadow-sm"
       }`}
     >
@@ -107,11 +107,11 @@ const ChatItem = React.memo(function ChatItem({
           <p className="text-[15.5px] font-semibold truncate text-[#111b21] dark:text-[#e9edef] flex items-center">
             {chat.type === "DIRECT" ? firstName(partner.name) : (chat.title || "Group Chat")}
             {chat.isPinned && (
-              <span className="text-xs text-emerald-500 font-bold ml-1.5 flex items-center" title="Pinned Chat">📌</span>
+              <span className="text-xs text-blue-500 font-bold ml-1.5 flex items-center" title="Pinned Chat">📌</span>
             )}
           </p>
           {chat.lastMessage && (
-            <span className={cn("text-[11px] font-semibold flex-shrink-0", preview?.isUnread ? "text-emerald-500 font-bold" : "text-[#667781] dark:text-[#8696a0]")}>
+            <span className={cn("text-[11px] font-semibold flex-shrink-0", preview?.isUnread ? "text-blue-500 font-bold" : "text-[#667781] dark:text-[#8696a0]")}>
               {formatTime(chat.lastMessage.createdAt)}
             </span>
           )}
@@ -119,7 +119,7 @@ const ChatItem = React.memo(function ChatItem({
 
         <p className="text-[13px] text-[#667781] dark:text-[#8696a0] truncate mt-1.5 flex items-center">
           {isTyping ? (
-            <span className="text-[#00b87c] font-bold dark:text-emerald-400 flex items-center gap-1">
+            <span className="text-[#06A0F8] font-bold dark:text-blue-400 flex items-center gap-1">
               <span className="flex gap-0.5 items-center">
                 <span className="typing-dot" />
                 <span className="typing-dot" />
@@ -131,13 +131,13 @@ const ChatItem = React.memo(function ChatItem({
             <>
               {preview.isMe && (
                 <span className={`font-bold select-none mr-1 leading-none tracking-tight flex-shrink-0 ${
-                  preview.isRead ? "text-[#34b7f1] dark:text-[#53bdeb]" : "text-zinc-400 dark:text-zinc-500/80"
+                  preview.isRead ? "text-[#34b7f1] dark:text-[#5D32FA]" : "text-zinc-400 dark:text-zinc-500/80"
                 }`}>✓✓</span>
               )}
               <span className="flex items-center gap-1 truncate max-w-full leading-none">
                 {preview.type === "IMAGE" && <Camera size={13} className="text-zinc-400 dark:text-zinc-500 flex-shrink-0" />}
                 {preview.type === "VIDEO" && <Video size={13} className="text-zinc-400 dark:text-zinc-500 flex-shrink-0" />}
-                {preview.type === "AUDIO" && <Mic size={13} className="text-emerald-500 dark:text-emerald-400 flex-shrink-0" />}
+                {preview.type === "AUDIO" && <Mic size={13} className="text-blue-500 dark:text-blue-400 flex-shrink-0" />}
                 {preview.type === "FILE" && <FileText size={13} className="text-zinc-400 dark:text-zinc-500 flex-shrink-0" />}
                 <span className="truncate">{preview.content}</span>
               </span>
@@ -149,7 +149,7 @@ const ChatItem = React.memo(function ChatItem({
       </div>
       {preview?.isUnread && (
         <div className="flex flex-col justify-center items-end ml-2">
-          <span className="bg-[#00b87c] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center shadow-sm">
+          <span className="bg-[#06A0F8] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center shadow-sm">
             new
           </span>
         </div>
@@ -359,7 +359,7 @@ export function Sidebar() {
     <div className="flex flex-col h-full border-r border-[#e9edef] dark:border-[#222e35] bg-white/40 dark:bg-[#111b21]/45 backdrop-blur-3xl relative select-none text-zinc-900 dark:text-[#e9edef] overflow-hidden">
 
       {/* Ambient glass background glow blobs */}
-      <div className="absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-emerald-500/10 dark:bg-emerald-500/5 blur-[50px] pointer-events-none z-0 blob-glow-1" />
+      <div className="absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-blue-500/10 dark:bg-blue-500/5 blur-[50px] pointer-events-none z-0 blob-glow-1" />
       <div className="absolute top-1/3 -right-16 h-48 w-48 rounded-full bg-brand-primary/10 dark:bg-brand-primary/5 blur-[50px] pointer-events-none z-0 blob-glow-2" />
 
       {/* Sidebar Header (Translucent glass) */}
@@ -372,7 +372,7 @@ export function Sidebar() {
           >
             <div className="relative">
               <Avatar src={user?.avatarUrl} name={user?.name} size="sm" />
-              <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-[#f0f2f5]/70 dark:ring-[#202c33]/70" />
+              <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-blue-500 ring-2 ring-[#f0f2f5]/70 dark:ring-[#202c33]/70" />
             </div>
             <div className="hidden sm:block">
               <p className="text-sm font-semibold truncate max-w-[120px] text-zinc-900 dark:text-[#e9edef] transition-colors">
@@ -471,7 +471,7 @@ export function Sidebar() {
               key={tab.id}
               onClick={() => setFilterTab(tab.id as any)}
               className={`px-3.5 py-1 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer select-none ${filterTab === tab.id
-                ? "bg-[#00b87c] text-white shadow-md shadow-emerald-500/20"
+                ? "bg-[#06A0F8] text-white shadow-md shadow-blue-500/20"
                 : "bg-zinc-200/50 dark:bg-zinc-800/40 text-[#54656f] dark:text-[#aebac1] hover:bg-zinc-300/40 dark:hover:bg-zinc-700/40"
                 }`}
             >
@@ -547,8 +547,8 @@ export function Sidebar() {
           {filteredChats.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center px-4">
               <div className="relative mb-4">
-                <div className="h-16 w-16 rounded-2xl bg-brand-primary/10 dark:bg-brand-primary/5 border border-brand-primary/15 flex items-center justify-center shadow-inner">
-                  <MessageSquare size={28} className="text-brand-primary/60" />
+                <div className="h-16 w-16 rounded-2xl flex items-center justify-center">
+                  <img src="/logo.png" alt="Orbix Logo" className="w-12 h-12 object-contain opacity-70" />
                 </div>
               </div>
               <p className="text-sm font-bold text-zinc-700 dark:text-zinc-300">
@@ -627,7 +627,7 @@ export function Sidebar() {
               </div>
               <button
                 onClick={() => setShowCreator(true)}
-                className="h-8 w-8 rounded-full bg-emerald-500/10 dark:bg-emerald-500/5 text-emerald-500 transition-all cursor-pointer flex items-center justify-center"
+                className="h-8 w-8 rounded-full bg-blue-500/10 dark:bg-blue-500/5 text-blue-500 transition-all cursor-pointer flex items-center justify-center"
               >
                 <Plus size={16} />
               </button>
@@ -716,7 +716,7 @@ export function Sidebar() {
           {recentStatuses.length === 0 && viewedStatuses.length === 0 && (
             <div className="flex flex-col items-center justify-center py-16 text-center px-4">
               <div className="relative mb-4">
-                <div className="h-16 w-16 rounded-2xl bg-emerald-500/10 dark:bg-emerald-500/5 border border-emerald-500/15 flex items-center justify-center shadow-inner text-emerald-500">
+                <div className="h-16 w-16 rounded-2xl bg-blue-500/10 dark:bg-blue-500/5 border border-blue-500/15 flex items-center justify-center shadow-inner text-blue-500">
                   <CircleDot size={28} />
                 </div>
               </div>

@@ -79,7 +79,7 @@ export default function LandingPage() {
 
   // --- INTERACTIVE DESKTOP MOCKUP STATES ---
   const [chats, setChats] = useState<Chat[]>([
-    { id: 1, name: "Rahul", avatar: "R", color: "from-[#00b87c] to-[#10B981]", message: "Are we still meeting for dinner tonight?", time: "12:45 PM", unread: 0, online: true, typing: false, type: "DIRECT", isPinned: true },
+    { id: 1, name: "Rahul", avatar: "R", color: "from-[#06A0F8] to-[#00D8E3]", message: "Are we still meeting for dinner tonight?", time: "12:45 PM", unread: 0, online: true, typing: false, type: "DIRECT", isPinned: true },
     { id: 2, name: "Pooja", avatar: "P", color: "from-[#FF4F8C] to-[#6D5DF6]", message: "Send me those photos from the trip!", time: "11:30 AM", unread: 2, online: true, typing: true, type: "DIRECT", isPinned: true },
     { id: 3, name: "College Friends", avatar: "CF", color: "from-[#00D4FF] to-[#4F8CFF]", message: "Vikram: Anyone up for a movie this weekend?", time: "10:15 AM", unread: 5, online: false, typing: false, type: "GROUP" },
     { id: 4, name: "Family Group", avatar: "FG", color: "from-[#FF9F43] to-[#FF4F8C]", message: "Aarav: Happy birthday mom! 🎉", time: "9:00 AM", unread: 0, online: true, typing: false, type: "GROUP" },
@@ -284,7 +284,7 @@ export default function LandingPage() {
       count: 3,
       viewedCount: 1,
       stories: [
-        { type: "text", content: "Working on the new Orbix dark mode dashboard today! 💻", bg: "bg-gradient-to-tr from-emerald-600 to-teal-800" },
+        { type: "text", content: "Working on the new Orbix dark mode dashboard today! 💻", bg: "bg-gradient-to-tr from-blue-600 to-teal-800" },
         { type: "text", content: "Interactive micro-animations are looking extremely smooth.", bg: "bg-gradient-to-tr from-[#6D5DF6] to-[#4F8CFF]" },
         { type: "text", content: "Coffee break! ☕✨", bg: "bg-gradient-to-tr from-rose-600 to-amber-600" }
       ]
@@ -293,12 +293,12 @@ export default function LandingPage() {
       id: 2,
       userName: "Rahul",
       avatar: "KT",
-      color: "from-[#00b87c] to-[#10B981]",
+      color: "from-[#06A0F8] to-[#00D8E3]",
       count: 2,
       viewedCount: 0,
       stories: [
         { type: "text", content: "E2E keys successfully tested over WebSockets. Speed is down to 12ms!", bg: "bg-gradient-to-br from-zinc-800 to-zinc-950" },
-        { type: "text", content: "Time to merge to production. 🚀", bg: "bg-gradient-to-tr from-[#00b87c] to-emerald-950" }
+        { type: "text", content: "Time to merge to production. 🚀", bg: "bg-gradient-to-tr from-[#06A0F8] to-blue-950" }
       ]
     }
   ];
@@ -413,7 +413,7 @@ export default function LandingPage() {
       quote: "Orbix is an absolute masterpiece of software design. The speed of message transmission and the layout of channels make communication feel effortless. Our teams have saved countless hours.",
       rating: 5,
       avatar: "AM",
-      gradient: "from-[#00b87c] to-[#10B981]"
+      gradient: "from-[#06A0F8] to-[#00D8E3]"
     },
     {
       name: "Ananya Sen",
@@ -454,13 +454,13 @@ export default function LandingPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#eff3f1] dark:bg-[#020705] text-zinc-900 dark:text-[#fafafa] selection:bg-[#00b87c]/30 selection:text-zinc-900 dark:selection:text-white font-sans overflow-x-hidden relative transition-colors duration-300">
+    <div className="min-h-screen bg-[#eff3f1] dark:bg-[#000000] text-zinc-900 dark:text-[#fafafa] selection:bg-[#06A0F8]/30 selection:text-zinc-900 dark:selection:text-white font-sans overflow-x-hidden relative transition-colors duration-300">
       
       {/* Enhanced Dark Mode Aurora Background */}
       <div className="absolute top-0 inset-x-0 h-[1200px] overflow-hidden pointer-events-none z-0">
         {/* Light mode blobs */}
-        <div className="dark:hidden absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-br from-[#00b87c]/15 via-emerald-800/5 to-transparent blur-[120px] animate-pulse-slow" />
-        <div className="dark:hidden absolute top-[20%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-bl from-teal-500/10 via-[#00b87c]/5 to-transparent blur-[140px] animate-pulse-slow" style={{ animationDelay: "2s" }} />
+        <div className="dark:hidden absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-br from-[#06A0F8]/15 via-blue-800/5 to-transparent blur-[120px] animate-pulse-slow" />
+        <div className="dark:hidden absolute top-[20%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-bl from-teal-500/10 via-[#06A0F8]/5 to-transparent blur-[140px] animate-pulse-slow" style={{ animationDelay: "2s" }} />
         {/* Dark mode enhanced blobs */}
         <div className="hidden dark:block dark-blob-1 absolute top-[-15%] left-[-5%] w-[55vw] h-[55vw] rounded-full blur-[130px]" />
         <div className="hidden dark:block dark-blob-2 absolute top-[25%] right-[-8%] w-[45vw] h-[45vw] rounded-full blur-[150px]" />
@@ -477,24 +477,25 @@ export default function LandingPage() {
       <nav 
         className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
           scrolled 
-            ? "ios-glass-header py-0 dark:border-[#00b87c]/10 dark:shadow-[0_1px_0_rgba(0,184,124,0.06)]" 
+            ? "ios-glass-header py-0 dark:border-[#06A0F8]/10 dark:shadow-[0_1px_0_rgba(6, 160, 248,0.06)]" 
             : "bg-transparent border-transparent py-2"
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           {/* Logo */}
           <a href="#" className="flex items-center gap-3 group">
-            <div className="relative w-9 h-9 rounded-xl bg-gradient-to-tr from-[#00b87c] to-[#10B981] flex items-center justify-center shadow-lg shadow-[#00b87c]/20 group-hover:scale-105 transition-transform">
-              <MessageSquare className="w-5 h-5 text-white" />
-              <div className="absolute inset-0 rounded-xl bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-            </div>
+            <img 
+              src="/logo.png" 
+              alt="Orbix Logo" 
+              className="w-12 h-12 object-contain drop-shadow-md group-hover:scale-105 transition-transform" 
+            />
             <span className="font-semibold text-xl tracking-tight bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-500 dark:from-white dark:via-white dark:to-[#8696a0] bg-clip-text text-transparent">
               Orbix
             </span>
           </a>
 
           {/* Navigation links - Desktop */}
-          <div className="hidden md:flex items-center gap-1 bg-zinc-200/40 dark:bg-[#0A100D]/80 border border-zinc-200/60 dark:border-white/[0.07] p-1.5 rounded-full backdrop-blur-md">
+          <div className="hidden md:flex items-center gap-1 bg-zinc-200/40 dark:bg-[#0A0A0A]/80 border border-zinc-200/60 dark:border-white/[0.07] p-1.5 rounded-full backdrop-blur-md">
             {["Features", "Solutions", "Communities", "Security", "Pricing", "Developers"].map((link) => (
               <a
                 key={link}
@@ -523,7 +524,7 @@ export default function LandingPage() {
             </Link>
             <Link 
               href="/signup" 
-              className="px-5 py-2.5 bg-gradient-to-tr from-[#00b87c] to-[#10B981] hover:from-[#009e6a] hover:to-[#0ea5e9] rounded-xl font-bold text-white shadow-lg shadow-[#00b87c]/30 hover:shadow-[#00b87c]/50 transition-all flex items-center gap-2 group hover:scale-[1.02]"
+              className="px-5 py-2.5 bg-gradient-to-tr from-[#06A0F8] to-[#00D8E3] hover:from-[#1661F9] hover:to-[#0ea5e9] rounded-xl font-bold text-white shadow-lg shadow-[#06A0F8]/30 hover:shadow-[#06A0F8]/50 transition-all flex items-center gap-2 group hover:scale-[1.02]"
             >
               Start Messaging
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -546,7 +547,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="absolute top-20 inset-x-0 bg-white/95 dark:bg-[#070f0b]/98 border-b border-zinc-200/80 dark:border-[#00b87c]/10 py-6 px-6 flex flex-col gap-4 backdrop-blur-xl md:hidden shadow-lg dark:shadow-2xl"
+              className="absolute top-20 inset-x-0 bg-white/95 dark:bg-[#050505]/98 border-b border-zinc-200/80 dark:border-[#06A0F8]/10 py-6 px-6 flex flex-col gap-4 backdrop-blur-xl md:hidden shadow-lg dark:shadow-2xl"
             >
               {["Features", "Solutions", "Communities", "Security", "Pricing", "Developers"].map((link) => (
                 <a
@@ -565,7 +566,7 @@ export default function LandingPage() {
                 <Link href="/login" className="bg-zinc-100/50 hover:bg-zinc-200/80 dark:bg-white/[0.03] dark:hover:bg-white/[0.08] text-center text-zinc-900 dark:text-white py-3 rounded-xl font-semibold transition-colors border border-zinc-200/80 dark:border-white/[0.08]">
                   Sign In
                 </Link>
-                <Link href="/signup" className="bg-gradient-to-tr from-[#00b87c] to-[#10B981] py-3 px-6 rounded-xl text-center font-bold shadow-lg shadow-[#00b87c]/25 text-white active:scale-95 transition-transform">
+                <Link href="/signup" className="bg-gradient-to-tr from-[#06A0F8] to-[#00D8E3] py-3 px-6 rounded-xl text-center font-bold shadow-lg shadow-[#06A0F8]/25 text-white active:scale-95 transition-transform">
                   Start Messaging
                 </Link>
               </div>
@@ -578,9 +579,9 @@ export default function LandingPage() {
       <section className="relative pt-24 pb-12 px-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center z-10 min-h-[85vh]">
         {/* Left Side: Headlines */}
         <div className="lg:col-span-5 flex flex-col gap-8 text-left">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#00b87c]/10 border border-[#00b87c]/20 dark:border-[#00b87c]/30 rounded-full w-fit">
-            <Sparkles className="w-4 h-4 text-[#00b87c]" />
-            <span className="text-sm font-semibold uppercase tracking-[0.15em] text-[#00b87c]">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#06A0F8]/10 border border-[#06A0F8]/20 dark:border-[#06A0F8]/30 rounded-full w-fit">
+            <Sparkles className="w-4 h-4 text-[#06A0F8]" />
+            <span className="text-sm font-semibold uppercase tracking-[0.15em] text-[#06A0F8]">
               Orbix Web Client
             </span>
           </div>
@@ -588,8 +589,8 @@ export default function LandingPage() {
           <h1 className="text-5xl md:text-6xl lg:text-[72px] font-bold tracking-tight leading-[1.06] text-zinc-900 dark:text-white dark:drop-shadow-[0_0_20px_rgba(255,255,255,0.25)]">
             Where Every <br />
             <span className="relative inline-block">
-              <span className="absolute inset-0 bg-gradient-to-r from-[#00b87c] via-[#10B981] to-[#53bdeb] filter blur-[30px] opacity-40 dark:opacity-60 animate-pulse-slow"></span>
-              <span className="relative bg-gradient-to-r from-[#00b87c] via-[#10B981] to-[#53bdeb] bg-clip-text text-transparent">
+              <span className="absolute inset-0 bg-gradient-to-r from-[#06A0F8] via-[#00D8E3] to-[#5D32FA] filter blur-[30px] opacity-40 dark:opacity-60 animate-pulse-slow"></span>
+              <span className="relative bg-gradient-to-r from-[#06A0F8] via-[#00D8E3] to-[#5D32FA] bg-clip-text text-transparent">
                 Conversation
               </span>
             </span> <br />
@@ -602,10 +603,10 @@ export default function LandingPage() {
 
           <div className="flex flex-wrap gap-4 pt-2">
             <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#00b87c] via-[#10B981] to-[#53bdeb] rounded-xl filter blur-[15px] opacity-0 group-hover:opacity-70 dark:group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#06A0F8] via-[#00D8E3] to-[#5D32FA] rounded-xl filter blur-[15px] opacity-0 group-hover:opacity-70 dark:group-hover:opacity-100 transition-opacity duration-500"></div>
               <Link 
                 href="/signup" 
-                className="relative px-8 py-4 bg-gradient-to-tr from-[#00b87c] via-[#10B981] to-[#53bdeb] hover:scale-[1.02] rounded-xl font-bold shadow-xl shadow-[#00b87c]/30 text-white transition-all flex items-center gap-2 group-hover:shadow-none"
+                className="relative px-8 py-4 bg-gradient-to-tr from-[#06A0F8] via-[#00D8E3] to-[#5D32FA] hover:scale-[1.02] rounded-xl font-bold shadow-xl shadow-[#06A0F8]/30 text-white transition-all flex items-center gap-2 group-hover:shadow-none"
               >
                 Start Messaging Free
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -613,7 +614,7 @@ export default function LandingPage() {
             </div>
             <Link 
               href="/login" 
-              className="group relative px-8 py-4 bg-white/50 hover:bg-white/80 dark:bg-[#0A100D]/40 dark:hover:bg-[#0A100D]/60 backdrop-blur-md border border-zinc-300/40 dark:border-white/[0.08] hover:dark:border-white/[0.15] rounded-xl font-semibold transition-all flex items-center gap-2 text-zinc-900 dark:text-white overflow-hidden shadow-sm hover:shadow-md dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+              className="group relative px-8 py-4 bg-white/50 hover:bg-white/80 dark:bg-[#0A0A0A]/40 dark:hover:bg-[#0A0A0A]/60 backdrop-blur-md border border-zinc-300/40 dark:border-white/[0.08] hover:dark:border-white/[0.15] rounded-xl font-semibold transition-all flex items-center gap-2 text-zinc-900 dark:text-white overflow-hidden shadow-sm hover:shadow-md dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 dark:via-white/5 to-transparent -translate-x-full group-hover:animate-[shimmer-move_1.5s_infinite]" />
               <span className="relative z-10">Sign In</span>
@@ -622,17 +623,17 @@ export default function LandingPage() {
           </div>
 
           {/* Quick Stats banner inside hero */}
-          <div className="grid grid-cols-3 gap-6 border-t border-zinc-200/80 dark:border-[#00b87c]/15 pt-8 mt-4">
+          <div className="grid grid-cols-3 gap-6 border-t border-zinc-200/80 dark:border-[#06A0F8]/15 pt-8 mt-4">
             <div>
-              <div className="text-xl font-bold text-zinc-900 dark:text-[#10b981]">E2E</div>
+              <div className="text-xl font-bold text-zinc-900 dark:text-[#00D8E3]">E2E</div>
               <div className="text-xs text-zinc-550 dark:text-[#8696a0] uppercase tracking-wider mt-1">Encrypted</div>
             </div>
             <div>
-              <div className="text-xl font-bold text-zinc-900 dark:text-[#10b981]">12ms</div>
+              <div className="text-xl font-bold text-zinc-900 dark:text-[#00D8E3]">12ms</div>
               <div className="text-xs text-zinc-550 dark:text-[#8696a0] uppercase tracking-wider mt-1">Latency</div>
             </div>
             <div>
-              <div className="text-xl font-bold text-zinc-900 dark:text-[#10b981]">100%</div>
+              <div className="text-xl font-bold text-zinc-900 dark:text-[#00D8E3]">100%</div>
               <div className="text-xs text-zinc-550 dark:text-[#8696a0] uppercase tracking-wider mt-1">Data Localized</div>
             </div>
           </div>
@@ -641,16 +642,16 @@ export default function LandingPage() {
         {/* Right Side: Exact Desktop Messaging Application mockup */}
         <div className="lg:col-span-7 w-full h-[600px] relative">
           {/* Decorative Back Glowing Circle */}
-          <div className="absolute inset-0 bg-[#00b87c]/20 dark:bg-[#00b87c]/25 filter blur-[100px] rounded-3xl -z-10 translate-x-8 translate-y-8 animate-pulse-slow" />
-          <div className="hidden dark:block absolute inset-0 bg-[#53bdeb]/15 filter blur-[120px] rounded-3xl -z-10 -translate-x-12 translate-y-12 animate-pulse-slow" style={{ animationDelay: "1s" }} />
+          <div className="absolute inset-0 bg-[#06A0F8]/20 dark:bg-[#06A0F8]/25 filter blur-[100px] rounded-3xl -z-10 translate-x-8 translate-y-8 animate-pulse-slow" />
+          <div className="hidden dark:block absolute inset-0 bg-[#5D32FA]/15 filter blur-[120px] rounded-3xl -z-10 -translate-x-12 translate-y-12 animate-pulse-slow" style={{ animationDelay: "1s" }} />
           
           {/* Main App Frame (Glassmorphic Window matching actual ChatLayout) */}
-          <div className="w-full h-full rounded-2xl ios-glass-container border border-zinc-200/80 dark:border-[#00b87c]/12 shadow-2xl dark:shadow-[0_25px_80px_rgba(0,0,0,0.7),0_0_40px_rgba(0,184,124,0.05)] flex overflow-hidden relative">
+          <div className="w-full h-full rounded-2xl ios-glass-container border border-zinc-200/80 dark:border-[#06A0F8]/12 shadow-2xl dark:shadow-[0_25px_80px_rgba(0,0,0,0.7),0_0_40px_rgba(6, 160, 248,0.05)] flex overflow-hidden relative">
             
             {/* 1. App Sidebar - Small Utility column */}
-            <div className="hidden sm:flex w-16 bg-zinc-100/90 dark:bg-[#0A100D]/90 border-r border-zinc-200/50 dark:border-white/[0.06] py-6 flex-col items-center justify-between flex-shrink-0">
+            <div className="hidden sm:flex w-16 bg-zinc-100/90 dark:bg-[#0A0A0A]/90 border-r border-zinc-200/50 dark:border-white/[0.06] py-6 flex-col items-center justify-between flex-shrink-0">
               <div className="flex flex-col gap-6 items-center">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#00b87c] to-[#10B981] flex items-center justify-center shadow-md">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#06A0F8] to-[#00D8E3] flex items-center justify-center shadow-md">
                   <MessageSquare className="w-5 h-5 text-white" />
                 </div>
                 
@@ -665,7 +666,7 @@ export default function LandingPage() {
                   className="p-2.5 rounded-xl text-zinc-550 dark:text-[#8696a0] hover:text-zinc-900 dark:hover:text-white transition-colors hover:bg-zinc-200/50 dark:hover:bg-white/[0.03] relative"
                 >
                   <CircleDot className="w-5 h-5" />
-                  <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#10b981] animate-pulse" />
+                  <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#00D8E3] animate-pulse" />
                 </button>
                 <button className="p-2.5 rounded-xl text-zinc-550 dark:text-[#8696a0] hover:text-zinc-900 dark:hover:text-white transition-colors hover:bg-zinc-200/50 dark:hover:bg-white/[0.03]">
                   <Phone className="w-5 h-5" />
@@ -681,14 +682,14 @@ export default function LandingPage() {
                   <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#34b7f1]" />
                 </button>
                 {/* User avatar */}
-                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#10B981] to-emerald-950 flex items-center justify-center font-bold text-xs shadow-inner text-white">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#00D8E3] to-blue-950 flex items-center justify-center font-bold text-xs shadow-inner text-white">
                   ME
                 </div>
               </div>
             </div>
 
             {/* 2. Chats Sidebar - List pane */}
-            <div className="hidden md:flex w-64 bg-zinc-50/50 dark:bg-[#0A100D]/50 border-r border-zinc-200/50 dark:border-white/[0.06] flex-col flex-shrink-0">
+            <div className="hidden md:flex w-64 bg-zinc-50/50 dark:bg-[#0A0A0A]/50 border-r border-zinc-200/50 dark:border-white/[0.06] flex-col flex-shrink-0">
               
               {/* Search Bar */}
               <div className="p-4">
@@ -697,7 +698,7 @@ export default function LandingPage() {
                   <input 
                     type="text" 
                     placeholder="Search chats..." 
-                    className="w-full bg-zinc-200/40 dark:bg-white/[0.04] border border-zinc-200/60 dark:border-white/[0.06] rounded-lg py-1.5 pl-9 pr-4 text-xs text-zinc-900 dark:text-white placeholder-zinc-550 dark:placeholder-[#8696a0] focus:outline-none focus:border-[#00b87c]/50 transition-colors"
+                    className="w-full bg-zinc-200/40 dark:bg-white/[0.04] border border-zinc-200/60 dark:border-white/[0.06] rounded-lg py-1.5 pl-9 pr-4 text-xs text-zinc-900 dark:text-white placeholder-zinc-550 dark:placeholder-[#8696a0] focus:outline-none focus:border-[#06A0F8]/50 transition-colors"
                   />
                 </div>
               </div>
@@ -710,7 +711,7 @@ export default function LandingPage() {
                     onClick={() => setFilterTab(tab)}
                     className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                       filterTab === tab 
-                        ? "bg-[#00b87c]/10 dark:bg-[#00b87c]/15 text-[#00b87c] border border-[#00b87c]/20" 
+                        ? "bg-[#06A0F8]/10 dark:bg-[#06A0F8]/15 text-[#06A0F8] border border-[#06A0F8]/20" 
                         : "text-zinc-550 dark:text-[#8696a0] hover:text-zinc-900 dark:hover:text-white"
                     }`}
                   >
@@ -727,7 +728,7 @@ export default function LandingPage() {
                     onClick={() => setSelectedChatId(chat.id)}
                     className={`w-full flex items-center gap-3 p-2.5 rounded-xl transition-all text-left relative cursor-pointer ${
                       selectedChatId === chat.id 
-                        ? "bg-white dark:bg-[#203c30]/65 border border-zinc-200/60 dark:border-white/10 shadow-md shadow-emerald-500/5 text-zinc-950 dark:text-white" 
+                        ? "bg-white dark:bg-[#203c30]/65 border border-zinc-200/60 dark:border-white/10 shadow-md shadow-blue-500/5 text-zinc-950 dark:text-white" 
                         : "hover:bg-zinc-200/30 dark:hover:bg-white/[0.02] border border-transparent"
                     }`}
                   >
@@ -738,7 +739,7 @@ export default function LandingPage() {
                       </div>
                       
                       {chat.online && (
-                        <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-[#10b981] border-2 border-white dark:border-[#0A100D]" />
+                        <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-[#00D8E3] border-2 border-white dark:border-[#0A0A0A]" />
                       )}
                     </div>
 
@@ -753,7 +754,7 @@ export default function LandingPage() {
                       </div>
                       <p className="text-sm text-zinc-550 dark:text-[#8696a0] truncate">
                         {chat.typing ? (
-                          <span className="text-[#00b87c] flex items-center gap-1 font-bold">
+                          <span className="text-[#06A0F8] flex items-center gap-1 font-bold">
                             typing...
                           </span>
                         ) : (
@@ -764,7 +765,7 @@ export default function LandingPage() {
 
                     {/* Unread badge */}
                     {chat.unread > 0 && (
-                      <span className="flex-shrink-0 min-w-4 h-4 rounded-full bg-[#00b87c] text-xs font-bold flex items-center justify-center px-1 text-white">
+                      <span className="flex-shrink-0 min-w-4 h-4 rounded-full bg-[#06A0F8] text-xs font-bold flex items-center justify-center px-1 text-white">
                         {chat.unread}
                       </span>
                     )}
@@ -773,7 +774,7 @@ export default function LandingPage() {
               </div>
 
               {/* Status Section in Sidebar */}
-              <div className="p-4 border-t border-zinc-200/50 dark:border-white/[0.06] bg-zinc-200/10 dark:bg-[#0A100D]/30">
+              <div className="p-4 border-t border-zinc-200/50 dark:border-white/[0.06] bg-zinc-200/10 dark:bg-[#0A0A0A]/30">
                 <div className="text-xs font-bold text-zinc-550 dark:text-[#8696a0] uppercase tracking-wider mb-2">Recent Status Update</div>
                 <div className="flex gap-3 overflow-x-auto pb-1">
                   {statusStories.map((grp) => (
@@ -784,8 +785,8 @@ export default function LandingPage() {
                     >
                       <div className="relative w-10 h-10">
                         {/* Circular ring indicating status update */}
-                        <div className="absolute inset-0 rounded-full border-2 border-[#10b981] p-0.5 animate-pulse" />
-                        <div className="w-full h-full rounded-full bg-gradient-to-tr from-[#00b87c] to-emerald-950 flex items-center justify-center text-xs font-bold text-white">
+                        <div className="absolute inset-0 rounded-full border-2 border-[#00D8E3] p-0.5 animate-pulse" />
+                        <div className="w-full h-full rounded-full bg-gradient-to-tr from-[#06A0F8] to-blue-950 flex items-center justify-center text-xs font-bold text-white">
                           {grp.avatar}
                         </div>
                       </div>
@@ -797,20 +798,20 @@ export default function LandingPage() {
             </div>
 
             {/* 3. Main Chat View */}
-            <div className="flex-1 flex flex-col bg-zinc-100/30 dark:bg-[#0A100D]/20 relative">
+            <div className="flex-1 flex flex-col bg-zinc-100/30 dark:bg-[#0A0A0A]/20 relative">
               
               {/* Chat Header */}
-              <div className="h-16 px-6 border-b border-zinc-200/50 dark:border-white/[0.06] flex items-center justify-between bg-zinc-50/80 dark:bg-[#0A100D]/45">
+              <div className="h-16 px-6 border-b border-zinc-200/50 dark:border-white/[0.06] flex items-center justify-between bg-zinc-50/80 dark:bg-[#0A0A0A]/45">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#00b87c] to-[#10B981] flex items-center justify-center font-bold text-xs text-white">
+                  <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#06A0F8] to-[#00D8E3] flex items-center justify-center font-bold text-xs text-white">
                     {chats.find(c => c.id === selectedChatId)?.avatar || "CF"}
                   </div>
                   <div>
                     <h3 className="text-xs font-semibold text-zinc-900 dark:text-white">
                       {chats.find(c => c.id === selectedChatId)?.name}
                     </h3>
-                    <p className="text-xs text-[#10B981] flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
+                    <p className="text-xs text-[#00D8E3] flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#00D8E3]" />
                       Online
                     </p>
                   </div>
@@ -819,18 +820,18 @@ export default function LandingPage() {
                 <div className="flex items-center gap-1">
                   <button 
                     onClick={() => setActiveCall({ active: true, type: "voice" })}
-                    className="p-2 text-zinc-550 dark:text-[#8696a0] hover:text-[#00b87c] dark:hover:text-white rounded-lg hover:bg-zinc-200/50 dark:hover:bg-white/[0.04]"
+                    className="p-2 text-zinc-550 dark:text-[#8696a0] hover:text-[#06A0F8] dark:hover:text-white rounded-lg hover:bg-zinc-200/50 dark:hover:bg-white/[0.04]"
                   >
                     <Phone className="w-4 h-4" />
                   </button>
                   <button 
                     onClick={() => setActiveCall({ active: true, type: "video" })}
-                    className="p-2 text-zinc-550 dark:text-[#8696a0] hover:text-[#00b87c] dark:hover:text-white rounded-lg hover:bg-zinc-200/50 dark:hover:bg-white/[0.04]"
+                    className="p-2 text-zinc-550 dark:text-[#8696a0] hover:text-[#06A0F8] dark:hover:text-white rounded-lg hover:bg-zinc-200/50 dark:hover:bg-white/[0.04]"
                   >
                     <Video className="w-4 h-4" />
                   </button>
                   <div className="w-[1px] h-4 bg-zinc-300 dark:bg-white/[0.08] mx-2" />
-                  <button className="p-2 text-zinc-550 dark:text-[#8696a0] hover:text-zinc-900 dark:hover:text-white rounded-lg hover:bg-[#00b87c]/10">
+                  <button className="p-2 text-zinc-550 dark:text-[#8696a0] hover:text-zinc-900 dark:hover:text-white rounded-lg hover:bg-[#06A0F8]/10">
                     <Search className="w-4 h-4" />
                   </button>
                 </div>
@@ -847,7 +848,7 @@ export default function LandingPage() {
                     <div 
                       className={`p-3 rounded-2xl text-xs leading-relaxed shadow-sm relative group ${
                         msg.self 
-                          ? "bg-[#00b87c] text-white rounded-tr-none" 
+                          ? "bg-[#06A0F8] text-white rounded-tr-none" 
                           : "bg-white dark:bg-[#222e35]/30 text-zinc-900 dark:text-white border border-zinc-200/50 dark:border-white/[0.05] rounded-tl-none"
                       }`}
                       style={{
@@ -867,12 +868,12 @@ export default function LandingPage() {
               </div>
 
               {/* Input Area */}
-              <div className="p-4 border-t border-zinc-200/50 dark:border-white/[0.06] bg-zinc-50/50 dark:bg-[#0A100D]/45">
+              <div className="p-4 border-t border-zinc-200/50 dark:border-white/[0.06] bg-zinc-50/50 dark:bg-[#0A0A0A]/45">
                 <form 
                   onSubmit={(e) => { e.preventDefault(); handleSendDesktopMessage(); }}
                   className="relative flex items-center"
                 >
-                  <button type="button" className="p-2 text-zinc-550 dark:text-[#8696a0] hover:text-[#00b87c] dark:hover:text-white transition-colors mr-1">
+                  <button type="button" className="p-2 text-zinc-550 dark:text-[#8696a0] hover:text-[#06A0F8] dark:hover:text-white transition-colors mr-1">
                     <Paperclip className="w-4.5 h-4.5" />
                   </button>
                   <input 
@@ -880,11 +881,11 @@ export default function LandingPage() {
                     value={desktopInput}
                     onChange={(e) => setDesktopInput(e.target.value)}
                     placeholder={`Message ${chats.find(c => c.id === selectedChatId)?.name.split(" ")[0]}...`}
-                    className="flex-1 bg-zinc-200/40 dark:bg-white/[0.04] border border-zinc-200/60 dark:border-white/[0.06] rounded-xl py-2 px-4 text-xs text-zinc-900 dark:text-white placeholder-zinc-500 dark:placeholder-[#8696a0] focus:outline-none focus:border-[#00b87c]/50 transition-colors"
+                    className="flex-1 bg-zinc-200/40 dark:bg-white/[0.04] border border-zinc-200/60 dark:border-white/[0.06] rounded-xl py-2 px-4 text-xs text-zinc-900 dark:text-white placeholder-zinc-500 dark:placeholder-[#8696a0] focus:outline-none focus:border-[#06A0F8]/50 transition-colors"
                   />
                   <button 
                     type="submit"
-                    className="ml-2 w-8 h-8 rounded-lg bg-[#00b87c] hover:bg-[#00b87c]/95 flex items-center justify-center text-white transition-colors"
+                    className="ml-2 w-8 h-8 rounded-lg bg-[#06A0F8] hover:bg-[#06A0F8]/95 flex items-center justify-center text-white transition-colors"
                   >
                     <SendHorizontal className="w-4 h-4" />
                   </button>
@@ -898,19 +899,19 @@ export default function LandingPage() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="absolute inset-0 bg-white/95 dark:bg-[#0A100D]/95 z-20 flex flex-col items-center justify-center p-6"
+                    className="absolute inset-0 bg-white/95 dark:bg-[#0A0A0A]/95 z-20 flex flex-col items-center justify-center p-6"
                   >
                     <div className="relative">
-                      <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-[#00b87c] to-[#10B981] flex items-center justify-center text-2xl font-bold mb-4 shadow-xl shadow-[#00b87c]/20 text-white">
+                      <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-[#06A0F8] to-[#00D8E3] flex items-center justify-center text-2xl font-bold mb-4 shadow-xl shadow-[#06A0F8]/20 text-white">
                         {chats.find(c => c.id === selectedChatId)?.avatar}
                       </div>
-                      <span className="absolute bottom-4 right-2 w-5 h-5 rounded-full bg-[#10b981] border-4 border-white dark:border-[#0A100D] animate-ping" />
+                      <span className="absolute bottom-4 right-2 w-5 h-5 rounded-full bg-[#00D8E3] border-4 border-white dark:border-[#0A0A0A] animate-ping" />
                     </div>
 
                     <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-1">
                       {chats.find(c => c.id === selectedChatId)?.name}
                     </h3>
-                    <p className="text-xs text-[#00b87c] mb-8 font-medium tracking-wide uppercase">
+                    <p className="text-xs text-[#06A0F8] mb-8 font-medium tracking-wide uppercase">
                       {activeCall.type === "voice" ? "HD Voice Call Active" : "HD Video Call Active"}
                     </p>
 
@@ -919,7 +920,7 @@ export default function LandingPage() {
                       {[6, 12, 18, 10, 24, 16, 32, 20, 28, 8, 14, 10].map((h, i) => (
                         <motion.div 
                           key={i}
-                          className="w-1 bg-[#00b87c] rounded-full"
+                          className="w-1 bg-[#06A0F8] rounded-full"
                           animate={{ height: [h, h * 0.3, h] }}
                           transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.05, ease: "easeInOut" }}
                         />
@@ -947,29 +948,29 @@ export default function LandingPage() {
       </section>
 
       {/* --- SECTION 3: SCALE & TRUST (CONSUMER FOCUSED) --- */}
-      <section className="py-14 bg-zinc-100/50 dark:bg-[#070f0b] relative z-10">
+      <section className="py-14 bg-zinc-100/50 dark:bg-[#050505] relative z-10">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 text-center md:text-left items-center">
           <div>
-            <span className="text-xs font-bold text-[#00b87c] tracking-wider uppercase">Scale & Trust</span>
+            <span className="text-xs font-bold text-[#06A0F8] tracking-wider uppercase">Scale & Trust</span>
             <h2 className="text-2xl font-bold mt-2 text-zinc-900 dark:text-white">Connecting all of India</h2>
           </div>
           
           <div className="flex flex-col items-center md:items-start">
-            <span className="text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-[#10b981] mb-2 tabular-nums">
+            <span className="text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-[#00D8E3] mb-2 tabular-nums">
               {usersCount} Crore+
             </span>
             <span className="text-xs text-zinc-550 dark:text-[#8696a0] uppercase font-semibold tracking-wider">Active Users</span>
           </div>
 
           <div className="flex flex-col items-center md:items-start">
-            <span className="text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-[#10b981] mb-2 tabular-nums">
+            <span className="text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-[#00D8E3] mb-2 tabular-nums">
               10M+
             </span>
             <span className="text-xs text-zinc-550 dark:text-[#8696a0] uppercase font-semibold tracking-wider">Daily Messages</span>
           </div>
 
           <div className="flex flex-col items-center md:items-start">
-            <span className="text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-[#10b981] mb-2 tabular-nums">
+            <span className="text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-[#00D8E3] mb-2 tabular-nums">
               28+
             </span>
             <span className="text-xs text-zinc-550 dark:text-[#8696a0] uppercase font-semibold tracking-wider">States Connected</span>
@@ -980,9 +981,9 @@ export default function LandingPage() {
       {/* --- SECTION 4: FEATURES BENTO GRID --- */}
       <section id="features" className="py-16 px-6 max-w-7xl mx-auto z-10 relative">
         <div className="text-center max-w-3xl mx-auto mb-12 flex flex-col items-center gap-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#00b87c]/10 border border-[#00b87c]/20 rounded-full w-fit">
-            <Zap className="w-3.5 h-3.5 text-[#00b87c]" />
-            <span className="text-sm font-semibold uppercase tracking-[0.15em] text-[#00b87c]">Core Features</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#06A0F8]/10 border border-[#06A0F8]/20 rounded-full w-fit">
+            <Zap className="w-3.5 h-3.5 text-[#06A0F8]" />
+            <span className="text-sm font-semibold uppercase tracking-[0.15em] text-[#06A0F8]">Core Features</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight text-zinc-900 dark:text-white">
             Engineered for the Speed of Thought.
@@ -998,10 +999,10 @@ export default function LandingPage() {
           {/* Card 1: Real-time messaging (2 columns span) */}
           <div 
             onMouseMove={handleMouseMove}
-            className="md:col-span-2 rounded-2xl bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#00b87c]/60 p-8 flex flex-col justify-between h-[420px] overflow-hidden group relative cf-card-glow transition-all duration-300 hover:scale-[1.02] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl dark:hover:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_24px_rgba(0,184,124,0.15)]"
+            className="md:col-span-2 rounded-2xl bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/60 p-8 flex flex-col justify-between h-[420px] overflow-hidden group relative cf-card-glow transition-all duration-300 hover:scale-[1.02] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl dark:hover:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_24px_rgba(6, 160, 248,0.15)]"
           >
             <div className="z-10">
-              <span className="text-xs font-bold uppercase tracking-[0.12em] text-[#00b87c]">Speed & Delivery</span>
+              <span className="text-xs font-bold uppercase tracking-[0.12em] text-[#06A0F8]">Speed & Delivery</span>
               <h3 className="text-2xl font-bold text-zinc-950 dark:text-white tracking-tight mt-2 mb-3">Real-Time Messaging</h3>
               <p className="text-base text-zinc-600 dark:text-[#8696a0] max-w-md">
                 No spinners, no queues. Orbix processes events globally in less than 40ms, making conversations feel as natural as talking in person.
@@ -1009,34 +1010,34 @@ export default function LandingPage() {
             </div>
 
             {/* Illustration: Animated typing & speed checks */}
-            <div className="absolute right-8 bottom-4 w-72 h-44 bg-zinc-100/90 dark:bg-[#020705]/80 border border-zinc-200/60 dark:border-white/[0.06] rounded-xl p-4 flex flex-col justify-between shadow-2xl z-10">
+            <div className="absolute right-8 bottom-4 w-72 h-44 bg-zinc-100/90 dark:bg-[#000000]/80 border border-zinc-200/60 dark:border-white/[0.06] rounded-xl p-4 flex flex-col justify-between shadow-2xl z-10">
               <div className="flex justify-between items-center border-b border-zinc-200/60 dark:border-white/[0.06] pb-2">
-                <span className="text-xs font-mono text-[#00b87c]">LATENCY</span>
-                <span className="text-xs bg-[#00b87c]/10 text-[#00b87c] dark:bg-[#10b981]/20 dark:text-[#10b981] px-2 py-0.5 rounded font-mono">12ms OK</span>
+                <span className="text-xs font-mono text-[#06A0F8]">LATENCY</span>
+                <span className="text-xs bg-[#06A0F8]/10 text-[#06A0F8] dark:bg-[#00D8E3]/20 dark:text-[#00D8E3] px-2 py-0.5 rounded font-mono">12ms OK</span>
               </div>
               <div className="space-y-2 py-3">
                 <div className="flex gap-2">
-                  <div className="w-6 h-6 rounded-full bg-[#00b87c] flex items-center justify-center text-xs font-bold text-white">PD</div>
+                  <div className="w-6 h-6 rounded-full bg-[#06A0F8] flex items-center justify-center text-xs font-bold text-white">PD</div>
                   <div className="bg-white/80 dark:bg-white/[0.05] p-2 rounded-lg text-xs max-w-[80%] text-zinc-900 dark:text-white border border-zinc-200 dark:border-transparent">Pushing the WebRTC updates.</div>
                 </div>
                 <div className="flex gap-2 justify-end">
-                  <div className="bg-[#00b87c] p-2 rounded-lg text-xs max-w-[80%] text-white flex items-center gap-1">
+                  <div className="bg-[#06A0F8] p-2 rounded-lg text-xs max-w-[80%] text-white flex items-center gap-1">
                     Received! ⚡
                     <span className="text-sm font-bold select-none leading-none tracking-tight text-[#34b7f1] ml-1">✓✓</span>
                   </div>
                 </div>
               </div>
               <div className="text-xs text-zinc-500 dark:text-[#8696a0] font-mono flex items-center gap-2">
-                <Activity className="w-3 h-3 text-[#00b87c] animate-pulse" />
+                <Activity className="w-3 h-3 text-[#06A0F8] animate-pulse" />
                 Live socket connection active
               </div>
             </div>
           </div>
 
           {/* Card 2: HD Calls */}
-          <div className="rounded-2xl bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#00b87c]/60 p-8 flex flex-col justify-between h-[420px] overflow-hidden group relative cf-card-glow transition-all duration-300 hover:scale-[1.02] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl dark:hover:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_24px_rgba(0,184,124,0.15)]">
+          <div className="rounded-2xl bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/60 p-8 flex flex-col justify-between h-[420px] overflow-hidden group relative cf-card-glow transition-all duration-300 hover:scale-[1.02] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl dark:hover:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_24px_rgba(6, 160, 248,0.15)]">
             <div className="z-10">
-              <span className="text-xs font-bold text-[#00b87c] uppercase tracking-wider">Voice & Video</span>
+              <span className="text-xs font-bold text-[#06A0F8] uppercase tracking-wider">Voice & Video</span>
               <h3 className="text-2xl font-bold text-zinc-900 dark:text-white mt-2 mb-3">HD WebRTC Calls</h3>
               <p className="text-base text-zinc-600 dark:text-[#8696a0]">
                 Crystal clear 1080p video calls and Spatial Audio voice channels.
@@ -1045,17 +1046,17 @@ export default function LandingPage() {
 
             {/* Illustration: Glowing speaker and animated mic scale */}
             <div className="relative h-44 w-full flex items-center justify-center z-10">
-              <div className="w-20 h-20 rounded-full bg-[#00b87c]/10 border border-[#00b87c]/30 flex items-center justify-center animate-ping absolute" />
-              <div className="w-16 h-16 rounded-full bg-[#00b87c] flex items-center justify-center shadow-lg shadow-[#00b87c]/30 relative z-20">
+              <div className="w-20 h-20 rounded-full bg-[#06A0F8]/10 border border-[#06A0F8]/30 flex items-center justify-center animate-ping absolute" />
+              <div className="w-16 h-16 rounded-full bg-[#06A0F8] flex items-center justify-center shadow-lg shadow-[#06A0F8]/30 relative z-20">
                 <Volume2 className="w-7 h-7 text-white" />
               </div>
             </div>
           </div>
 
           {/* Card 3: Status Updates */}
-          <div className="rounded-2xl bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#00b87c]/60 p-8 flex flex-col justify-between h-[420px] overflow-hidden group relative cf-card-glow transition-all duration-300 hover:scale-[1.02] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl dark:hover:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_24px_rgba(0,184,124,0.15)]">
+          <div className="rounded-2xl bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/60 p-8 flex flex-col justify-between h-[420px] overflow-hidden group relative cf-card-glow transition-all duration-300 hover:scale-[1.02] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl dark:hover:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_24px_rgba(6, 160, 248,0.15)]">
             <div className="z-10">
-              <span className="text-sm font-semibold uppercase tracking-[0.12em] text-[#00b87c]">Stories</span>
+              <span className="text-sm font-semibold uppercase tracking-[0.12em] text-[#06A0F8]">Stories</span>
               <h3 className="text-2xl font-bold text-zinc-950 dark:text-white tracking-tight mt-2 mb-3">Swipable Statuses</h3>
               <p className="text-sm text-zinc-600 dark:text-zinc-300">
                 Share pictures, videos, or formatted text updates that disappear after 24 hours.
@@ -1063,22 +1064,22 @@ export default function LandingPage() {
             </div>
 
             {/* Illustration: Status Circle ring */}
-            <div className="bg-zinc-100/90 dark:bg-[#020705]/85 border border-zinc-200/60 dark:border-white/[0.06] rounded-xl p-4 flex justify-around mt-4 z-10 shadow-sm">
+            <div className="bg-zinc-100/90 dark:bg-[#000000]/85 border border-zinc-200/60 dark:border-white/[0.06] rounded-xl p-4 flex justify-around mt-4 z-10 shadow-sm">
               <div className="relative w-12 h-12">
-                <div className="absolute inset-0 rounded-full border-2 border-dashed border-[#10b981]" />
-                <div className="absolute inset-1 rounded-full bg-[#00b87c] flex items-center justify-center text-xs font-bold text-white">PD</div>
+                <div className="absolute inset-0 rounded-full border-2 border-dashed border-[#00D8E3]" />
+                <div className="absolute inset-1 rounded-full bg-[#06A0F8] flex items-center justify-center text-xs font-bold text-white">PD</div>
               </div>
               <div className="relative w-12 h-12">
-                <div className="absolute inset-0 rounded-full border-2 border-[#10b981]" />
+                <div className="absolute inset-0 rounded-full border-2 border-[#00D8E3]" />
                 <div className="absolute inset-1 rounded-full bg-zinc-400 dark:bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-900 dark:text-white">KT</div>
               </div>
             </div>
           </div>
 
           {/* Card 4: End-to-end Encryption */}
-          <div className="rounded-2xl bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#00b87c]/60 p-8 flex flex-col justify-between h-[420px] overflow-hidden group relative cf-card-glow transition-all duration-300 hover:scale-[1.02] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl dark:hover:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_24px_rgba(0,184,124,0.15)]">
+          <div className="rounded-2xl bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/60 p-8 flex flex-col justify-between h-[420px] overflow-hidden group relative cf-card-glow transition-all duration-300 hover:scale-[1.02] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl dark:hover:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_24px_rgba(6, 160, 248,0.15)]">
             <div className="z-10">
-              <span className="text-xs font-bold text-[#00b87c] uppercase tracking-wider">Security</span>
+              <span className="text-xs font-bold text-[#06A0F8] uppercase tracking-wider">Security</span>
               <h3 className="text-2xl font-bold text-zinc-900 dark:text-white mt-2 mb-3">End-to-End Cryptography</h3>
               <p className="text-sm text-zinc-600 dark:text-zinc-300">
                 Encryption keys reside locally on-device. Zero knowledge, maximum data safety.
@@ -1086,9 +1087,9 @@ export default function LandingPage() {
             </div>
 
             {/* Scanning Lock Illustration */}
-            <div className="bg-zinc-100/90 dark:bg-[#020705]/85 border border-zinc-200/60 dark:border-white/[0.06] rounded-xl p-4 flex items-center justify-between mt-4 z-10 shadow-sm">
+            <div className="bg-zinc-100/90 dark:bg-[#000000]/85 border border-zinc-200/60 dark:border-white/[0.06] rounded-xl p-4 flex items-center justify-between mt-4 z-10 shadow-sm">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-tr from-[#00b87c] to-[#10B981] flex items-center justify-center text-white">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-tr from-[#06A0F8] to-[#00D8E3] flex items-center justify-center text-white">
                   <Lock className="w-5 h-5" />
                 </div>
                 <div>
@@ -1106,23 +1107,23 @@ export default function LandingPage() {
           </div>
 
           {/* Card 5: Message Editing & Starring */}
-          <div className="rounded-2xl bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#00b87c]/60 p-8 flex flex-col justify-between h-[420px] overflow-hidden group relative cf-card-glow transition-all duration-300 hover:scale-[1.02] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl dark:hover:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_24px_rgba(0,184,124,0.15)]">
+          <div className="rounded-2xl bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/60 p-8 flex flex-col justify-between h-[420px] overflow-hidden group relative cf-card-glow transition-all duration-300 hover:scale-[1.02] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl dark:hover:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_24px_rgba(6, 160, 248,0.15)]">
             <div className="z-10">
-              <span className="text-xs font-bold text-[#00b87c] uppercase tracking-wider">Productivity</span>
+              <span className="text-xs font-bold text-[#06A0F8] uppercase tracking-wider">Productivity</span>
               <h3 className="text-2xl font-bold text-zinc-900 dark:text-white mt-2 mb-3">Editing & Starring</h3>
               <p className="text-sm text-zinc-650 dark:text-[#8696a0]">
                 Correct typos or bookmark important messages with star indicators.
               </p>
             </div>
 
-            <div className="bg-zinc-100/90 dark:bg-[#020705]/85 border border-zinc-200/60 dark:border-white/[0.06] rounded-xl p-3.5 mt-4 z-10 space-y-2 shadow-sm">
+            <div className="bg-zinc-100/90 dark:bg-[#000000]/85 border border-zinc-200/60 dark:border-white/[0.06] rounded-xl p-3.5 mt-4 z-10 space-y-2 shadow-sm">
               <div className="flex items-center justify-between text-sm bg-white dark:bg-white/[0.03] border border-zinc-200 dark:border-white/[0.05] p-2 rounded-lg text-zinc-700 dark:text-zinc-300">
                 <span className="truncate">This is a message with a typo...</span>
-                <Pencil className="w-3.5 h-3.5 text-[#00b87c] flex-shrink-0" />
+                <Pencil className="w-3.5 h-3.5 text-[#06A0F8] flex-shrink-0" />
               </div>
-              <div className="flex items-center justify-between text-sm bg-[#00b87c]/10 border border-[#00b87c]/20 p-2 rounded-lg text-[#00b87c] dark:text-white">
+              <div className="flex items-center justify-between text-sm bg-[#06A0F8]/10 border border-[#06A0F8]/20 p-2 rounded-lg text-[#06A0F8] dark:text-white">
                 <span className="truncate font-semibold">This is a corrected message</span>
-                <span className="text-xs text-[#00b87c] font-semibold flex items-center gap-1">
+                <span className="text-xs text-[#06A0F8] font-semibold flex items-center gap-1">
                   (edited)
                   <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
                 </span>
@@ -1134,13 +1135,13 @@ export default function LandingPage() {
       </section>
 
       {/* --- SECTION 5: DEVICE SHOWCASE --- */}
-      <section className="py-16 px-6 bg-zinc-100/50 dark:bg-[#0A100D]/20 relative z-10 overflow-hidden">
+      <section className="py-16 px-6 bg-zinc-100/50 dark:bg-[#0A0A0A]/20 relative z-10 overflow-hidden">
         {/* Decorative Lighting behind devices */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-[#00b87c]/6 dark:bg-[#00b87c]/8 filter blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-[#06A0F8]/6 dark:bg-[#06A0F8]/8 filter blur-[100px] rounded-full pointer-events-none" />
 
         <div className="max-w-7xl mx-auto flex flex-col items-center">
           <div className="text-center max-w-2xl mx-auto mb-10">
-            <span className="text-xs font-bold text-[#00b87c] uppercase tracking-wider">Multi-Device Cloud Sync</span>
+            <span className="text-xs font-bold text-[#06A0F8] uppercase tracking-wider">Multi-Device Cloud Sync</span>
             <h2 className="text-4xl md:text-5xl font-extrabold text-zinc-900 dark:text-white mt-2 mb-4">
               A Unified Fluid Experience on Any Screen.
             </h2>
@@ -1160,8 +1161,8 @@ export default function LandingPage() {
                 <div className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
                 <span className="text-xs text-zinc-500 dark:text-[#8696a0] ml-2 font-mono">web.orbix.app</span>
               </div>
-              <div className="aspect-[16/10] bg-zinc-50 dark:bg-[#020705] rounded-lg overflow-hidden relative flex flex-col items-center justify-center p-6 border border-zinc-200/50 dark:border-white/[0.04]">
-                <Laptop className="w-12 h-12 text-[#00b87c] mb-3" />
+              <div className="aspect-[16/10] bg-zinc-50 dark:bg-[#000000] rounded-lg overflow-hidden relative flex flex-col items-center justify-center p-6 border border-zinc-200/50 dark:border-white/[0.04]">
+                <Laptop className="w-12 h-12 text-[#06A0F8] mb-3" />
                 <span className="text-xs font-bold text-zinc-900 dark:text-white">macOS & Windows Client</span>
                 <span className="text-xs text-zinc-500 dark:text-[#8696a0] mt-1">120 FPS Rendering</span>
               </div>
@@ -1169,8 +1170,8 @@ export default function LandingPage() {
 
             {/* 2. Tablet Mockup frame */}
             <div className="w-72 bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] rounded-2xl p-2.5 shadow-2xl dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] relative group hover:scale-[1.03] hover:rotate-1 transition-all duration-500">
-              <div className="aspect-[4/3] bg-zinc-50 dark:bg-[#020705] rounded-xl overflow-hidden relative flex flex-col items-center justify-center p-6 border border-zinc-200/50 dark:border-white/[0.04]">
-                <Tablet className="w-10 h-10 text-[#10B981] mb-3" />
+              <div className="aspect-[4/3] bg-zinc-50 dark:bg-[#000000] rounded-xl overflow-hidden relative flex flex-col items-center justify-center p-6 border border-zinc-200/50 dark:border-white/[0.04]">
+                <Tablet className="w-10 h-10 text-[#00D8E3] mb-3" />
                 <span className="text-xs font-bold text-zinc-900 dark:text-white">iPadOS & Android Tablet</span>
                 <span className="text-xs text-zinc-500 dark:text-[#8696a0] mt-1">Optimized Grid View</span>
               </div>
@@ -1179,7 +1180,7 @@ export default function LandingPage() {
             {/* 3. Mobile Mockup frame */}
             <div className="w-56 bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] rounded-[2rem] p-3 shadow-2xl dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] relative group hover:scale-[1.04] hover:-rotate-2 transition-all duration-500">
               <div className="w-20 h-4 bg-zinc-200 dark:bg-black rounded-full mx-auto mb-2" />
-              <div className="aspect-[9/19] bg-zinc-50 dark:bg-[#020705] rounded-[1.5rem] overflow-hidden relative flex flex-col items-center justify-center p-4 border border-zinc-200/50 dark:border-white/[0.04]">
+              <div className="aspect-[9/19] bg-zinc-50 dark:bg-[#000000] rounded-[1.5rem] overflow-hidden relative flex flex-col items-center justify-center p-4 border border-zinc-200/50 dark:border-white/[0.04]">
                 <Smartphone className="w-8 h-8 text-[#FF4F8C] mb-3" />
                 <span className="text-xs font-bold text-center text-zinc-900 dark:text-white">iOS & Android App</span>
                 <span className="text-xs text-zinc-500 dark:text-[#8696a0] mt-1 text-center">FaceID Authentication</span>
@@ -1196,9 +1197,9 @@ export default function LandingPage() {
           
           {/* Left Text */}
           <div className="lg:col-span-5 flex flex-col gap-6 text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#00b87c]/10 border border-[#00b87c]/20 rounded-full w-fit">
-              <Sparkles className="w-3.5 h-3.5 text-[#00b87c]" />
-              <span className="text-xs font-bold uppercase tracking-wider text-[#00b87c]">Interactive Sandbox</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#06A0F8]/10 border border-[#06A0F8]/20 rounded-full w-fit">
+              <Sparkles className="w-3.5 h-3.5 text-[#06A0F8]" />
+              <span className="text-xs font-bold uppercase tracking-wider text-[#06A0F8]">Interactive Sandbox</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-extrabold text-zinc-900 dark:text-white">
               Try the Chat Experience.
@@ -1218,13 +1219,13 @@ export default function LandingPage() {
                 <div>
                   <h4 className="text-sm font-semibold text-zinc-900 dark:text-white">Starred Bookmarks</h4>
                   <p className="text-xs text-zinc-650 dark:text-[#8696a0]">
-                    Star messages to save them to your bookmarks. Currently starred: <span className="text-[#00b87c] dark:text-white font-bold">{starredMessages.length}</span>
+                    Star messages to save them to your bookmarks. Currently starred: <span className="text-[#06A0F8] dark:text-white font-bold">{starredMessages.length}</span>
                   </p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="w-5 h-5 rounded-full bg-[#10B981]/20 flex items-center justify-center mt-0.5">
-                  <Check className="w-3 h-3 text-[#10B981]" />
+                <div className="w-5 h-5 rounded-full bg-[#00D8E3]/20 flex items-center justify-center mt-0.5">
+                  <Check className="w-3 h-3 text-[#00D8E3]" />
                 </div>
                 <div>
                   <h4 className="text-sm font-semibold text-zinc-900 dark:text-white">Interactive Editing</h4>
@@ -1244,7 +1245,7 @@ export default function LandingPage() {
                   initial={{ opacity: 0, x: 50 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 50 }}
-                  className="absolute inset-y-0 right-0 w-64 bg-white dark:bg-[#0A100D] border-l border-zinc-200/80 dark:border-white/[0.08] z-30 p-4 flex flex-col shadow-lg"
+                  className="absolute inset-y-0 right-0 w-64 bg-white dark:bg-[#0A0A0A] border-l border-zinc-200/80 dark:border-white/[0.08] z-30 p-4 flex flex-col shadow-lg"
                 >
                   <div className="flex justify-between items-center border-b border-zinc-200/55 dark:border-white/[0.06] pb-3 mb-4">
                     <h3 className="text-xs font-bold text-amber-500 flex items-center gap-1.5">
@@ -1264,7 +1265,7 @@ export default function LandingPage() {
                         if (!msg) return null;
                         return (
                           <div key={id} className="bg-zinc-100 dark:bg-white/[0.03] border border-zinc-200 dark:border-white/[0.05] p-2.5 rounded-lg">
-                            <div className="text-xs text-[#00b87c] font-bold">{msg.sender}</div>
+                            <div className="text-xs text-[#06A0F8] font-bold">{msg.sender}</div>
                             <div className="text-xs text-zinc-800 dark:text-white mt-1 leading-normal">{msg.text || "[Media Note]"}</div>
                           </div>
                         );
@@ -1276,13 +1277,13 @@ export default function LandingPage() {
             </AnimatePresence>
 
             {/* Sandbox Header */}
-            <div className="px-6 py-4 border-b border-zinc-200/50 dark:border-white/[0.06] flex items-center justify-between bg-zinc-50/50 dark:bg-[#0A100D]/30">
+            <div className="px-6 py-4 border-b border-zinc-200/50 dark:border-white/[0.06] flex items-center justify-between bg-zinc-50/50 dark:bg-[#0A0A0A]/30">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#FF4F8C] to-[#6D5DF6] flex items-center justify-center text-xs font-bold text-white">PR</div>
                 <div>
                   <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">Priya (Marketing)</h3>
-                  <span className="text-xs text-[#10B981] flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
+                  <span className="text-xs text-[#00D8E3] flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#00D8E3] animate-pulse" />
                     online
                   </span>
                 </div>
@@ -1308,7 +1309,7 @@ export default function LandingPage() {
                   <div 
                     className={`p-3.5 rounded-2xl text-xs leading-relaxed shadow-sm relative group ${
                       msg.self 
-                        ? "bg-[#00b87c] text-white rounded-tr-none" 
+                        ? "bg-[#06A0F8] text-white rounded-tr-none" 
                         : "bg-zinc-100 dark:bg-white/[0.05] text-zinc-900 dark:text-white border border-zinc-200/50 dark:border-white/[0.06] rounded-tl-none"
                     }`}
                     style={{
@@ -1326,16 +1327,16 @@ export default function LandingPage() {
                         />
                         <div className="flex gap-2 justify-end">
                           <button onClick={() => setEditingMessageId(null)} className="text-xs text-zinc-500 dark:text-[#8696a0] cursor-pointer">Cancel</button>
-                          <button onClick={() => handleSaveEdit(msg.id)} className="text-xs text-[#00b87c] font-bold cursor-pointer">Save</button>
+                          <button onClick={() => handleSaveEdit(msg.id)} className="text-xs text-[#06A0F8] font-bold cursor-pointer">Save</button>
                         </div>
                       </div>
                     ) : msg.media?.type === "AUDIO" ? (
                       <div className="flex items-center gap-3 w-56">
                         <button 
                           onClick={() => setVoicePlaying(!voicePlaying)}
-                          className="w-8 h-8 rounded-full bg-[#00b87c]/20 text-[#00b87c] hover:bg-[#00b87c]/30 flex items-center justify-center transition-all cursor-pointer"
+                          className="w-8 h-8 rounded-full bg-[#06A0F8]/20 text-[#06A0F8] hover:bg-[#06A0F8]/30 flex items-center justify-center transition-all cursor-pointer"
                         >
-                          {voicePlaying ? <Square className="w-3.5 h-3.5 fill-[#00b87c]" /> : <Play className="w-3.5 h-3.5 fill-[#00b87c]" />}
+                          {voicePlaying ? <Square className="w-3.5 h-3.5 fill-[#06A0F8]" /> : <Play className="w-3.5 h-3.5 fill-[#06A0F8]" />}
                         </button>
                         <div className="flex-1">
                           <div className="flex items-center gap-1 h-6">
@@ -1343,7 +1344,7 @@ export default function LandingPage() {
                               <div 
                                 key={idx}
                                 className={`w-[2px] rounded-full transition-colors ${
-                                  voicePlaying && voiceProgress > (idx / 15) * 100 ? "bg-[#00b87c]" : "bg-zinc-300 dark:bg-white/20"
+                                  voicePlaying && voiceProgress > (idx / 15) * 100 ? "bg-[#06A0F8]" : "bg-zinc-300 dark:bg-white/20"
                                 }`}
                                 style={{ height: `${h}px` }}
                               />
@@ -1364,7 +1365,7 @@ export default function LandingPage() {
 
                     {/* Hover Options Bar (Star, Edit, Delete, Reply) */}
                     {editingMessageId !== msg.id && (
-                      <div className="absolute top-1/2 -right-24 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1.5 bg-white dark:bg-[#0A100D] border border-zinc-200 dark:border-white/[0.08] p-1.5 rounded-lg shadow-xl z-20 select-none">
+                      <div className="absolute top-1/2 -right-24 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1.5 bg-white dark:bg-[#0A0A0A] border border-zinc-200 dark:border-white/[0.08] p-1.5 rounded-lg shadow-xl z-20 select-none">
                         <button 
                           onClick={() => handleToggleStar(msg.id)}
                           className={`text-xs hover:scale-125 transition-all cursor-pointer ${msg.isStarred ? "text-amber-500" : "text-zinc-500 dark:text-[#8696a0] hover:text-zinc-900 dark:hover:text-white"}`}
@@ -1445,7 +1446,7 @@ export default function LandingPage() {
             </div>
 
             {/* Input form */}
-            <div className="p-4 border-t border-zinc-200/50 dark:border-white/[0.06] bg-zinc-50/50 dark:bg-[#0A100D]/30">
+            <div className="p-4 border-t border-zinc-200/50 dark:border-white/[0.06] bg-zinc-50/50 dark:bg-[#0A0A0A]/30">
               <form 
                 onSubmit={(e) => { e.preventDefault(); handleSendSandboxMessage(); }}
                 className="relative flex items-center"
@@ -1455,11 +1456,11 @@ export default function LandingPage() {
                   value={sandboxInput}
                   onChange={(e) => setSandboxInput(e.target.value)}
                   placeholder="Type a message to Priya..."
-                  className="flex-1 bg-zinc-200/40 dark:bg-white/[0.04] border border-zinc-200/60 dark:border-white/[0.06] rounded-xl py-3.5 pl-4 pr-12 text-xs text-zinc-900 dark:text-white placeholder-zinc-500 dark:placeholder-[#8696a0] focus:outline-none focus:border-[#00b87c]/50 transition-colors"
+                  className="flex-1 bg-zinc-200/40 dark:bg-white/[0.04] border border-zinc-200/60 dark:border-white/[0.06] rounded-xl py-3.5 pl-4 pr-12 text-xs text-zinc-900 dark:text-white placeholder-zinc-500 dark:placeholder-[#8696a0] focus:outline-none focus:border-[#06A0F8]/50 transition-colors"
                 />
                 <button 
                   type="submit"
-                  className="absolute right-2 w-10 h-10 rounded-lg bg-[#00b87c] hover:bg-[#00b87c]/95 flex items-center justify-center text-white transition-colors cursor-pointer"
+                  className="absolute right-2 w-10 h-10 rounded-lg bg-[#06A0F8] hover:bg-[#06A0F8]/95 flex items-center justify-center text-white transition-colors cursor-pointer"
                 >
                   <Send className="w-4.5 h-4.5" />
                 </button>
@@ -1471,13 +1472,13 @@ export default function LandingPage() {
       </section>
 
       {/* --- SECTION 7: STATUS/STORIES SHOWCASE --- */}
-      <section id="communities" className="py-16 px-6 bg-zinc-100/50 dark:bg-[#0A100D]/30 relative z-10">
+      <section id="communities" className="py-16 px-6 bg-zinc-100/50 dark:bg-[#0A0A0A]/30 relative z-10">
         <div className="max-w-7xl mx-auto flex flex-col items-center">
           
           <div className="text-center max-w-2xl mx-auto mb-12 flex flex-col items-center gap-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#00b87c]/10 border border-[#00b87c]/20 rounded-full w-fit">
-              <CircleDot className="w-3.5 h-3.5 text-[#00b87c]" />
-              <span className="text-xs font-bold uppercase tracking-wider text-[#00b87c]">24-Hour Stories</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#06A0F8]/10 border border-[#06A0F8]/20 rounded-full w-fit">
+              <CircleDot className="w-3.5 h-3.5 text-[#06A0F8]" />
+              <span className="text-xs font-bold uppercase tracking-wider text-[#06A0F8]">24-Hour Stories</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-extrabold text-zinc-900 dark:text-white">
               Status & Stories Sharing.
@@ -1491,7 +1492,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 w-full max-w-3xl items-center">
             
             {/* Story update feeds */}
-            <div className="bg-white dark:bg-[#0A100D] border border-zinc-200/80 dark:border-white/[0.08] p-6 rounded-2xl space-y-4 shadow-xl">
+            <div className="bg-white dark:bg-[#0A0A0A] border border-zinc-200/80 dark:border-white/[0.08] p-6 rounded-2xl space-y-4 shadow-xl">
               <h3 className="text-xs font-bold text-zinc-500 dark:text-[#8696a0] uppercase tracking-wider mb-2">Recent Statuses</h3>
               
               {statusStories.map((grp) => (
@@ -1509,7 +1510,7 @@ export default function LandingPage() {
                           cy="22" 
                           r="19" 
                           fill="transparent" 
-                          stroke={grp.viewedCount === grp.count ? "#9ca3af" : "#10b981"}
+                          stroke={grp.viewedCount === grp.count ? "#9ca3af" : "#00D8E3"}
                           strokeWidth="2.5"
                           strokeDasharray="119"
                           className="transition-all"
@@ -1524,13 +1525,13 @@ export default function LandingPage() {
                       <p className="text-xs text-zinc-500 dark:text-[#8696a0] mt-0.5">{grp.count} status updates</p>
                     </div>
                   </div>
-                  <button className="text-xs font-bold text-[#00b87c] bg-[#00b87c]/10 px-2.5 py-1.5 rounded cursor-pointer">View</button>
+                  <button className="text-xs font-bold text-[#06A0F8] bg-[#06A0F8]/10 px-2.5 py-1.5 rounded cursor-pointer">View</button>
                 </div>
               ))}
             </div>
 
             {/* Active Story Viewer Mockup */}
-            <div className="w-64 h-[420px] mx-auto rounded-[2rem] border-8 border-zinc-200 dark:border-[#0A100D] bg-zinc-900 dark:bg-zinc-950 shadow-2xl relative overflow-hidden flex flex-col justify-between p-4">
+            <div className="w-64 h-[420px] mx-auto rounded-[2rem] border-8 border-zinc-200 dark:border-[#0A0A0A] bg-zinc-900 dark:bg-zinc-950 shadow-2xl relative overflow-hidden flex flex-col justify-between p-4">
               
               {activeStoryGroup ? (
                 <>
@@ -1539,7 +1540,7 @@ export default function LandingPage() {
                     {activeStoryGroup.stories.map((_, idx) => (
                       <div key={idx} className="flex-1 h-1 bg-white/20 rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-[#10b981] transition-all duration-150" 
+                          className="h-full bg-[#00D8E3] transition-all duration-150" 
                           style={{ 
                             width: activeStoryIndex === idx 
                               ? `${storyProgress}%` 
@@ -1554,7 +1555,7 @@ export default function LandingPage() {
 
                   {/* Header info */}
                   <div className="flex items-center gap-2.5 z-10 mt-2">
-                    <div className="w-8 h-8 rounded-full bg-[#00b87c] flex items-center justify-center text-xs font-bold text-white">
+                    <div className="w-8 h-8 rounded-full bg-[#06A0F8] flex items-center justify-center text-xs font-bold text-white">
                       {activeStoryGroup.avatar}
                     </div>
                     <div>
@@ -1575,7 +1576,7 @@ export default function LandingPage() {
                 </>
               ) : (
                 <div className="flex-1 flex flex-col items-center justify-center text-center p-6 text-zinc-400 dark:text-[#8696a0]">
-                  <CircleDot className="w-10 h-10 text-[#00b87c] animate-pulse mb-3" />
+                  <CircleDot className="w-10 h-10 text-[#06A0F8] animate-pulse mb-3" />
                   <h4 className="text-sm font-bold text-zinc-900 dark:text-white">Story Player</h4>
                   <p className="text-xs mt-1">Select a contact to view their active status story updates.</p>
                 </div>
@@ -1595,10 +1596,10 @@ export default function LandingPage() {
           <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-6">
             
             {/* File uploader panel */}
-            <div className="bg-white/85 dark:bg-[#0A100D]/70 border border-zinc-200/50 dark:border-white/[0.08] rounded-xl p-6 flex flex-col justify-between h-[250px] shadow-xl relative overflow-hidden">
+            <div className="bg-white/85 dark:bg-[#0A0A0A]/70 border border-zinc-200/50 dark:border-white/[0.08] rounded-xl p-6 flex flex-col justify-between h-[250px] shadow-xl relative overflow-hidden">
               <div>
                 <div className="flex justify-between items-center mb-4">
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#00b87c]">Shared Files</span>
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#06A0F8]">Shared Files</span>
                   <button 
                     onClick={startMockUpload}
                     className="p-1.5 rounded-lg bg-zinc-100 hover:bg-zinc-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-zinc-300/60 dark:border-white/[0.08] text-zinc-500 dark:text-[#8696a0] hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer"
@@ -1609,13 +1610,13 @@ export default function LandingPage() {
                 
                 {/* Upload indicator */}
                 {uploadProgress !== null ? (
-                  <div className="bg-zinc-50 dark:bg-[#020705] border border-zinc-200/60 dark:border-white/[0.06] rounded-lg p-3">
+                  <div className="bg-zinc-50 dark:bg-[#000000] border border-zinc-200/60 dark:border-white/[0.06] rounded-lg p-3">
                     <div className="flex justify-between items-center text-xs text-zinc-500 dark:text-[#8696a0] mb-2 font-mono">
                       <span>Uploading Interactive_Spec_Sheet...</span>
                       <span>{uploadProgress}%</span>
                     </div>
                     <div className="w-full h-1.5 bg-zinc-200 dark:bg-white/[0.08] rounded-full overflow-hidden">
-                      <div className="h-full bg-[#00b87c] transition-all" style={{ width: `${uploadProgress}%` }} />
+                      <div className="h-full bg-[#06A0F8] transition-all" style={{ width: `${uploadProgress}%` }} />
                     </div>
                   </div>
                 ) : (
@@ -1637,13 +1638,13 @@ export default function LandingPage() {
               </div>
 
               <div className="text-xs text-zinc-500 dark:text-[#8696a0] flex items-center gap-1">
-                <Activity className="w-3 h-3 text-[#10B981]" />
+                <Activity className="w-3 h-3 text-[#00D8E3]" />
                 Direct peer-to-peer file sharing
               </div>
             </div>
 
             {/* Media Lightbox preview card */}
-            <div className="bg-white/85 dark:bg-[#0A100D]/70 border border-zinc-200/50 dark:border-white/[0.08] rounded-xl p-6 flex flex-col justify-between h-[250px] shadow-xl">
+            <div className="bg-white/85 dark:bg-[#0A0A0A]/70 border border-zinc-200/50 dark:border-white/[0.08] rounded-xl p-6 flex flex-col justify-between h-[250px] shadow-xl">
               <div>
                 <span className="text-xs font-bold uppercase tracking-wider text-[#34b7f1]">Media Lightbox Viewer</span>
                 
@@ -1677,9 +1678,9 @@ export default function LandingPage() {
 
           {/* Right Text */}
           <div className="lg:col-span-5 flex flex-col gap-6 text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#00b87c]/10 border border-[#00b87c]/20 rounded-full w-fit">
-              <Share2 className="w-3.5 h-3.5 text-[#00b87c]" />
-              <span className="text-xs font-bold uppercase tracking-wider text-[#00b87c]">Rich Collaboration</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#06A0F8]/10 border border-[#06A0F8]/20 rounded-full w-fit">
+              <Share2 className="w-3.5 h-3.5 text-[#06A0F8]" />
+              <span className="text-xs font-bold uppercase tracking-wider text-[#06A0F8]">Rich Collaboration</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-extrabold text-zinc-900 dark:text-white">
               Media & Document sharing.
@@ -1697,9 +1698,9 @@ export default function LandingPage() {
 
           {/* Left Text Column */}
           <div className="lg:col-span-5 flex flex-col gap-7 text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#10b981]/10 border border-[#10b981]/25 rounded-full w-fit">
-              <Lock className="w-3.5 h-3.5 text-[#10b981]" />
-              <span className="text-xs font-bold uppercase tracking-wider text-[#10b981]">Zero-Knowledge Privacy</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#00D8E3]/10 border border-[#00D8E3]/25 rounded-full w-fit">
+              <Lock className="w-3.5 h-3.5 text-[#00D8E3]" />
+              <span className="text-xs font-bold uppercase tracking-wider text-[#00D8E3]">Zero-Knowledge Privacy</span>
             </div>
 
             <h2 className="text-4xl md:text-5xl font-extrabold text-zinc-900 dark:text-white leading-[1.1] tracking-tight">
@@ -1712,8 +1713,8 @@ export default function LandingPage() {
 
             <div className="space-y-4 pt-2">
               <div className="flex items-start gap-3">
-                <div className="w-5 h-5 rounded-full bg-[#10B981]/20 flex items-center justify-center mt-0.5 flex-shrink-0">
-                  <Check className="w-3 h-3 text-[#10B981]" />
+                <div className="w-5 h-5 rounded-full bg-[#00D8E3]/20 flex items-center justify-center mt-0.5 flex-shrink-0">
+                  <Check className="w-3 h-3 text-[#00D8E3]" />
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-zinc-900 dark:text-white">End-to-End Encryption</h4>
@@ -1721,8 +1722,8 @@ export default function LandingPage() {
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="w-5 h-5 rounded-full bg-[#10B981]/20 flex items-center justify-center mt-0.5 flex-shrink-0">
-                  <Check className="w-3 h-3 text-[#10B981]" />
+                <div className="w-5 h-5 rounded-full bg-[#00D8E3]/20 flex items-center justify-center mt-0.5 flex-shrink-0">
+                  <Check className="w-3 h-3 text-[#00D8E3]" />
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-zinc-900 dark:text-white">Zero Server Databases</h4>
@@ -1730,8 +1731,8 @@ export default function LandingPage() {
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="w-5 h-5 rounded-full bg-[#10B981]/20 flex items-center justify-center mt-0.5 flex-shrink-0">
-                  <Check className="w-3 h-3 text-[#10B981]" />
+                <div className="w-5 h-5 rounded-full bg-[#00D8E3]/20 flex items-center justify-center mt-0.5 flex-shrink-0">
+                  <Check className="w-3 h-3 text-[#00D8E3]" />
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-zinc-900 dark:text-white">AES-GCM 256-Bit Keys</h4>
@@ -1743,22 +1744,22 @@ export default function LandingPage() {
 
           {/* Right Encryption Sandbox Card */}
           <div className="lg:col-span-7 flex justify-center lg:justify-end">
-            <div className="w-full max-w-lg bg-[#0b1f18] border border-[#10b981]/20 rounded-2xl p-6 shadow-2xl shadow-[#10b981]/10 relative overflow-hidden">
+            <div className="w-full max-w-lg bg-[#0b1f18] border border-[#00D8E3]/20 rounded-2xl p-6 shadow-2xl shadow-[#00D8E3]/10 relative overflow-hidden">
               
               {/* Subtle glow background */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-[#10b981]/5 rounded-full blur-[80px] pointer-events-none" />
-              <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#00b87c]/5 rounded-full blur-[60px] pointer-events-none" />
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[#00D8E3]/5 rounded-full blur-[80px] pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#06A0F8]/5 rounded-full blur-[60px] pointer-events-none" />
 
               {/* Header */}
               <div className="flex items-center justify-between mb-6 relative z-10">
                 <div className="flex items-center gap-2">
-                  <Lock className="w-3.5 h-3.5 text-[#10b981]" />
-                  <span className="text-xs font-bold uppercase tracking-[0.15em] text-[#10b981]">Encryption Sandbox</span>
+                  <Lock className="w-3.5 h-3.5 text-[#00D8E3]" />
+                  <span className="text-xs font-bold uppercase tracking-[0.15em] text-[#00D8E3]">Encryption Sandbox</span>
                 </div>
                 <motion.div
                   animate={{ scale: [1, 1.2, 1], opacity: [1, 0.7, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className="w-2.5 h-2.5 rounded-full bg-[#10b981] shadow-sm shadow-[#10b981]/50"
+                  className="w-2.5 h-2.5 rounded-full bg-[#00D8E3] shadow-sm shadow-[#00D8E3]/50"
                 />
               </div>
 
@@ -1771,12 +1772,12 @@ export default function LandingPage() {
                     onChange={(e) => { if (!isEncrypted) setEncryptInput(e.target.value); }}
                     disabled={isEncrypted}
                     rows={2}
-                    className="w-full bg-[#0d2820] border border-[#10b981]/20 rounded-xl px-4 py-3 text-sm text-white placeholder-[#8696a0] focus:outline-none focus:border-[#10b981]/50 resize-none transition-colors font-sans disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="w-full bg-[#0d2820] border border-[#00D8E3]/20 rounded-xl px-4 py-3 text-sm text-white placeholder-[#8696a0] focus:outline-none focus:border-[#00D8E3]/50 resize-none transition-colors font-sans disabled:opacity-60 disabled:cursor-not-allowed"
                     placeholder="Type a message to encrypt..."
                   />
                   {isEncrypted && (
                     <div className="absolute top-2 right-2">
-                      <Lock className="w-3.5 h-3.5 text-[#10b981]" />
+                      <Lock className="w-3.5 h-3.5 text-[#00D8E3]" />
                     </div>
                   )}
                 </div>
@@ -1785,7 +1786,7 @@ export default function LandingPage() {
               {/* Network Stream Data Output */}
               <div className="relative z-10 mb-6">
                 <label className="block text-xs font-bold uppercase tracking-[0.12em] text-[#8696a0] mb-2">Network Stream Data</label>
-                <div className="bg-[#0d2820] border border-[#10b981]/20 rounded-xl px-4 py-3 min-h-[64px] flex items-center">
+                <div className="bg-[#0d2820] border border-[#00D8E3]/20 rounded-xl px-4 py-3 min-h-[64px] flex items-center">
                   <AnimatePresence mode="wait">
                     {isEncrypting ? (
                       <motion.div
@@ -1799,13 +1800,13 @@ export default function LandingPage() {
                           {[0, 1, 2, 3, 4].map((i) => (
                             <motion.div
                               key={i}
-                              className="w-1.5 h-4 bg-[#10b981] rounded-full"
+                              className="w-1.5 h-4 bg-[#00D8E3] rounded-full"
                               animate={{ scaleY: [0.4, 1, 0.4] }}
                               transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.1 }}
                             />
                           ))}
                         </div>
-                        <span className="text-sm text-[#10b981] font-mono animate-pulse">
+                        <span className="text-sm text-[#00D8E3] font-mono animate-pulse">
                           {isEncrypted ? "Decrypting payload..." : "Encrypting with AES-GCM-256..."}
                         </span>
                       </motion.div>
@@ -1815,7 +1816,7 @@ export default function LandingPage() {
                         initial={{ opacity: 0, y: 4 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -4 }}
-                        className="text-sm text-[#10b981] font-mono leading-relaxed break-all"
+                        className="text-sm text-[#00D8E3] font-mono leading-relaxed break-all"
                       >
                         {encryptedOutput}
                       </motion.p>
@@ -1837,7 +1838,7 @@ export default function LandingPage() {
                 <div className="flex items-center gap-2 mt-2">
                   <span className={`text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-full transition-all ${
                     isEncrypted 
-                      ? "bg-[#10b981]/15 text-[#10b981] border border-[#10b981]/25" 
+                      ? "bg-[#00D8E3]/15 text-[#00D8E3] border border-[#00D8E3]/25" 
                       : "bg-white/[0.04] text-[#8696a0] border border-white/[0.08]"
                   }`}>
                     {isEncrypted ? "🔒 Encrypted" : "🔓 Plaintext"}
@@ -1862,7 +1863,7 @@ export default function LandingPage() {
                   className={`w-full py-3.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2.5 transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
                     isEncrypted
                       ? "bg-zinc-700 hover:bg-zinc-600 text-white border border-zinc-600"
-                      : "bg-[#10b981] hover:bg-[#00b87c] text-white shadow-lg shadow-[#10b981]/25 hover:shadow-[#10b981]/40"
+                      : "bg-[#00D8E3] hover:bg-[#06A0F8] text-white shadow-lg shadow-[#00D8E3]/25 hover:shadow-[#00D8E3]/40"
                   }`}
                 >
                   {isEncrypting ? (
@@ -1900,14 +1901,14 @@ export default function LandingPage() {
       </section>
 
       {/* --- SECTION 9: PRIVACY & SECURITY --- */}
-      <section id="security" className="py-16 px-6 bg-zinc-100/50 dark:bg-[#0A100D]/30 relative z-10">
+      <section id="security" className="py-16 px-6 bg-zinc-100/50 dark:bg-[#0A0A0A]/30 relative z-10">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
           
           {/* Left Text */}
           <div className="lg:col-span-6 flex flex-col gap-6 text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#10b981]/10 border border-[#10b981]/20 rounded-full w-fit">
-              <Shield className="w-3.5 h-3.5 text-[#10b981]" />
-              <span className="text-xs font-bold uppercase tracking-wider text-[#10b981]">RBI & CERT-In Compliant</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#00D8E3]/10 border border-[#00D8E3]/20 rounded-full w-fit">
+              <Shield className="w-3.5 h-3.5 text-[#00D8E3]" />
+              <span className="text-xs font-bold uppercase tracking-wider text-[#00D8E3]">RBI & CERT-In Compliant</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-extrabold text-zinc-900 dark:text-white">
               Privacy as a First Class Citizen.
@@ -1923,8 +1924,8 @@ export default function LandingPage() {
                 "Two-Factor Authentication", "Encrypted Media Assets"
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-3">
-                  <div className="w-5 h-5 rounded-full bg-[#10B981]/25 flex items-center justify-center">
-                    <Check className="w-3 h-3 text-[#10B981]" />
+                  <div className="w-5 h-5 rounded-full bg-[#00D8E3]/25 flex items-center justify-center">
+                    <Check className="w-3 h-3 text-[#00D8E3]" />
                   </div>
                   <span className="text-xs font-semibold text-zinc-950 dark:text-white">{item}</span>
                 </div>
@@ -1936,12 +1937,12 @@ export default function LandingPage() {
           <div className="lg:col-span-6 flex items-center justify-center">
             <div 
               onClick={triggerSecurityScan}
-              className="w-80 h-96 bg-white dark:bg-[#0A100D] border border-zinc-200/80 dark:border-white/[0.08] rounded-2xl p-6 flex flex-col justify-between items-center shadow-2xl relative overflow-hidden group cursor-pointer hover:border-[#10b981]/50 transition-colors"
+              className="w-80 h-96 bg-white dark:bg-[#0A0A0A] border border-zinc-200/80 dark:border-white/[0.08] rounded-2xl p-6 flex flex-col justify-between items-center shadow-2xl relative overflow-hidden group cursor-pointer hover:border-[#00D8E3]/50 transition-colors"
             >
               {/* Scan Bar Animation */}
               {isScanning && (
                 <motion.div 
-                  className="absolute left-0 right-0 h-1 bg-[#10b981] shadow-lg shadow-[#10b981]/60 z-20"
+                  className="absolute left-0 right-0 h-1 bg-[#00D8E3] shadow-lg shadow-[#00D8E3]/60 z-20"
                   animate={{ top: ["5%", "90%", "5%"] }}
                   transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                 />
@@ -1949,7 +1950,7 @@ export default function LandingPage() {
 
               <div className="w-full flex justify-between items-center">
                 <span className="text-xs font-bold text-zinc-500 dark:text-[#8696a0] tracking-wider uppercase">Biometric Gateway</span>
-                <span className={`text-xs font-bold uppercase tracking-wider ${scanComplete ? "text-[#10B981]" : "text-[#10b981]"}`}>
+                <span className={`text-xs font-bold uppercase tracking-wider ${scanComplete ? "text-[#00D8E3]" : "text-[#00D8E3]"}`}>
                   {scanComplete ? "APPROVED" : "READY"}
                 </span>
               </div>
@@ -1957,16 +1958,16 @@ export default function LandingPage() {
               {/* Biometric Scan Fingerprint Icon container */}
               <div className="relative my-8">
                 <div className={`w-32 h-32 rounded-full flex items-center justify-center bg-zinc-150 dark:bg-white/[0.02] border transition-all ${
-                  scanComplete ? "border-[#10B981] bg-[#10B981]/5" : "border-zinc-200/60 dark:border-white/[0.08] group-hover:border-[#10b981]/30"
+                  scanComplete ? "border-[#00D8E3] bg-[#00D8E3]/5" : "border-zinc-200/60 dark:border-white/[0.08] group-hover:border-[#00D8E3]/30"
                 }`}>
                   <Fingerprint className={`w-16 h-16 transition-colors ${
-                    scanComplete ? "text-[#10B981]" : "text-zinc-500 dark:text-[#8696a0] group-hover:text-zinc-800 dark:group-hover:text-white"
+                    scanComplete ? "text-[#00D8E3]" : "text-zinc-500 dark:text-[#8696a0] group-hover:text-zinc-800 dark:group-hover:text-white"
                   }`} />
                 </div>
                 
                 {/* Encryption Lock symbol overlay */}
-                <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-xl bg-white dark:bg-[#0A100D] border border-zinc-200/80 dark:border-white/[0.08] flex items-center justify-center shadow-lg">
-                  {scanComplete ? <Check className="w-5 h-5 text-[#10B981]" /> : <Lock className="w-4 h-4 text-zinc-950 dark:text-white" />}
+                <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-xl bg-white dark:bg-[#0A0A0A] border border-zinc-200/80 dark:border-white/[0.08] flex items-center justify-center shadow-lg">
+                  {scanComplete ? <Check className="w-5 h-5 text-[#00D8E3]" /> : <Lock className="w-4 h-4 text-zinc-950 dark:text-white" />}
                 </div>
               </div>
 
@@ -1984,13 +1985,13 @@ export default function LandingPage() {
       </section>
 
       {/* --- SECTION 11: PRICING SECTION --- */}
-      <section id="pricing" className="py-16 px-6 bg-zinc-100/50 dark:bg-[#070f0b] relative z-10">
+      <section id="pricing" className="py-16 px-6 bg-zinc-100/50 dark:bg-[#050505] relative z-10">
         <div className="max-w-7xl mx-auto">
           
           <div className="text-center max-w-2xl mx-auto mb-10 flex flex-col items-center gap-4">
-            <span className="text-xs font-bold text-[#00b87c] uppercase tracking-wider">Simple Pricing</span>
+            <span className="text-xs font-bold text-[#06A0F8] uppercase tracking-wider">Simple Pricing</span>
             <h2 className="text-4xl md:text-5xl font-extrabold text-zinc-900 dark:text-white mt-2">
-              Free for Everyone. <span className="text-[#00b87c]">Always.</span>
+              Free for Everyone. <span className="text-[#06A0F8]">Always.</span>
             </h2>
             <p className="text-base text-zinc-600 dark:text-zinc-300 max-w-lg">
               Orbix is completely free right now — no hidden fees, no limits, no credit card. Paid plans are coming in the future with extra features.
@@ -2002,8 +2003,8 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
             
             {/* FREE - Current plan */}
-            <div className="bg-white dark:bg-[#0A100D] border-2 border-[#00b87c] dark:border-[#00b87c]/50 rounded-2xl p-8 flex flex-col relative shadow-2xl shadow-[#00b87c]/10 dark:shadow-[0_0_60px_rgba(0,184,124,0.12),0_25px_60px_rgba(0,0,0,0.4)] transition-all hover:-translate-y-1">
-              <span className="absolute -top-3.5 left-6 bg-[#00b87c] text-white text-xs font-bold tracking-wider uppercase px-3 py-1 rounded-full">
+            <div className="bg-white dark:bg-[#0A0A0A] border-2 border-[#06A0F8] dark:border-[#06A0F8]/50 rounded-2xl p-8 flex flex-col relative shadow-2xl shadow-[#06A0F8]/10 dark:shadow-[0_0_60px_rgba(6, 160, 248,0.12),0_25px_60px_rgba(0,0,0,0.4)] transition-all hover:-translate-y-1">
+              <span className="absolute -top-3.5 left-6 bg-[#06A0F8] text-white text-xs font-bold tracking-wider uppercase px-3 py-1 rounded-full">
                 ✓ Active Now
               </span>
               <div className="flex items-start justify-between mb-6">
@@ -2011,11 +2012,11 @@ export default function LandingPage() {
                   <h3 className="text-xl font-extrabold text-zinc-950 dark:text-white">Free</h3>
                   <p className="text-xs text-zinc-500 dark:text-[#8696a0] mt-1">For everyone, forever — no strings attached.</p>
                 </div>
-                <div className="w-10 h-10 rounded-xl bg-[#00b87c]/10 border border-[#00b87c]/20 flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-[#00b87c]" />
+                <div className="w-10 h-10 rounded-xl bg-[#06A0F8]/10 border border-[#06A0F8]/20 flex items-center justify-center">
+                  <Zap className="w-5 h-5 text-[#06A0F8]" />
                 </div>
               </div>
-              <div className="text-5xl font-black text-[#00b87c] mb-1">₹0</div>
+              <div className="text-5xl font-black text-[#06A0F8] mb-1">₹0</div>
               <div className="text-sm text-zinc-500 dark:text-[#8696a0] uppercase font-bold tracking-wider mb-8">Free Forever · No Credit Card</div>
               
               <div className="space-y-3.5 flex-1">
@@ -2030,12 +2031,12 @@ export default function LandingPage() {
                   "Message reactions & replies",
                 ].map(f => (
                   <div key={f} className="flex items-center gap-2.5 text-xs text-zinc-800 dark:text-zinc-200">
-                    <Check className="w-4 h-4 text-[#10B981] flex-shrink-0" />
+                    <Check className="w-4 h-4 text-[#00D8E3] flex-shrink-0" />
                     <span>{f}</span>
                   </div>
                 ))}
               </div>
-              <Link href="/signup" className="w-full py-3.5 mt-8 bg-[#00b87c] hover:bg-[#00b87c]/90 rounded-xl text-sm font-bold text-white transition-all shadow-lg shadow-[#00b87c]/25 flex items-center justify-center gap-2 group">
+              <Link href="/signup" className="w-full py-3.5 mt-8 bg-[#06A0F8] hover:bg-[#06A0F8]/90 rounded-xl text-sm font-bold text-white transition-all shadow-lg shadow-[#06A0F8]/25 flex items-center justify-center gap-2 group">
                 Start for Free
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
@@ -2079,11 +2080,11 @@ export default function LandingPage() {
             </div>
 
             {/* Note card */}
-            <div className="bg-gradient-to-br from-[#0b1f18] to-[#0a1510] border border-[#00b87c]/30 rounded-2xl p-8 flex flex-col justify-between shadow-lg dark:shadow-[0_0_40px_rgba(0,184,124,0.15)] relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#00b87c]/10 filter blur-[40px] rounded-full group-hover:bg-[#00b87c]/20 transition-all duration-500" />
+            <div className="bg-gradient-to-br from-[#0b1f18] to-[#0a1510] border border-[#06A0F8]/30 rounded-2xl p-8 flex flex-col justify-between shadow-lg dark:shadow-[0_0_40px_rgba(6, 160, 248,0.15)] relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#06A0F8]/10 filter blur-[40px] rounded-full group-hover:bg-[#06A0F8]/20 transition-all duration-500" />
               <div className="relative z-10">
-                <div className="w-12 h-12 rounded-2xl bg-[#00b87c]/15 border border-[#00b87c]/20 flex items-center justify-center mb-6">
-                  <MessageSquare className="w-6 h-6 text-[#00b87c]" />
+                <div className="w-12 h-12 rounded-2xl bg-[#06A0F8]/15 border border-[#06A0F8]/20 flex items-center justify-center mb-6">
+                  <MessageSquare className="w-6 h-6 text-[#06A0F8]" />
                 </div>
                 <h3 className="text-xl font-extrabold text-white mb-3">Built for India</h3>
                 <p className="text-base text-[#8696a0] leading-relaxed">
@@ -2097,7 +2098,7 @@ export default function LandingPage() {
                   { icon: Globe, text: "Servers in India (Mumbai)" },
                 ].map(({ icon: Icon, text }) => (
                   <div key={text} className="flex items-center gap-2.5 text-xs text-[#8696a0]">
-                    <Icon className="w-3.5 h-3.5 text-[#00b87c] flex-shrink-0" />
+                    <Icon className="w-3.5 h-3.5 text-[#06A0F8] flex-shrink-0" />
                     <span>{text}</span>
                   </div>
                 ))}
@@ -2111,7 +2112,7 @@ export default function LandingPage() {
       {/* --- SECTION 12: FAQ SECTION --- */}
       <section className="py-16 px-6 max-w-4xl mx-auto z-10 relative">
         <div className="text-center mb-16">
-          <span className="text-xs font-bold text-[#00b87c] uppercase tracking-wider">Answering Inquiries</span>
+          <span className="text-xs font-bold text-[#06A0F8] uppercase tracking-wider">Answering Inquiries</span>
           <h2 className="text-3xl font-extrabold text-zinc-900 dark:text-white mt-2">Frequently Asked Questions</h2>
         </div>
 
@@ -2125,7 +2126,7 @@ export default function LandingPage() {
           ].map((faq, i) => (
             <div 
               key={i} 
-              className="bg-white dark:bg-[#0A100D]/90 border border-zinc-200/80 dark:border-white/[0.07] hover:dark:border-[#00b87c]/40 rounded-xl overflow-hidden shadow-sm hover:shadow-md dark:shadow-[0_4px_24px_rgba(0,0,0,0.2)] hover:scale-[1.01] transition-all duration-300"
+              className="bg-white dark:bg-[#0A0A0A]/90 border border-zinc-200/80 dark:border-white/[0.07] hover:dark:border-[#06A0F8]/40 rounded-xl overflow-hidden shadow-sm hover:shadow-md dark:shadow-[0_4px_24px_rgba(0,0,0,0.2)] hover:scale-[1.01] transition-all duration-300"
             >
               <button
                 type="button"
@@ -2161,9 +2162,9 @@ export default function LandingPage() {
       {/* --- SECTION 13: HOW IT WORKS --- */}
       <section className="py-20 px-6 max-w-7xl mx-auto z-10 relative">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#00b87c]/10 border border-[#00b87c]/20 rounded-full w-fit mx-auto mb-4">
-            <Layers className="w-3.5 h-3.5 text-[#00b87c]" />
-            <span className="text-xs font-bold uppercase tracking-wider text-[#00b87c]">Quick Setup</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#06A0F8]/10 border border-[#06A0F8]/20 rounded-full w-fit mx-auto mb-4">
+            <Layers className="w-3.5 h-3.5 text-[#06A0F8]" />
+            <span className="text-xs font-bold uppercase tracking-wider text-[#06A0F8]">Quick Setup</span>
           </div>
           <h2 className="text-3xl md:text-4xl font-extrabold text-zinc-900 dark:text-white">
             Up and Running in 3 Steps.
@@ -2175,30 +2176,30 @@ export default function LandingPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative group">
           {/* Connecting Lines (Desktop only) */}
-          <div className="hidden md:block absolute top-24 left-[15%] right-[15%] h-0.5 bg-gradient-to-r from-[#00b87c]/20 via-[#6D5DF6]/20 to-[#FF4F8C]/20 z-0">
+          <div className="hidden md:block absolute top-24 left-[15%] right-[15%] h-0.5 bg-gradient-to-r from-[#06A0F8]/20 via-[#6D5DF6]/20 to-[#FF4F8C]/20 z-0">
             {/* Animated Flow Dot */}
             <div className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,1)] animate-ping" style={{ left: '0%', animationDuration: '3s' }} />
           </div>
 
           {/* Step 1 */}
-          <div className="relative flex flex-col items-center text-center gap-5 p-8 bg-white/80 dark:bg-[#0A100D]/70 border border-zinc-200/80 dark:border-white/[0.08] rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all cf-card-glow">
+          <div className="relative flex flex-col items-center text-center gap-5 p-8 bg-white/80 dark:bg-[#0A0A0A]/70 border border-zinc-200/80 dark:border-white/[0.08] rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all cf-card-glow">
             <div className="relative">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#00b87c] to-[#10B981] flex items-center justify-center shadow-lg shadow-[#00b87c]/30">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#06A0F8] to-[#00D8E3] flex items-center justify-center shadow-lg shadow-[#06A0F8]/30">
                 <Users className="w-7 h-7 text-white" />
               </div>
-              <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#00b87c] text-white text-xs font-black flex items-center justify-center">1</span>
+              <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#06A0F8] text-white text-xs font-black flex items-center justify-center">1</span>
             </div>
             <div>
               <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-2">Create Your Account</h3>
               <p className="text-base text-zinc-600 dark:text-[#8696a0] leading-relaxed">Sign up in seconds with your email or phone number. No credit card required for free tier.</p>
             </div>
-            <Link href="/signup" className="inline-flex items-center gap-1.5 text-sm font-bold text-[#00b87c] hover:text-[#10B981] transition-colors">
+            <Link href="/signup" className="inline-flex items-center gap-1.5 text-sm font-bold text-[#06A0F8] hover:text-[#00D8E3] transition-colors">
               Create Account <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
           {/* Step 2 */}
-          <div className="relative flex flex-col items-center text-center gap-5 p-8 bg-white/80 dark:bg-[#0A100D]/70 border border-zinc-200/80 dark:border-white/[0.08] rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all cf-card-glow">
+          <div className="relative flex flex-col items-center text-center gap-5 p-8 bg-white/80 dark:bg-[#0A0A0A]/70 border border-zinc-200/80 dark:border-white/[0.08] rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all cf-card-glow">
             <div className="relative">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#6D5DF6] to-[#4F8CFF] flex items-center justify-center shadow-lg shadow-purple-500/30">
                 <Hash className="w-7 h-7 text-white" />
@@ -2213,7 +2214,7 @@ export default function LandingPage() {
           </div>
 
           {/* Step 3 */}
-          <div className="relative flex flex-col items-center text-center gap-5 p-8 bg-white/80 dark:bg-[#0A100D]/70 border border-zinc-200/80 dark:border-white/[0.08] rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all cf-card-glow">
+          <div className="relative flex flex-col items-center text-center gap-5 p-8 bg-white/80 dark:bg-[#0A0A0A]/70 border border-zinc-200/80 dark:border-white/[0.08] rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all cf-card-glow">
             <div className="relative">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#FF4F8C] to-[#FF9F43] flex items-center justify-center shadow-lg shadow-pink-500/30">
                 <Zap className="w-7 h-7 text-white" />
@@ -2230,19 +2231,19 @@ export default function LandingPage() {
       </section>
 
       {/* --- SECTION 13b: APP AVAILABILITY SHOWCASE --- */}
-      <section id="download" className="py-20 px-6 bg-zinc-100/50 dark:bg-[#0A100D]/30 relative z-10 overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#00b87c]/5 dark:bg-[#00b87c]/8 filter blur-[100px] rounded-full pointer-events-none" />
+      <section id="download" className="py-20 px-6 bg-zinc-100/50 dark:bg-[#0A0A0A]/30 relative z-10 overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#06A0F8]/5 dark:bg-[#06A0F8]/8 filter blur-[100px] rounded-full pointer-events-none" />
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-16">
             {/* Left: Text */}
             <div className="flex flex-col gap-6 max-w-lg">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#00b87c]/10 border border-[#00b87c]/20 rounded-full w-fit">
-                <Sparkles className="w-3.5 h-3.5 text-[#00b87c]" />
-                <span className="text-xs font-bold uppercase tracking-wider text-[#00b87c]">Apps Coming Soon</span>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#06A0F8]/10 border border-[#06A0F8]/20 rounded-full w-fit">
+                <Sparkles className="w-3.5 h-3.5 text-[#06A0F8]" />
+                <span className="text-xs font-bold uppercase tracking-wider text-[#06A0F8]">Apps Coming Soon</span>
               </div>
               <h2 className="text-3xl md:text-4xl font-extrabold text-zinc-900 dark:text-white">
                 Use on Web Today. <br />
-                <span className="text-[#00b87c]">Apps Launching Soon.</span>
+                <span className="text-[#06A0F8]">Apps Launching Soon.</span>
               </h2>
               <p className="text-base text-zinc-600 dark:text-[#8696a0] leading-relaxed">
                 Orbix is live right now as a web app — no download needed. Open your browser and start chatting instantly. Our Android, iOS, and desktop apps are coming very soon!
@@ -2270,17 +2271,17 @@ export default function LandingPage() {
                 </div>
               </div>
               <div className="flex items-center gap-4 text-xs text-zinc-500 dark:text-[#8696a0]">
-                <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-[#10B981]" /> 100% Free</span>
-                <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-[#10B981]" /> No ads</span>
-                <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-[#10B981]" /> No data selling</span>
+                <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-[#00D8E3]" /> 100% Free</span>
+                <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-[#00D8E3]" /> No ads</span>
+                <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-[#00D8E3]" /> No data selling</span>
               </div>
             </div>
 
             {/* Right: Platform Status Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-sm">
               {/* Web - LIVE */}
-              <div className="col-span-full bg-white dark:bg-[#0c1a14] border-2 border-[#00b87c] dark:border-[#00b87c]/60 rounded-2xl p-5 flex items-center gap-4 shadow-lg shadow-[#00b87c]/10 dark:shadow-[0_0_30px_rgba(0,184,124,0.10),0_8px_24px_rgba(0,0,0,0.4)]">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#00b87c] to-[#10B981] flex items-center justify-center flex-shrink-0">
+              <div className="col-span-full bg-white dark:bg-[#0c1a14] border-2 border-[#06A0F8] dark:border-[#06A0F8]/60 rounded-2xl p-5 flex items-center gap-4 shadow-lg shadow-[#06A0F8]/10 dark:shadow-[0_0_30px_rgba(6, 160, 248,0.10),0_8px_24px_rgba(0,0,0,0.4)]">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#06A0F8] to-[#00D8E3] flex items-center justify-center flex-shrink-0">
                   <Globe className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1">
@@ -2288,13 +2289,13 @@ export default function LandingPage() {
                   <div className="text-xs text-zinc-500 dark:text-[#8696a0] mt-0.5">orbix.app — open in any browser</div>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" />
-                  <span className="text-xs font-bold text-[#10b981]">Live</span>
+                  <span className="w-2 h-2 rounded-full bg-[#00D8E3] animate-pulse" />
+                  <span className="text-xs font-bold text-[#00D8E3]">Live</span>
                 </div>
               </div>
 
               {/* Android */}
-              <div className="bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#00b87c]/30 rounded-2xl p-5 flex flex-col items-center text-center gap-3 shadow-sm dark:shadow-[0_4px_16px_rgba(0,0,0,0.4)] transition-all">
+              <div className="bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/30 rounded-2xl p-5 flex flex-col items-center text-center gap-3 shadow-sm dark:shadow-[0_4px_16px_rgba(0,0,0,0.4)] transition-all">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#3ddc84] to-[#5af776] flex items-center justify-center opacity-70">
                   {/* Android logo */}
                   <svg className="w-7 h-7" viewBox="0 0 24 24" fill="white">
@@ -2309,7 +2310,7 @@ export default function LandingPage() {
               </div>
 
               {/* iOS */}
-              <div className="bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#00b87c]/30 rounded-2xl p-5 flex flex-col items-center text-center gap-3 shadow-sm dark:shadow-[0_4px_16px_rgba(0,0,0,0.4)] transition-all">
+              <div className="bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/30 rounded-2xl p-5 flex flex-col items-center text-center gap-3 shadow-sm dark:shadow-[0_4px_16px_rgba(0,0,0,0.4)] transition-all">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-zinc-600 to-zinc-400 flex items-center justify-center opacity-70">
                   <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.44-2.94 1.42-.15-1.15.41-2.35 1.04-3.11z"/></svg>
                 </div>
@@ -2321,7 +2322,7 @@ export default function LandingPage() {
               </div>
 
               {/* Desktop */}
-              <div className="col-span-full bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#00b87c]/30 rounded-2xl p-5 flex items-center gap-4 shadow-sm dark:shadow-[0_4px_16px_rgba(0,0,0,0.4)] transition-all">
+              <div className="col-span-full bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/30 rounded-2xl p-5 flex items-center gap-4 shadow-sm dark:shadow-[0_4px_16px_rgba(0,0,0,0.4)] transition-all">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#34b7f1] to-[#5dc8f5] flex items-center justify-center opacity-70 flex-shrink-0">
                   {/* Monitor/Desktop SVG */}
                   <svg className="w-7 h-7" viewBox="0 0 24 24" fill="white">
@@ -2342,9 +2343,9 @@ export default function LandingPage() {
       {/* --- SECTION 13c: REAL USER LOVE / SOCIAL PROOF --- */}
       <section className="py-16 px-6 max-w-7xl mx-auto z-10 relative">
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#00b87c]/10 border border-[#00b87c]/20 rounded-full w-fit mx-auto mb-4">
-            <Star className="w-3.5 h-3.5 text-[#00b87c]" />
-            <span className="text-xs font-bold uppercase tracking-wider text-[#00b87c]">What People Say</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#06A0F8]/10 border border-[#06A0F8]/20 rounded-full w-fit mx-auto mb-4">
+            <Star className="w-3.5 h-3.5 text-[#06A0F8]" />
+            <span className="text-xs font-bold uppercase tracking-wider text-[#06A0F8]">What People Say</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-extrabold text-zinc-900 dark:text-white">
             Loved Across India
@@ -2381,8 +2382,8 @@ export default function LandingPage() {
               stars: 5,
             },
           ].map((review) => (
-            <div key={review.name} className="group relative ios-glass-panel hover:dark:border-[#00b87c]/40 rounded-2xl p-6 flex flex-col gap-4 shadow-sm hover:shadow-xl dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] dark:hover:shadow-[0_0_30px_rgba(0,184,124,0.15)] hover:-translate-y-1 transition-all duration-300">
-              <div className="absolute inset-0 bg-gradient-to-br from-transparent to-[#00b87c]/0 group-hover:to-[#00b87c]/5 rounded-2xl transition-colors pointer-events-none" />
+            <div key={review.name} className="group relative ios-glass-panel hover:dark:border-[#06A0F8]/40 rounded-2xl p-6 flex flex-col gap-4 shadow-sm hover:shadow-xl dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] dark:hover:shadow-[0_0_30px_rgba(6, 160, 248,0.15)] hover:-translate-y-1 transition-all duration-300">
+              <div className="absolute inset-0 bg-gradient-to-br from-transparent to-[#06A0F8]/0 group-hover:to-[#06A0F8]/5 rounded-2xl transition-colors pointer-events-none" />
               <div className="flex items-center justify-between relative z-10">
                 <div className="flex items-center gap-3">
                   <div
@@ -2412,7 +2413,7 @@ export default function LandingPage() {
         </div>
 
         {/* User count stat bar */}
-        <div className="mt-12 bg-white dark:bg-[#0A100D]/80 border border-zinc-200/60 dark:border-[#00b87c]/12 rounded-2xl p-6 grid grid-cols-2 md:grid-cols-4 gap-6 dark:shadow-[0_0_40px_rgba(0,184,124,0.04)]">
+        <div className="mt-12 bg-white dark:bg-[#0A0A0A]/80 border border-zinc-200/60 dark:border-[#06A0F8]/12 rounded-2xl p-6 grid grid-cols-2 md:grid-cols-4 gap-6 dark:shadow-[0_0_40px_rgba(6, 160, 248,0.04)]">
           {[
             { value: "100%", label: "Free Forever" },
             { value: "E2E", label: "Encrypted Always" },
@@ -2420,7 +2421,7 @@ export default function LandingPage() {
             { value: "🇮🇳", label: "Made in India" },
           ].map(({ value, label }) => (
             <div key={label} className="text-center">
-              <div className="text-2xl font-extrabold text-zinc-900 dark:text-[#10b981]">{value}</div>
+              <div className="text-2xl font-extrabold text-zinc-900 dark:text-[#00D8E3]">{value}</div>
               <div className="text-xs text-zinc-500 dark:text-[#8696a0] uppercase tracking-wider mt-1">{label}</div>
             </div>
           ))}
@@ -2430,20 +2431,20 @@ export default function LandingPage() {
       {/* --- SECTION 14: FINAL CTA --- */}
       <section className="py-16 px-6 max-w-7xl mx-auto z-10 relative">
         {/* Glow wrapper container */}
-        <div className="bg-gradient-to-br from-[#0b1f18] via-[#0a1a10] to-[#020705] border border-[#10b981]/20 dark:border-[#10b981]/30 rounded-3xl p-12 md:p-20 relative overflow-hidden flex flex-col items-center text-center shadow-2xl shadow-[#00b87c]/10 dark:shadow-[0_0_120px_rgba(0,184,124,0.10),0_40px_80px_rgba(0,0,0,0.6)]">
+        <div className="bg-gradient-to-br from-[#0b1f18] via-[#0a1a10] to-[#000000] border border-[#00D8E3]/20 dark:border-[#00D8E3]/30 rounded-3xl p-12 md:p-20 relative overflow-hidden flex flex-col items-center text-center shadow-2xl shadow-[#06A0F8]/10 dark:shadow-[0_0_120px_rgba(6, 160, 248,0.10),0_40px_80px_rgba(0,0,0,0.6)]">
           
           {/* Internal background glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#00b87c]/10 filter blur-[80px] rounded-full pointer-events-none" />
-          <div className="absolute bottom-0 right-0 w-64 h-64 bg-[#10b981]/5 filter blur-[60px] rounded-full pointer-events-none" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#06A0F8]/10 filter blur-[80px] rounded-full pointer-events-none" />
+          <div className="absolute bottom-0 right-0 w-64 h-64 bg-[#00D8E3]/5 filter blur-[60px] rounded-full pointer-events-none" />
 
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#10b981]/15 border border-[#10b981]/25 rounded-full w-fit mb-6 relative z-10">
-            <Sparkles className="w-3.5 h-3.5 text-[#10b981]" />
-            <span className="text-xs font-bold uppercase tracking-wider text-[#10b981]">Get Started Free</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#00D8E3]/15 border border-[#00D8E3]/25 rounded-full w-fit mb-6 relative z-10">
+            <Sparkles className="w-3.5 h-3.5 text-[#00D8E3]" />
+            <span className="text-xs font-bold uppercase tracking-wider text-[#00D8E3]">Get Started Free</span>
           </div>
 
           <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-6 relative z-10">
             Start Connecting <br />
-            <span className="bg-gradient-to-r from-[#00b87c] via-[#10B981] to-[#53bdeb] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#06A0F8] via-[#00D8E3] to-[#5D32FA] bg-clip-text text-transparent">
               Without Limits.
             </span>
           </h2>
@@ -2453,7 +2454,7 @@ export default function LandingPage() {
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 relative z-10">
-            <Link href="/signup" className="px-8 py-4 bg-[#10b981] hover:bg-[#00b87c] rounded-xl font-semibold shadow-lg shadow-[#10b981]/30 hover:shadow-[#10b981]/50 text-white transition-all flex items-center gap-2 group">
+            <Link href="/signup" className="px-8 py-4 bg-[#00D8E3] hover:bg-[#06A0F8] rounded-xl font-semibold shadow-lg shadow-[#00D8E3]/30 hover:shadow-[#00D8E3]/50 text-white transition-all flex items-center gap-2 group">
               Create Free Account
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
@@ -2473,7 +2474,7 @@ export default function LandingPage() {
               { icon: Cpu, label: "12ms Latency" },
             ].map(({ icon: Icon, label }) => (
               <div key={label} className="flex items-center gap-2 text-sm text-[#8696a0]">
-                <Icon className="w-3.5 h-3.5 text-[#10b981]" />
+                <Icon className="w-3.5 h-3.5 text-[#00D8E3]" />
                 <span>{label}</span>
               </div>
             ))}
@@ -2482,15 +2483,17 @@ export default function LandingPage() {
       </section>
 
       {/* --- SECTION 14: FOOTER --- */}
-      <footer className="bg-white dark:bg-[#020705] border-t border-zinc-200/80 dark:border-[#00b87c]/10 py-12 px-6 relative z-10 dark:shadow-[inset_0_1px_0_rgba(0,184,124,0.06)]">
+      <footer className="bg-white dark:bg-[#000000] border-t border-zinc-200/80 dark:border-[#06A0F8]/10 py-12 px-6 relative z-10 dark:shadow-[inset_0_1px_0_rgba(6, 160, 248,0.06)]">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12">
           
           {/* Logo & Info column */}
           <div className="md:col-span-4 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#00b87c] to-[#10B981] flex items-center justify-center shadow-lg">
-                <MessageSquare className="w-4.5 h-4.5 text-white" />
-              </div>
+              <img 
+                src="/logo.png" 
+                alt="Orbix Logo" 
+                className="w-12 h-12 object-contain drop-shadow-sm" 
+              />
               <span className="font-semibold text-lg text-zinc-950 dark:text-white">Orbix</span>
             </div>
             <p className="text-sm text-zinc-650 dark:text-[#8696a0] leading-relaxed max-w-sm">
@@ -2537,11 +2540,11 @@ export default function LandingPage() {
               <input 
                 type="email" 
                 placeholder="you@domain.com"
-                className="w-full bg-zinc-100/80 dark:bg-white/[0.04] border border-zinc-200/80 dark:border-white/[0.06] rounded-lg py-2.5 px-3 text-sm text-zinc-950 dark:text-white placeholder-[#8696a0] focus:outline-none focus:border-[#00b87c]/50 transition-colors"
+                className="w-full bg-zinc-100/80 dark:bg-white/[0.04] border border-zinc-200/80 dark:border-white/[0.06] rounded-lg py-2.5 px-3 text-sm text-zinc-950 dark:text-white placeholder-[#8696a0] focus:outline-none focus:border-[#06A0F8]/50 transition-colors"
               />
               <button 
                 type="submit"
-                className="absolute right-1 px-4 py-1.5 bg-[#00b87c] hover:bg-[#00b87c]/95 rounded text-sm font-bold text-white transition-colors cursor-pointer"
+                className="absolute right-1 px-4 py-1.5 bg-[#06A0F8] hover:bg-[#06A0F8]/95 rounded text-sm font-bold text-white transition-colors cursor-pointer"
               >
                 Join
               </button>

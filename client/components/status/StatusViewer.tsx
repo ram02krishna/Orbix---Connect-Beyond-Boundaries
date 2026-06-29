@@ -121,7 +121,7 @@ export function StatusViewer() {
           {group.statuses.map((s, index) => (
             <div key={s.id} className="h-1 flex-1 bg-white/20 rounded-full overflow-hidden">
               <div
-                className="h-full bg-emerald-500 rounded-full"
+                className="h-full bg-blue-500 rounded-full"
                 style={{
                   width: index === activeStatusIndex ? `${progress}%` : index < activeStatusIndex ? "100%" : "0%",
                 }}
@@ -132,7 +132,7 @@ export function StatusViewer() {
 
         <div className="absolute top-8 left-4 right-4 z-30 flex items-center justify-between px-1">
           <div className="flex items-center gap-3">
-            <Avatar src={group.user.avatarUrl} name={group.user.name} size="sm" className="ring-1 ring-emerald-500" />
+            <Avatar src={group.user.avatarUrl} name={group.user.name} size="sm" className="ring-1 ring-blue-500" />
             <div>
               <p className="text-sm font-semibold truncate leading-tight">{group.user.name}</p>
               <p className="text-[10px] text-zinc-400 font-medium">
@@ -217,7 +217,7 @@ export function StatusViewer() {
           <div className="w-full max-w-md rounded-t-3xl border border-white/10 bg-zinc-900 shadow-2xl flex flex-col max-h-[50vh]">
             <div className="flex items-center justify-between p-4 border-b border-white/5">
               <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-1.5">
-                <Eye size={14} className="text-emerald-500" />
+                <Eye size={14} className="text-blue-500" />
                 Viewed By ({activeStatusViewers.length})
               </span>
               <button

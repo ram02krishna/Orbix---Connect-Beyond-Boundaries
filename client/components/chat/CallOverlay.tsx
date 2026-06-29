@@ -81,7 +81,7 @@ export function CallOverlay() {
         className="fixed inset-0 z-[999] flex flex-col items-center justify-center ios-call-panel text-white select-none overflow-hidden"
       >
         {/* Shifting radial lighting behind call panel */}
-        <div className="absolute top-1/4 left-1/4 h-[500px] w-[500px] rounded-full bg-emerald-600/10 blur-[120px] pointer-events-none animate-pulse-slow z-0" />
+        <div className="absolute top-1/4 left-1/4 h-[500px] w-[500px] rounded-full bg-blue-600/10 blur-[120px] pointer-events-none animate-pulse-slow z-0" />
         <div className="absolute bottom-1/4 right-1/4 h-[500px] w-[500px] rounded-full bg-brand-primary/10 blur-[120px] pointer-events-none animate-pulse z-0" />
 
         {/* Real-time Video Feeds */}
@@ -154,7 +154,7 @@ export function CallOverlay() {
               <h2 className="text-2xl font-bold tracking-tight text-white drop-shadow-md">
                 {partner.name}
               </h2>
-              <p className="text-sm font-medium text-emerald-400 drop-shadow-sm tracking-wide">
+              <p className="text-sm font-medium text-blue-400 drop-shadow-sm tracking-wide">
                 {callState === "outgoing" && "Calling..."}
                 {callState === "incoming" && `Incoming ${callType === "video" ? "Video" : "Voice"} Call`}
                 {callState === "connected" && (
@@ -188,7 +188,7 @@ export function CallOverlay() {
                   onClick={acceptCall}
                   className="flex flex-col items-center gap-2 group focus:outline-none"
                 >
-                  <div className="h-16 w-16 rounded-full bg-emerald-500 hover:bg-emerald-600 active:scale-95 flex items-center justify-center shadow-lg transition-all duration-150 cursor-pointer animate-bounce">
+                  <div className="h-16 w-16 rounded-full bg-blue-500 hover:bg-blue-600 active:scale-95 flex items-center justify-center shadow-lg transition-all duration-150 cursor-pointer animate-bounce">
                     <Phone size={26} className="text-white" />
                   </div>
                   <span className="text-xs text-zinc-400 group-hover:text-zinc-200 transition-colors font-medium">Accept</span>

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 export default function ChatsPage() {
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-[#f8f9fa] dark:bg-[#222e35]/15 border-b-4 border-emerald-500">
+    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-[#f8f9fa] dark:bg-[#222e35]/15 border-b-4 border-blue-500">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}

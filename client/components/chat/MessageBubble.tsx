@@ -150,7 +150,7 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
 
       <div className={cn("flex flex-col max-w-[85%] sm:max-w-[75%]", isSelf ? "items-end" : "items-start")}>
         {!isSelf && (
-          <span className="text-[13px] font-bold text-emerald-600 dark:text-emerald-400 pl-2 mb-1">
+          <span className="text-[13px] font-bold text-blue-600 dark:text-blue-400 pl-2 mb-1">
             {message.sender.name}
           </span>
         )}
@@ -265,12 +265,12 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
               className={cn(
                 "flex items-start gap-2 border-l-4 pl-2 py-1 pr-1 mb-2 rounded text-xs select-none",
                 isSelf
-                  ? "border-emerald-600 bg-black/5 dark:border-emerald-400 dark:bg-black/20"
-                  : "border-emerald-500 bg-zinc-100 dark:border-emerald-400 dark:bg-[#182229]"
+                  ? "border-blue-600 bg-black/5 dark:border-blue-400 dark:bg-black/20"
+                  : "border-blue-500 bg-zinc-100 dark:border-blue-400 dark:bg-[#182229]"
               )}
             >
               <div className="flex-1 min-w-0">
-                <p className={cn("font-bold text-[10px]", isSelf ? "text-emerald-800 dark:text-emerald-400" : "text-emerald-600 dark:text-emerald-400")}>
+                <p className={cn("font-bold text-[10px]", isSelf ? "text-blue-800 dark:text-blue-400" : "text-blue-600 dark:text-blue-400")}>
                   {message.replyTo.sender.name}
                 </p>
                 <p className="truncate max-w-full text-[11px] text-zinc-600 dark:text-zinc-300 mt-0.5">
@@ -336,7 +336,7 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
                     >
                       <video src={att.fileUrl} className="max-h-64 object-contain pointer-events-none" />
                       <div className="absolute inset-0 flex items-center justify-center bg-black/10 hover:bg-black/35 transition-colors">
-                        <span className="p-2.5 rounded-full bg-emerald-500 text-white shadow-lg flex items-center justify-center">
+                        <span className="p-2.5 rounded-full bg-blue-500 text-white shadow-lg flex items-center justify-center">
                           <Play size={16} fill="currentColor" className="ml-0.5" />
                         </span>
                       </div>
@@ -391,7 +391,7 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
                         "flex items-center justify-center h-9 w-9 rounded-lg flex-shrink-0 transition-colors",
                         isSelf
                           ? "bg-white/20 text-white"
-                          : "bg-zinc-200 dark:bg-zinc-800 text-emerald-600 dark:text-emerald-400"
+                          : "bg-zinc-200 dark:bg-zinc-800 text-blue-600 dark:text-blue-400"
                       )}
                     >
                       <FileText size={18} />
@@ -400,7 +400,7 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
                       <p className={cn("text-xs font-bold truncate", isSelf ? "text-white" : "text-zinc-800 dark:text-zinc-200")}>
                         {att.fileName}
                       </p>
-                      <p className={cn("text-[10px] font-semibold", isSelf ? "text-emerald-100/90" : "text-zinc-500 dark:text-zinc-450")}>
+                      <p className={cn("text-[10px] font-semibold", isSelf ? "text-blue-100/90" : "text-zinc-500 dark:text-zinc-450")}>
                         {(att.fileSize / 1024).toFixed(1)} KB {isPdf && "• PDF"}
                       </p>
                     </div>
@@ -433,7 +433,7 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
                 type="text"
                 value={editVal}
                 onChange={(e) => setEditVal(e.target.value)}
-                className="w-full px-2.5 py-1.5 rounded-lg border border-[#b2e7a6]/60 dark:border-[#025041]/60 bg-white/70 dark:bg-[#182229] text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 text-xs"
+                className="w-full px-2.5 py-1.5 rounded-lg border border-[#b2e7a6]/60 dark:border-[#025041]/60 bg-white/70 dark:bg-[#182229] text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-blue-500 text-xs"
                 placeholder="Edit message..."
                 autoFocus
                 onKeyDown={(e) => {

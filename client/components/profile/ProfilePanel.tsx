@@ -306,7 +306,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
             <button
               onClick={handleSaveTitle}
               disabled={savingTitle}
-              className="p-1.5 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 cursor-pointer disabled:opacity-50"
+              className="p-1.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 cursor-pointer disabled:opacity-50"
             >
               {savingTitle ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />}
             </button>
@@ -380,7 +380,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
             onClick={() => setActiveTab("members")}
             className={`px-3 py-3 text-center border-b-2 flex-shrink-0 cursor-pointer transition-colors ${
               activeTab === "members"
-                ? "border-[#00a884] text-[#00a884] dark:border-emerald-500 dark:text-emerald-400"
+                ? "border-[#00a884] text-[#00a884] dark:border-blue-500 dark:text-blue-400"
                 : "border-transparent text-[#667781] hover:text-[#111b21] dark:text-zinc-400 dark:hover:text-[#e9edef]"
             }`}
           >
@@ -391,7 +391,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
           onClick={() => setActiveTab("media")}
           className={`px-3 py-3 text-center border-b-2 flex-shrink-0 cursor-pointer transition-colors ${
             activeTab === "media"
-              ? "border-[#00a884] text-[#00a884] dark:border-emerald-500 dark:text-emerald-400"
+              ? "border-[#00a884] text-[#00a884] dark:border-blue-500 dark:text-blue-400"
               : "border-transparent text-[#667781] hover:text-[#111b21] dark:text-zinc-400 dark:hover:text-[#e9edef]"
           }`}
         >
@@ -401,7 +401,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
           onClick={() => setActiveTab("files")}
           className={`px-3 py-3 text-center border-b-2 flex-shrink-0 cursor-pointer transition-colors ${
             activeTab === "files"
-              ? "border-[#00a884] text-[#00a884] dark:border-emerald-500 dark:text-emerald-400"
+              ? "border-[#00a884] text-[#00a884] dark:border-blue-500 dark:text-blue-400"
               : "border-transparent text-[#667781] hover:text-[#111b21] dark:text-zinc-400 dark:hover:text-[#e9edef]"
           }`}
         >
@@ -411,7 +411,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
           onClick={() => setActiveTab("starred")}
           className={`px-3 py-3 text-center border-b-2 flex-shrink-0 cursor-pointer transition-colors ${
             activeTab === "starred"
-              ? "border-[#00a884] text-[#00a884] dark:border-emerald-500 dark:text-emerald-400"
+              ? "border-[#00a884] text-[#00a884] dark:border-blue-500 dark:text-blue-400"
               : "border-transparent text-[#667781] hover:text-[#111b21] dark:text-zinc-400 dark:hover:text-[#e9edef]"
           }`}
         >
@@ -431,7 +431,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
                 {!showAddMember ? (
                   <button
                     onClick={() => setShowAddMember(true)}
-                    className="flex items-center gap-2 text-xs font-bold text-[#00a884] dark:text-emerald-400 hover:underline cursor-pointer"
+                    className="flex items-center gap-2 text-xs font-bold text-[#00a884] dark:text-blue-400 hover:underline cursor-pointer"
                   >
                     <Plus size={14} className="stroke-[2.5px]" /> Add Member
                   </button>
@@ -462,7 +462,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
 
                     {/* Member Add Search Results */}
                     {searchingMembers ? (
-                      <div className="flex justify-center py-2"><Loader2 size={14} className="animate-spin text-emerald-500" /></div>
+                      <div className="flex justify-center py-2"><Loader2 size={14} className="animate-spin text-blue-500" /></div>
                     ) : memberSearchQuery.trim().length >= 2 && memberSearchResults.length === 0 ? (
                       <p className="text-[10px] text-zinc-400 py-1 text-center">No users found</p>
                     ) : (
@@ -501,7 +501,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
                   member.role === "OWNER"
                     ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20"
                     : member.role === "ADMIN"
-                    ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-450 border border-emerald-500/20"
+                    ? "bg-blue-500/10 text-blue-600 dark:text-blue-450 border border-blue-500/20"
                     : "bg-zinc-200/50 dark:bg-zinc-800/40 text-zinc-550 dark:text-zinc-400";
 
                 return (
@@ -567,7 +567,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
                 <div
                   key={att.id}
                   onClick={() => handleDownload(att.fileUrl, att.fileName)}
-                  className="aspect-square rounded-lg overflow-hidden border border-[#e9edef] dark:border-white/5 bg-[#f0f2f5] dark:bg-zinc-950 relative group cursor-pointer hover:border-emerald-500 transition-colors"
+                  className="aspect-square rounded-lg overflow-hidden border border-[#e9edef] dark:border-white/5 bg-[#f0f2f5] dark:bg-zinc-950 relative group cursor-pointer hover:border-blue-500 transition-colors"
                 >
                   <img src={att.fileUrl} alt="media" className="h-full w-full object-cover" />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
@@ -594,7 +594,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
                   onClick={() => handleDownload(att.fileUrl, att.fileName)}
                   className="flex items-center gap-3 p-2.5 rounded-lg border border-[#e9edef] dark:border-[#222e35]/35 bg-zinc-50 dark:bg-white/5 hover:bg-zinc-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
                 >
-                  <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-zinc-200 dark:bg-zinc-800 text-[#00a884] dark:text-emerald-400">
+                  <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-zinc-200 dark:bg-zinc-800 text-[#00a884] dark:text-blue-400">
                     <FileText size={16} />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -625,7 +625,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
                   className="p-3 rounded-xl border border-zinc-200/60 dark:border-white/5 bg-zinc-50 dark:bg-white/5 relative group select-text"
                 >
                   <div className="flex items-center justify-between gap-2 mb-1 text-[10px] font-bold text-zinc-400">
-                    <span className="text-emerald-650 dark:text-emerald-400">{msg.senderName}</span>
+                    <span className="text-blue-650 dark:text-blue-400">{msg.senderName}</span>
                     <span>{new Date(msg.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
                   </div>
                   <p className="text-xs text-zinc-800 dark:text-zinc-200 break-words line-clamp-3 select-all">
