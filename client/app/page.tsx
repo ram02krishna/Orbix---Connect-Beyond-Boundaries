@@ -284,7 +284,7 @@ export default function LandingPage() {
       count: 3,
       viewedCount: 1,
       stories: [
-        { type: "text", content: "Working on the new Orbix dark mode dashboard today! 💻", bg: "bg-gradient-to-tr from-blue-600 to-teal-800" },
+        { type: "text", content: "Working on the new Orbix dark mode dashboard today! 💻", bg: "bg-gradient-to-tr from-blue-600 to-blue-800" },
         { type: "text", content: "Interactive micro-animations are looking extremely smooth.", bg: "bg-gradient-to-tr from-[#6D5DF6] to-[#4F8CFF]" },
         { type: "text", content: "Coffee break! ☕✨", bg: "bg-gradient-to-tr from-rose-600 to-amber-600" }
       ]
@@ -460,7 +460,7 @@ export default function LandingPage() {
       <div className="absolute top-0 inset-x-0 h-[1200px] overflow-hidden pointer-events-none z-0">
         {/* Light mode blobs */}
         <div className="dark:hidden absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-br from-[#06A0F8]/15 via-blue-800/5 to-transparent blur-[120px] animate-pulse-slow" />
-        <div className="dark:hidden absolute top-[20%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-bl from-teal-500/10 via-[#06A0F8]/5 to-transparent blur-[140px] animate-pulse-slow" style={{ animationDelay: "2s" }} />
+        <div className="dark:hidden absolute top-[20%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-bl from-[#00D8E3]/10 via-[#06A0F8]/5 to-transparent blur-[140px] animate-pulse-slow" style={{ animationDelay: "2s" }} />
         {/* Dark mode enhanced blobs */}
         <div className="hidden dark:block dark-blob-1 absolute top-[-15%] left-[-5%] w-[55vw] h-[55vw] rounded-full blur-[130px]" />
         <div className="hidden dark:block dark-blob-2 absolute top-[25%] right-[-8%] w-[45vw] h-[45vw] rounded-full blur-[150px]" />
@@ -524,10 +524,11 @@ export default function LandingPage() {
             </Link>
             <Link 
               href="/signup" 
-              className="px-5 py-2.5 bg-gradient-to-tr from-[#06A0F8] to-[#00D8E3] hover:from-[#1661F9] hover:to-[#0ea5e9] rounded-xl font-bold text-white shadow-lg shadow-[#06A0F8]/30 hover:shadow-[#06A0F8]/50 transition-all flex items-center gap-2 group hover:scale-[1.02]"
+              className="relative px-5 py-2.5 bg-gradient-to-tr from-[#06A0F8] to-[#00D8E3] hover:from-[#1661F9] hover:to-[#0ea5e9] rounded-xl font-bold text-white shadow-lg shadow-[#06A0F8]/30 hover:shadow-[#06A0F8]/50 transition-all flex items-center gap-2 group hover:scale-[1.02] overflow-hidden"
             >
-              Start Messaging
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer-move_1.5s_infinite]" />
+              <span className="relative z-10">Start Messaging</span>
+              <ArrowRight className="relative z-10 w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
 
@@ -606,10 +607,11 @@ export default function LandingPage() {
               <div className="absolute inset-0 bg-gradient-to-tr from-[#06A0F8] via-[#00D8E3] to-[#5D32FA] rounded-xl filter blur-[15px] opacity-0 group-hover:opacity-70 dark:group-hover:opacity-100 transition-opacity duration-500"></div>
               <Link 
                 href="/signup" 
-                className="relative px-8 py-4 bg-gradient-to-tr from-[#06A0F8] via-[#00D8E3] to-[#5D32FA] hover:scale-[1.02] rounded-xl font-bold shadow-xl shadow-[#06A0F8]/30 text-white transition-all flex items-center gap-2 group-hover:shadow-none"
+                className="relative overflow-hidden px-8 py-4 bg-gradient-to-tr from-[#06A0F8] via-[#00D8E3] to-[#5D32FA] hover:scale-[1.02] rounded-xl font-bold shadow-xl shadow-[#06A0F8]/30 text-white transition-all flex items-center gap-2 group-hover:shadow-none"
               >
-                Start Messaging Free
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer-move_1.5s_infinite]" />
+                <span className="relative z-10">Start Messaging Free</span>
+                <ArrowRight className="relative z-10 w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
             <Link 
@@ -728,7 +730,7 @@ export default function LandingPage() {
                     onClick={() => setSelectedChatId(chat.id)}
                     className={`w-full flex items-center gap-3 p-2.5 rounded-xl transition-all text-left relative cursor-pointer ${
                       selectedChatId === chat.id 
-                        ? "bg-white dark:bg-[#203c30]/65 border border-zinc-200/60 dark:border-white/10 shadow-md shadow-blue-500/5 text-zinc-950 dark:text-white" 
+                        ? "bg-white dark:bg-[#06A0F8]/15 border border-zinc-200/60 dark:border-[#06A0F8]/20 shadow-md shadow-blue-500/5 text-zinc-950 dark:text-white" 
                         : "hover:bg-zinc-200/30 dark:hover:bg-white/[0.02] border border-transparent"
                     }`}
                   >
@@ -997,9 +999,13 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           
           {/* Card 1: Real-time messaging (2 columns span) */}
-          <div 
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5 }}
             onMouseMove={handleMouseMove}
-            className="md:col-span-2 rounded-2xl bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/60 p-8 flex flex-col justify-between h-[420px] overflow-hidden group relative cf-card-glow transition-all duration-300 hover:scale-[1.02] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl dark:hover:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_24px_rgba(6, 160, 248,0.15)]"
+            className="md:col-span-2 rounded-2xl bg-white dark:bg-[#0A0A0A] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/60 p-8 flex flex-col justify-between h-[420px] overflow-hidden group relative cf-card-glow transition-all duration-300 hover:scale-[1.02] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl dark:hover:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_24px_rgba(6, 160, 248,0.15)]"
           >
             <div className="z-10">
               <span className="text-xs font-bold uppercase tracking-[0.12em] text-[#06A0F8]">Speed & Delivery</span>
@@ -1032,10 +1038,16 @@ export default function LandingPage() {
                 Live socket connection active
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Card 2: HD Calls */}
-          <div className="rounded-2xl bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/60 p-8 flex flex-col justify-between h-[420px] overflow-hidden group relative cf-card-glow transition-all duration-300 hover:scale-[1.02] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl dark:hover:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_24px_rgba(6, 160, 248,0.15)]">
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="rounded-2xl bg-white dark:bg-[#0A0A0A] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/60 p-8 flex flex-col justify-between h-[420px] overflow-hidden group relative cf-card-glow transition-all duration-300 hover:scale-[1.02] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl dark:hover:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_24px_rgba(6, 160, 248,0.15)]"
+          >
             <div className="z-10">
               <span className="text-xs font-bold text-[#06A0F8] uppercase tracking-wider">Voice & Video</span>
               <h3 className="text-2xl font-bold text-zinc-900 dark:text-white mt-2 mb-3">HD WebRTC Calls</h3>
@@ -1047,14 +1059,20 @@ export default function LandingPage() {
             {/* Illustration: Glowing speaker and animated mic scale */}
             <div className="relative h-44 w-full flex items-center justify-center z-10">
               <div className="w-20 h-20 rounded-full bg-[#06A0F8]/10 border border-[#06A0F8]/30 flex items-center justify-center animate-ping absolute" />
-              <div className="w-16 h-16 rounded-full bg-[#06A0F8] flex items-center justify-center shadow-lg shadow-[#06A0F8]/30 relative z-20">
+              <div className="w-16 h-16 rounded-full bg-[#06A0F8] flex items-center justify-center shadow-lg shadow-[#06A0F8]/30 relative z-20 group-hover:scale-110 transition-transform duration-500">
                 <Volume2 className="w-7 h-7 text-white" />
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Card 3: Status Updates */}
-          <div className="rounded-2xl bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/60 p-8 flex flex-col justify-between h-[420px] overflow-hidden group relative cf-card-glow transition-all duration-300 hover:scale-[1.02] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl dark:hover:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_24px_rgba(6, 160, 248,0.15)]">
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="rounded-2xl bg-white dark:bg-[#0A0A0A] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/60 p-8 flex flex-col justify-between h-[420px] overflow-hidden group relative cf-card-glow transition-all duration-300 hover:scale-[1.02] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl dark:hover:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_24px_rgba(6, 160, 248,0.15)]"
+          >
             <div className="z-10">
               <span className="text-sm font-semibold uppercase tracking-[0.12em] text-[#06A0F8]">Stories</span>
               <h3 className="text-2xl font-bold text-zinc-950 dark:text-white tracking-tight mt-2 mb-3">Swipable Statuses</h3>
@@ -1064,7 +1082,7 @@ export default function LandingPage() {
             </div>
 
             {/* Illustration: Status Circle ring */}
-            <div className="bg-zinc-100/90 dark:bg-[#000000]/85 border border-zinc-200/60 dark:border-white/[0.06] rounded-xl p-4 flex justify-around mt-4 z-10 shadow-sm">
+            <div className="bg-zinc-100/90 dark:bg-[#000000]/85 border border-zinc-200/60 dark:border-white/[0.06] rounded-xl p-4 flex justify-around mt-4 z-10 shadow-sm group-hover:-translate-y-2 transition-transform duration-500">
               <div className="relative w-12 h-12">
                 <div className="absolute inset-0 rounded-full border-2 border-dashed border-[#00D8E3]" />
                 <div className="absolute inset-1 rounded-full bg-[#06A0F8] flex items-center justify-center text-xs font-bold text-white">PD</div>
@@ -1074,10 +1092,16 @@ export default function LandingPage() {
                 <div className="absolute inset-1 rounded-full bg-zinc-400 dark:bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-900 dark:text-white">KT</div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Card 4: End-to-end Encryption */}
-          <div className="rounded-2xl bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/60 p-8 flex flex-col justify-between h-[420px] overflow-hidden group relative cf-card-glow transition-all duration-300 hover:scale-[1.02] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl dark:hover:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_24px_rgba(6, 160, 248,0.15)]">
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="rounded-2xl bg-white dark:bg-[#0A0A0A] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/60 p-8 flex flex-col justify-between h-[420px] overflow-hidden group relative cf-card-glow transition-all duration-300 hover:scale-[1.02] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl dark:hover:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_24px_rgba(6, 160, 248,0.15)]"
+          >
             <div className="z-10">
               <span className="text-xs font-bold text-[#06A0F8] uppercase tracking-wider">Security</span>
               <h3 className="text-2xl font-bold text-zinc-900 dark:text-white mt-2 mb-3">End-to-End Cryptography</h3>
@@ -1087,7 +1111,7 @@ export default function LandingPage() {
             </div>
 
             {/* Scanning Lock Illustration */}
-            <div className="bg-zinc-100/90 dark:bg-[#000000]/85 border border-zinc-200/60 dark:border-white/[0.06] rounded-xl p-4 flex items-center justify-between mt-4 z-10 shadow-sm">
+            <div className="bg-zinc-100/90 dark:bg-[#000000]/85 border border-zinc-200/60 dark:border-white/[0.06] rounded-xl p-4 flex items-center justify-between mt-4 z-10 shadow-sm group-hover:border-[#00D8E3]/40 transition-colors duration-500">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-tr from-[#06A0F8] to-[#00D8E3] flex items-center justify-center text-white">
                   <Lock className="w-5 h-5" />
@@ -1104,10 +1128,16 @@ export default function LandingPage() {
                 {isScanning ? "Encrypting..." : scanComplete ? "Secure ✔" : "Verify Keys"}
               </button>
             </div>
-          </div>
+          </motion.div>
 
           {/* Card 5: Message Editing & Starring */}
-          <div className="rounded-2xl bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/60 p-8 flex flex-col justify-between h-[420px] overflow-hidden group relative cf-card-glow transition-all duration-300 hover:scale-[1.02] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl dark:hover:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_24px_rgba(6, 160, 248,0.15)]">
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="rounded-2xl bg-white dark:bg-[#0A0A0A] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/60 p-8 flex flex-col justify-between h-[420px] overflow-hidden group relative cf-card-glow transition-all duration-300 hover:scale-[1.02] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl dark:hover:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_24px_rgba(6, 160, 248,0.15)]"
+          >
             <div className="z-10">
               <span className="text-xs font-bold text-[#06A0F8] uppercase tracking-wider">Productivity</span>
               <h3 className="text-2xl font-bold text-zinc-900 dark:text-white mt-2 mb-3">Editing & Starring</h3>
@@ -1116,7 +1146,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="bg-zinc-100/90 dark:bg-[#000000]/85 border border-zinc-200/60 dark:border-white/[0.06] rounded-xl p-3.5 mt-4 z-10 space-y-2 shadow-sm">
+            <div className="bg-zinc-100/90 dark:bg-[#000000]/85 border border-zinc-200/60 dark:border-white/[0.06] rounded-xl p-3.5 mt-4 z-10 space-y-2 shadow-sm group-hover:-translate-y-2 transition-transform duration-500">
               <div className="flex items-center justify-between text-sm bg-white dark:bg-white/[0.03] border border-zinc-200 dark:border-white/[0.05] p-2 rounded-lg text-zinc-700 dark:text-zinc-300">
                 <span className="truncate">This is a message with a typo...</span>
                 <Pencil className="w-3.5 h-3.5 text-[#06A0F8] flex-shrink-0" />
@@ -1129,7 +1159,7 @@ export default function LandingPage() {
                 </span>
               </div>
             </div>
-          </div>
+          </motion.div>
 
         </div>
       </section>
@@ -1154,7 +1184,7 @@ export default function LandingPage() {
           <div className="w-full flex flex-col lg:flex-row justify-center items-center gap-12 pt-8">
             
             {/* 1. Desktop & Laptop Mockup frame */}
-            <div className="w-full max-w-md bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-zinc-800/50 rounded-xl p-3 shadow-2xl dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] relative group hover:scale-[1.02] hover:-rotate-1 transition-all duration-500">
+            <div className="w-full max-w-md bg-white dark:bg-[#0A0A0A] border border-zinc-200 dark:border-zinc-800/50 rounded-xl p-3 shadow-2xl dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] relative group hover:scale-[1.02] hover:-rotate-1 transition-all duration-500">
               <div className="flex items-center gap-1.5 pb-2 mb-2 border-b border-zinc-200/50 dark:border-white/[0.06]">
                 <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
                 <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
@@ -1169,7 +1199,7 @@ export default function LandingPage() {
             </div>
 
             {/* 2. Tablet Mockup frame */}
-            <div className="w-72 bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] rounded-2xl p-2.5 shadow-2xl dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] relative group hover:scale-[1.03] hover:rotate-1 transition-all duration-500">
+            <div className="w-72 bg-white dark:bg-[#0A0A0A] border border-zinc-200 dark:border-white/[0.06] rounded-2xl p-2.5 shadow-2xl dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] relative group hover:scale-[1.03] hover:rotate-1 transition-all duration-500">
               <div className="aspect-[4/3] bg-zinc-50 dark:bg-[#000000] rounded-xl overflow-hidden relative flex flex-col items-center justify-center p-6 border border-zinc-200/50 dark:border-white/[0.04]">
                 <Tablet className="w-10 h-10 text-[#00D8E3] mb-3" />
                 <span className="text-xs font-bold text-zinc-900 dark:text-white">iPadOS & Android Tablet</span>
@@ -1178,7 +1208,7 @@ export default function LandingPage() {
             </div>
 
             {/* 3. Mobile Mockup frame */}
-            <div className="w-56 bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] rounded-[2rem] p-3 shadow-2xl dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] relative group hover:scale-[1.04] hover:-rotate-2 transition-all duration-500">
+            <div className="w-56 bg-white dark:bg-[#0A0A0A] border border-zinc-200 dark:border-white/[0.06] rounded-[2rem] p-3 shadow-2xl dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] relative group hover:scale-[1.04] hover:-rotate-2 transition-all duration-500">
               <div className="w-20 h-4 bg-zinc-200 dark:bg-black rounded-full mx-auto mb-2" />
               <div className="aspect-[9/19] bg-zinc-50 dark:bg-[#000000] rounded-[1.5rem] overflow-hidden relative flex flex-col items-center justify-center p-4 border border-zinc-200/50 dark:border-white/[0.04]">
                 <Smartphone className="w-8 h-8 text-[#FF4F8C] mb-3" />
@@ -1236,7 +1266,7 @@ export default function LandingPage() {
           </div>
 
           {/* Right Sandbox Container */}
-          <div className="lg:col-span-7 w-full max-w-xl mx-auto bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] rounded-2xl flex flex-col h-[520px] overflow-hidden shadow-2xl dark:shadow-[0_8px_40px_rgba(0,0,0,0.5)] backdrop-blur-md relative">
+          <div className="lg:col-span-7 w-full max-w-xl mx-auto bg-white dark:bg-[#0A0A0A] border border-zinc-200 dark:border-white/[0.06] rounded-2xl flex flex-col h-[520px] overflow-hidden shadow-2xl dark:shadow-[0_8px_40px_rgba(0,0,0,0.5)] backdrop-blur-md relative">
             
             {/* Starred Messages Drawer overlay */}
             <AnimatePresence>
@@ -1744,7 +1774,7 @@ export default function LandingPage() {
 
           {/* Right Encryption Sandbox Card */}
           <div className="lg:col-span-7 flex justify-center lg:justify-end">
-            <div className="w-full max-w-lg bg-[#0b1f18] border border-[#00D8E3]/20 rounded-2xl p-6 shadow-2xl shadow-[#00D8E3]/10 relative overflow-hidden">
+            <div className="w-full max-w-lg bg-[#0a101f] border border-[#00D8E3]/20 rounded-2xl p-6 shadow-2xl shadow-[#00D8E3]/10 relative overflow-hidden">
               
               {/* Subtle glow background */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-[#00D8E3]/5 rounded-full blur-[80px] pointer-events-none" />
@@ -2080,7 +2110,7 @@ export default function LandingPage() {
             </div>
 
             {/* Note card */}
-            <div className="bg-gradient-to-br from-[#0b1f18] to-[#0a1510] border border-[#06A0F8]/30 rounded-2xl p-8 flex flex-col justify-between shadow-lg dark:shadow-[0_0_40px_rgba(6, 160, 248,0.15)] relative overflow-hidden group">
+            <div className="bg-gradient-to-br from-[#0a101f] to-[#050a0f] border border-[#06A0F8]/30 rounded-2xl p-8 flex flex-col justify-between shadow-lg dark:shadow-[0_0_40px_rgba(6, 160, 248,0.15)] relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#06A0F8]/10 filter blur-[40px] rounded-full group-hover:bg-[#06A0F8]/20 transition-all duration-500" />
               <div className="relative z-10">
                 <div className="w-12 h-12 rounded-2xl bg-[#06A0F8]/15 border border-[#06A0F8]/20 flex items-center justify-center mb-6">
@@ -2280,7 +2310,7 @@ export default function LandingPage() {
             {/* Right: Platform Status Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-sm">
               {/* Web - LIVE */}
-              <div className="col-span-full bg-white dark:bg-[#0c1a14] border-2 border-[#06A0F8] dark:border-[#06A0F8]/60 rounded-2xl p-5 flex items-center gap-4 shadow-lg shadow-[#06A0F8]/10 dark:shadow-[0_0_30px_rgba(6, 160, 248,0.10),0_8px_24px_rgba(0,0,0,0.4)]">
+              <div className="col-span-full bg-white dark:bg-[#0A0A0A] border-2 border-[#06A0F8] dark:border-[#06A0F8]/60 rounded-2xl p-5 flex items-center gap-4 shadow-lg shadow-[#06A0F8]/10 dark:shadow-[0_0_30px_rgba(6, 160, 248,0.10),0_8px_24px_rgba(0,0,0,0.4)]">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#06A0F8] to-[#00D8E3] flex items-center justify-center flex-shrink-0">
                   <Globe className="w-6 h-6 text-white" />
                 </div>
@@ -2295,7 +2325,7 @@ export default function LandingPage() {
               </div>
 
               {/* Android */}
-              <div className="bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/30 rounded-2xl p-5 flex flex-col items-center text-center gap-3 shadow-sm dark:shadow-[0_4px_16px_rgba(0,0,0,0.4)] transition-all">
+              <div className="bg-white dark:bg-[#0A0A0A] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/30 rounded-2xl p-5 flex flex-col items-center text-center gap-3 shadow-sm dark:shadow-[0_4px_16px_rgba(0,0,0,0.4)] transition-all">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#3ddc84] to-[#5af776] flex items-center justify-center opacity-70">
                   {/* Android logo */}
                   <svg className="w-7 h-7" viewBox="0 0 24 24" fill="white">
@@ -2310,7 +2340,7 @@ export default function LandingPage() {
               </div>
 
               {/* iOS */}
-              <div className="bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/30 rounded-2xl p-5 flex flex-col items-center text-center gap-3 shadow-sm dark:shadow-[0_4px_16px_rgba(0,0,0,0.4)] transition-all">
+              <div className="bg-white dark:bg-[#0A0A0A] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/30 rounded-2xl p-5 flex flex-col items-center text-center gap-3 shadow-sm dark:shadow-[0_4px_16px_rgba(0,0,0,0.4)] transition-all">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-zinc-600 to-zinc-400 flex items-center justify-center opacity-70">
                   <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.44-2.94 1.42-.15-1.15.41-2.35 1.04-3.11z"/></svg>
                 </div>
@@ -2322,7 +2352,7 @@ export default function LandingPage() {
               </div>
 
               {/* Desktop */}
-              <div className="col-span-full bg-white dark:bg-[#0c1a14] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/30 rounded-2xl p-5 flex items-center gap-4 shadow-sm dark:shadow-[0_4px_16px_rgba(0,0,0,0.4)] transition-all">
+              <div className="col-span-full bg-white dark:bg-[#0A0A0A] border border-zinc-200 dark:border-white/[0.06] hover:dark:border-[#06A0F8]/30 rounded-2xl p-5 flex items-center gap-4 shadow-sm dark:shadow-[0_4px_16px_rgba(0,0,0,0.4)] transition-all">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#34b7f1] to-[#5dc8f5] flex items-center justify-center opacity-70 flex-shrink-0">
                   {/* Monitor/Desktop SVG */}
                   <svg className="w-7 h-7" viewBox="0 0 24 24" fill="white">
@@ -2431,7 +2461,7 @@ export default function LandingPage() {
       {/* --- SECTION 14: FINAL CTA --- */}
       <section className="py-16 px-6 max-w-7xl mx-auto z-10 relative">
         {/* Glow wrapper container */}
-        <div className="bg-gradient-to-br from-[#0b1f18] via-[#0a1a10] to-[#000000] border border-[#00D8E3]/20 dark:border-[#00D8E3]/30 rounded-3xl p-12 md:p-20 relative overflow-hidden flex flex-col items-center text-center shadow-2xl shadow-[#06A0F8]/10 dark:shadow-[0_0_120px_rgba(6, 160, 248,0.10),0_40px_80px_rgba(0,0,0,0.6)]">
+        <div className="bg-gradient-to-br from-[#0a101f] via-[#050a0f] to-[#000000] border border-[#00D8E3]/20 dark:border-[#00D8E3]/30 rounded-3xl p-12 md:p-20 relative overflow-hidden flex flex-col items-center text-center shadow-2xl shadow-[#06A0F8]/10 dark:shadow-[0_0_120px_rgba(6, 160, 248,0.10),0_40px_80px_rgba(0,0,0,0.6)]">
           
           {/* Internal background glow */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#06A0F8]/10 filter blur-[80px] rounded-full pointer-events-none" />

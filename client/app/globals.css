@@ -165,7 +165,7 @@ body {
   background: linear-gradient(
     135deg,
     var(--color-brand-primary) 0%,
-    #00e599 100%
+    #00D8E3 100%
   );
   box-shadow: 0 0 20px rgba(6, 160, 248, 0.3);
 }
@@ -270,10 +270,10 @@ body {
 }
 
 .dark .whatsapp-wallpaper {
-  background-color: rgba(4, 9, 7, 0.2);
+  background-color: rgba(4, 7, 9, 0.2);
   background-image: 
     radial-gradient(rgba(6, 160, 248, 0.06) 1.5px, transparent 0),
-    radial-gradient(rgba(6, 160, 248, 0.06) 1.5px, rgba(4, 9, 7, 0.2) 0);
+    radial-gradient(rgba(6, 160, 248, 0.06) 1.5px, rgba(4, 7, 9, 0.2) 0);
   background-size: 24px 24px;
   background-position: 0 0, 12px 12px;
 }
@@ -749,7 +749,7 @@ body {
 
 .dark .lp-step-card:hover {
   border-color: rgba(6, 160, 248, 0.2);
-  background: rgba(11, 19, 15, 0.9);
+  background: rgba(11, 15, 19, 0.9);
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), 0 0 24px rgba(6, 160, 248, 0.06);
 }
 
@@ -768,13 +768,13 @@ body {
 
 /* Pricing coming soon card in dark */
 .dark .lp-pricing-soon {
-  background: rgba(7, 10, 9, 0.5);
+  background: rgba(7, 9, 10, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 /* Pricing built for Bharat card in dark */
 .dark .lp-pricing-bharat {
-  background: linear-gradient(135deg, #0b1f18 0%, #0a1510 100%);
+  background: linear-gradient(135deg, #0a101f 0%, #050a0f 100%);
   border: 1px solid rgba(6, 160, 248, 0.18);
 }
 
@@ -792,7 +792,7 @@ body {
 
 /* Encryption sandbox in dark */
 .dark .lp-sandbox-card {
-  background: rgba(6, 14, 10, 0.9);
+  background: rgba(6, 10, 14, 0.9);
   border: 1px solid rgba(6, 160, 248, 0.15);
   box-shadow: 0 0 60px rgba(6, 160, 248, 0.06), inset 0 0 40px rgba(6, 160, 248, 0.02);
 }
@@ -805,7 +805,7 @@ body {
 
 /* CTA section in dark */
 .dark .lp-cta-section {
-  background: linear-gradient(135deg, #091510 0%, #0b1f18 40%, #091510 100%);
+  background: linear-gradient(135deg, #050a0f 0%, #0a101f 40%, #050a0f 100%);
   border: 1px solid rgba(6, 160, 248, 0.15);
   box-shadow: 0 0 80px rgba(6, 160, 248, 0.07);
 }
