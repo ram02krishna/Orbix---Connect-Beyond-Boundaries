@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { Reply, Smile, Trash2, Download, FileText, Pencil, Check, X, Star, Play, Loader2, AlertCircle } from "lucide-react";
+import { Reply, Smile, Trash2, Download, FileText, Pencil, Check, X, Star, Play, Loader2, AlertCircle, Forward } from "lucide-react";
 import { cn } from "@lib/utils";
 import { useAuthStore } from "@hooks/useAuthStore";
 import { Avatar } from "@components/ui/Avatar";
@@ -17,13 +17,13 @@ export interface MessageBubbleProps {
   onDelete: (messageId: string, mode: "me" | "everyone") => void;
   onEdit?: (messageId: string, newContent: string) => Promise<void>;
   onRetry?: (message: any) => void;
+  onForward?: (message: any) => void;
   searchQuery?: string;
 }
 
-export const MessageBubble = React.memo(function MessageBubble({ message, onReply, onReact, onDelete, onEdit, onRetry, searchQuery }: MessageBubbleProps) {
+export const MessageBubble = React.memo(function MessageBubble({ message, onReply, onReact, onDelete, onEdit, onRetry, onForward, searchQuery }: MessageBubbleProps) {
   const user = useAuthStore((state) => state.user);
 
-  const [showReactionPicker, setShowReactionPicker] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editVal, setEditVal] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -72,7 +72,6 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
       const handleGlobalClick = (e: MouseEvent | TouchEvent) => {
         if (bubbleRef.current && !bubbleRef.current.contains(e.target as Node)) {
           setShowOptionsMobile(false);
-          setShowReactionPicker(false);
         }
       };
       const timeout = setTimeout(() => {
@@ -105,8 +104,6 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
     message.attachments.some((att: any) => att.fileType === "IMAGE" || att.fileType === "VIDEO") &&
     (message.content === message.attachments[0]?.fileName || !message.content);
 
-  const quickEmojis = ["👍", "❤️", "😂", "😮", "😢", "🙏"];
-
   const handleDownload = (url: string, filename: string) => {
     const downloadUrl = `${API_BASE_URL}/media/download?url=${encodeURIComponent(url)}&name=${encodeURIComponent(filename)}`;
     window.location.href = downloadUrl;
@@ -119,7 +116,7 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
 
   const handleDoubleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (isDeleted || message.id.startsWith("temp-")) return;
+    if (isDeleted || message.id.startsWith("temp-") || isSelf) return;
     onReact(message.id, "❤️");
   };
 
@@ -135,6 +132,13 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
       clearTimeout(touchTimerRef.current);
       touchTimerRef.current = null;
     }
+  };
+
+  const handleBubbleClick = (e: React.MouseEvent) => {
+    if (isDeleted || message.id.startsWith("temp-")) return;
+    
+    // On touch devices or clicks, toggle the options menu
+    setShowOptionsMobile(prev => !prev);
   };
 
   return (
@@ -161,6 +165,7 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEndOrMove}
           onTouchMove={handleTouchEndOrMove}
+          onClick={handleBubbleClick}
           className={cn(
             isMediaOnly
               ? "p-1 rounded-2xl relative border shadow-[0_2px_4px_rgba(0,0,0,0.04)] overflow-hidden"
@@ -181,83 +186,97 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
               : "var(--bubble-radius, 16px) var(--bubble-radius, 16px) var(--bubble-radius, 16px) 0px"
           }}
         >
-          {/* Options Bar - Positioned outside left/right of the card */}
+          {/* Options Bar & Reaction Picker */}
           {!isDeleted && (
             <div
+              onClick={(e) => e.stopPropagation()}
               className={cn(
                 "absolute top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 flex items-center gap-1.5 bg-white dark:bg-zinc-900/90 border border-zinc-200 dark:border-white/5 backdrop-blur-md rounded-xl p-1 shadow-lg transition-all z-30 select-none",
                 isSelf ? "right-full mr-3" : "left-full ml-3",
                 showOptionsMobile && "opacity-100"
               )}
             >
-              <div className="relative">
-                <button
-                  onClick={() => setShowReactionPicker(!showReactionPicker)}
-                  className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors cursor-pointer"
-                  title="Add Reaction"
-                >
-                  <Smile size={14} />
-                </button>
+                <>
+                  {!isSelf && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        onReply(message);
+                        setShowOptionsMobile(false);
+                      }}
+                      className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                      title="Reply"
+                    >
+                      <Reply size={14} className="pointer-events-none" />
+                    </button>
+                  )}
+                  
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      if (onForward) onForward(message);
+                      setShowOptionsMobile(false);
+                    }}
+                    className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                    title="Forward"
+                  >
+                    <Forward size={14} className="pointer-events-none" />
+                  </button>
 
-                {showReactionPicker && (
-                  <div className="absolute bottom-10 left-0 flex gap-1.5 p-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-white/10 rounded-full shadow-2xl z-50 animate-scale-up">
-                    {quickEmojis.map((emoji) => (
-                      <button
-                        key={emoji}
-                        onClick={() => {
-                          onReact(message.id, emoji);
-                          setShowReactionPicker(false);
-                        }}
-                        className="hover:scale-130 active:scale-95 transition-all p-0.5 text-xl cursor-pointer"
-                      >
-                        {emoji}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      handleToggleStar();
+                      setShowOptionsMobile(false);
+                    }}
+                    className={cn(
+                      "p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors cursor-pointer",
+                      isStarred ? "text-amber-550 dark:text-amber-500" : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200"
+                    )}
+                    title={isStarred ? "Unstar message" : "Star message"}
+                  >
+                    <Star size={13} fill={isStarred ? "currentColor" : "none"} className="pointer-events-none" />
+                  </button>
 
-              <button
-                onClick={() => onReply(message)}
-                className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors cursor-pointer"
-                title="Reply"
-              >
-                <Reply size={14} />
-              </button>
+                  {isSelf && message.type === "TEXT" && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        setIsEditing(true);
+                        setEditVal(message.content || "");
+                        setShowOptionsMobile(false);
+                      }}
+                      className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                      title="Edit message"
+                    >
+                      <Pencil size={13} className="pointer-events-none" />
+                    </button>
+                  )}
 
-              <button
-                onClick={handleToggleStar}
-                className={cn(
-                  "p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors cursor-pointer",
-                  isStarred ? "text-amber-550 dark:text-amber-500" : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200"
-                )}
-                title={isStarred ? "Unstar message" : "Star message"}
-              >
-                <Star size={13} fill={isStarred ? "currentColor" : "none"} />
-              </button>
-
-              {isSelf && message.type === "TEXT" && (
-                <button
-                  onClick={() => {
-                    setIsEditing(true);
-                    setEditVal(message.content || "");
-                  }}
-                  className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors cursor-pointer"
-                  title="Edit message"
-                >
-                  <Pencil size={13} />
-                </button>
-              )}
-
-              {!isDeleted && (
-                <button
-                  onClick={() => setShowDeleteModal(true)}
-                  className="p-1.5 rounded-lg hover:bg-red-500/10 text-[#54656f] dark:text-[#aebac1] hover:text-red-500 dark:hover:text-red-400 transition-all cursor-pointer"
-                  title="Delete message"
-                >
-                  <Trash2 size={14} />
-                </button>
-              )}
+                  {!isDeleted && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        setShowDeleteModal(true);
+                        setShowOptionsMobile(false);
+                      }}
+                      className="p-1.5 rounded-lg hover:bg-red-500/10 text-[#54656f] dark:text-[#aebac1] hover:text-red-500 dark:hover:text-red-400 transition-all cursor-pointer"
+                      title="Delete message"
+                    >
+                      <Trash2 size={14} className="pointer-events-none" />
+                    </button>
+                  )}
+                </>
             </div>
           )}
           {!isDeleted && message.replyTo && (
@@ -291,7 +310,8 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
                   return (
                     <div
                       key={att.id}
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         setLightboxUrl(att.fileUrl);
                         setLightboxType("IMAGE");
                         setLightboxName(att.fileName);
@@ -323,7 +343,8 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
                   return (
                     <div
                       key={att.id}
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         setLightboxUrl(att.fileUrl);
                         setLightboxType("VIDEO");
                         setLightboxName(att.fileName);
@@ -369,7 +390,8 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
                 return (
                   <div
                     key={att.id}
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       if (isPdf) {
                         setLightboxUrl(att.fileUrl);
                         setLightboxType("PDF");
@@ -428,13 +450,13 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
 
           {/* Message text or Edit input block */}
           {isEditing ? (
-            <div className="flex flex-col gap-2 min-w-[200px] mt-1 select-none">
+            <div className="flex flex-col gap-2.5 min-w-[220px] mt-1 select-none">
               <input
                 type="text"
                 value={editVal}
                 onChange={(e) => setEditVal(e.target.value)}
-                className="w-full px-2.5 py-1.5 rounded-lg border border-[#b2e7a6]/60 dark:border-[#025041]/60 bg-white/70 dark:bg-[#182229] text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-blue-500 text-xs"
-                placeholder="Edit message..."
+                className="w-full px-3 py-2 rounded-xl border border-white/30 bg-black/10 text-white placeholder-white/50 focus:outline-none focus:bg-black/20 focus:border-white/50 transition-all text-sm font-medium"
+                placeholder="Edit your message..."
                 autoFocus
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
@@ -444,23 +466,22 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
                   }
                 }}
               />
-              <div className="flex items-center justify-end gap-1.5 self-end">
+              <div className="flex items-center justify-end gap-2 self-end">
                 <button
                   type="button"
                   onClick={() => setIsEditing(false)}
-                  className="p-1 rounded bg-zinc-200/50 hover:bg-zinc-200 dark:bg-zinc-700/30 dark:hover:bg-zinc-700/60 text-zinc-500 dark:text-zinc-400 transition-colors cursor-pointer"
-                  title="Cancel"
+                  className="px-3.5 py-1.5 text-xs font-semibold rounded-full bg-white/10 hover:bg-white/25 text-white transition-colors cursor-pointer"
                 >
-                  <X size={12} />
+                  Cancel
                 </button>
                 <button
                   type="button"
                   onClick={handleSaveEdit}
                   disabled={!editVal.trim() || editVal === message.content}
-                  className="p-1 rounded bg-[#00a884] hover:bg-[#008f6f] text-white disabled:opacity-40 disabled:pointer-events-none transition-colors cursor-pointer"
-                  title="Save changes"
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-full bg-white text-blue-600 hover:bg-white/90 disabled:opacity-50 disabled:pointer-events-none transition-all cursor-pointer shadow-sm"
                 >
-                  <Check size={12} />
+                  <Check size={14} strokeWidth={3} />
+                  Save
                 </button>
               </div>
             </div>
@@ -521,9 +542,10 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
               </span>
               {isSelf && (
                 <div className="flex items-center ml-1">
-                  {message.isSending ? (
+                  {message.isSending && (
                     <Loader2 size={11} className="animate-spin text-white/60 dark:text-zinc-500" />
-                  ) : message.hasFailed ? (
+                  )}
+                  {!message.isSending && message.hasFailed && (
                     <button
                       onClick={() => onRetry && onRetry(message)}
                       className="text-red-500 hover:text-red-600 transition-colors cursor-pointer flex items-center"
@@ -531,15 +553,16 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
                     >
                       <AlertCircle size={12} className="fill-red-500/10 animate-bounce" />
                     </button>
-                  ) : (
+                  )}
+                  {!message.isSending && !message.hasFailed && (
                     <span
                       className={cn(
-                        "text-[12px] font-bold select-none leading-none tracking-tight",
+                        "text-[12px] font-bold select-none leading-none tracking-tight transition-colors",
                         (message.reads?.length > 0 || message.status === "SEEN")
-                          ? "text-[#34b7f1]"
+                          ? "text-[#00FFC2] drop-shadow-sm"
                           : isMediaOnly
                           ? "text-white/70"
-                          : "text-white/60 dark:text-zinc-400"
+                          : "text-white/60 dark:text-white/50"
                       )}
                       title={
                         (message.reads?.length > 0 || message.status === "SEEN")
@@ -573,11 +596,14 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.95 }}
                 transition={{ type: "spring", stiffness: 450, damping: 20 }}
-                onClick={() => onReact(message.id, emoji)}
+                onTap={(e) => {
+                  e.stopPropagation();
+                  onReact(message.id, emoji);
+                }}
                 className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#1f2c34] backdrop-blur-md text-zinc-700 dark:text-zinc-300 cursor-pointer select-none hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors shadow-sm"
               >
-                <span className="text-[14px] leading-none select-none flex items-center justify-center">{emoji}</span>
-                {count > 1 && <span className="text-[11px] font-bold leading-none text-zinc-500 dark:text-zinc-400 select-none">{count}</span>}
+                <span className="text-[14px] leading-none select-none flex items-center justify-center pointer-events-none">{emoji}</span>
+                {count > 1 && <span className="text-[11px] font-bold leading-none text-zinc-500 dark:text-zinc-400 select-none pointer-events-none">{count}</span>}
               </motion.div>
             ))}
           </div>
@@ -635,22 +661,29 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
         </div>
       )}
 
-      <MediaLightbox
-        isOpen={lightboxOpen}
-        onClose={() => setLightboxOpen(false)}
-        mediaUrl={lightboxUrl}
-        mediaType={lightboxType}
-        fileName={lightboxName}
-      />
+      {lightboxOpen && (
+        <MediaLightbox
+          isOpen={lightboxOpen}
+          onClose={() => setLightboxOpen(false)}
+          mediaUrl={lightboxUrl}
+          mediaType={lightboxType}
+          fileName={lightboxName}
+        />
+      )}
     </motion.div>
   );
 }, (prevProps, nextProps) => {
+  if (prevProps.searchQuery !== nextProps.searchQuery) return false;
+
   const prevMsg = prevProps.message;
   const nextMsg = nextProps.message;
   if (prevMsg.id !== nextMsg.id) return false;
   if (prevMsg.content !== nextMsg.content) return false;
   if (prevMsg.editedAt !== nextMsg.editedAt) return false;
   if (prevMsg.deletedAt !== nextMsg.deletedAt) return false;
+  if (prevMsg.status !== nextMsg.status) return false;
+  if (prevMsg.isSending !== nextMsg.isSending) return false;
+  if (prevMsg.hasFailed !== nextMsg.hasFailed) return false;
 
   const prevReactions = prevMsg.reactions || [];
   const nextReactions = nextMsg.reactions || [];

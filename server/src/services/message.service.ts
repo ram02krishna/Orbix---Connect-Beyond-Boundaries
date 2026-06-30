@@ -2,6 +2,8 @@ import { prisma } from "../config/prisma.js";
 import { ApiError } from "../utils/ApiError.js";
 import type { MessageType } from "@prisma/client";
 import { encryptMessage, decryptMessage } from "./crypto.service.js";
+import { redis } from "../config/redis.js";
+import { invalidateInboxCache } from "./chat.service.js";
 
 function decryptMessageObj(message: any) {
   if (!message) return message;
@@ -131,6 +133,12 @@ export async function sendMessage(
     data: { isDeleted: false },
   });
 
+  // Invalidate caches
+  const allMemberIds = chat.members.map(m => m.userId);
+  await invalidateInboxCache(allMemberIds);
+  const messageKeys = allMemberIds.map(id => `messages:${chatId}:${id}`);
+  if (messageKeys.length > 0) await redis.del(...messageKeys);
+
   return decryptMessageObj(message);
 }
 
@@ -149,6 +157,12 @@ export async function getChatMessages(
   });
   if (!membership) throw new ApiError(403, "You are not in this chat");
 
+  const cacheKey = `messages:${chatId}:${userId}`;
+  if (!cursor && limit === 30) {
+    const cached = await redis.get<any[]>(cacheKey);
+    if (cached) return cached;
+  }
+
   const messages = await prisma.message.findMany({
     where: {
       chatId,
@@ -161,7 +175,13 @@ export async function getChatMessages(
     include: messageInclude,
   });
 
-  return messages.map(decryptMessageObj).reverse(); // return decrypted oldest→newest
+  const result = messages.map(decryptMessageObj).reverse(); // return decrypted oldest→newest
+  
+  if (!cursor && limit === 30) {
+    await redis.set(cacheKey, result, { ex: 60 * 60 * 24 });
+  }
+  
+  return result;
 }
 
 // ─── Edit a Message ───────────────────────────────────────────────────────────
@@ -180,6 +200,14 @@ export async function editMessage(messageId: string, userId: string, newContent:
     include: messageInclude,
   });
 
+  // Invalidate cache
+  const chat = await prisma.chat.findUnique({ where: { id: message.chatId }, include: { members: true } });
+  if (chat) {
+    const memberIds = chat.members.map(m => m.userId);
+    const messageKeys = memberIds.map(id => `messages:${message.chatId}:${id}`);
+    if (messageKeys.length > 0) await redis.del(...messageKeys);
+  }
+
   return decryptMessageObj(updated);
 }
 
@@ -192,18 +220,19 @@ export async function deleteMessage(messageId: string, userId: string, mode: "me
 
   if (!message) throw new ApiError(404, "Message not found");
 
+  let updated;
   if (mode === "everyone") {
     if (message.senderId !== userId) throw new ApiError(403, "You can only delete your own messages for everyone");
     if (message.deletedAt) throw new ApiError(400, "Message is already deleted");
 
-    return prisma.message.update({
+    updated = await prisma.message.update({
       where: { id: messageId },
       data: { deletedAt: new Date(), content: null },
     });
   } else {
     // Mode is "me"
     // Push the userId to the deletedForUsers array so it's hidden for them
-    return prisma.message.update({
+    updated = await prisma.message.update({
       where: { id: messageId },
       data: {
         deletedForUsers: {
@@ -212,6 +241,17 @@ export async function deleteMessage(messageId: string, userId: string, mode: "me
       },
     });
   }
+
+  // Invalidate cache
+  const chat = await prisma.chat.findUnique({ where: { id: message.chatId }, include: { members: true } });
+  if (chat) {
+    const memberIds = chat.members.map(m => m.userId);
+    const messageKeys = memberIds.map(id => `messages:${message.chatId}:${id}`);
+    if (messageKeys.length > 0) await redis.del(...messageKeys);
+    await invalidateInboxCache(memberIds);
+  }
+  
+  return updated;
 }
 
 // ─── Toggle a Reaction ────────────────────────────────────────────────────────

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../components/ThemeProvider";
@@ -12,8 +12,17 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Orbix — Connect Beyond Boundaries",
-  description: "Orbix is a next-generation real-time messaging platform that combines secure instant chats, HD voice/video calls, and group channels into a premium, unified experience.",
+  title: "Orbix - Connect Beyond Boundaries",
+  description: "A beautiful, real-time chat application inspired by WhatsApp and modern messengers.",
+  manifest: "/manifest.json",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: "#3b82f6",
 };
 
 export default function RootLayout({

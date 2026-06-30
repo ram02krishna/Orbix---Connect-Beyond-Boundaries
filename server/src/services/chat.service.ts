@@ -1,6 +1,7 @@
 import { prisma } from "../config/prisma.js";
 import { ApiError } from "../utils/ApiError.js";
 import { decryptMessage, decryptDeterministic } from "./crypto.service.js";
+import { redis } from "../config/redis.js";
 
 function decryptChatMembers(chat: any) {
   if (chat && chat.members) {
@@ -93,6 +94,7 @@ export async function getOrCreateDirectChat(userId: string, targetUserId: string
   });
 
   decryptChatMembers(chat);
+  await invalidateInboxCache([userId, targetUserId]);
   return { chat, isNew: true };
 }
 
@@ -133,12 +135,24 @@ export async function createGroupChat(
     },
   });
 
+  await invalidateInboxCache(uniqueMembers);
   return decryptChatMembers(chat);
 }
 
 // ─── Get All Chats for a User (their inbox) ───────────────────────────────────
 
+export async function invalidateInboxCache(userIds: string[]) {
+  const keys = userIds.map((id) => `inbox:${id}`);
+  if (keys.length > 0) {
+    await redis.del(...keys);
+  }
+}
+
 export async function getUserChats(userId: string) {
+  const cacheKey = `inbox:${userId}`;
+  const cached = await redis.get<any[]>(cacheKey);
+  if (cached) return cached;
+
   const memberships = await prisma.chatMember.findMany({
     where: { userId, isDeleted: false },
     orderBy: { chat: { updatedAt: "desc" } },
@@ -166,7 +180,7 @@ export async function getUserChats(userId: string) {
   });
 
   // Flatten the membership + chat data for easy use on the frontend
-  return memberships.map((m) => {
+  const mappedChats = memberships.map((m) => {
     const chat = m.chat;
     if (chat.lastMessage && chat.lastMessage.content) {
       chat.lastMessage.content = decryptMessage(chat.lastMessage.content);
@@ -178,8 +192,12 @@ export async function getUserChats(userId: string) {
       isPinned: m.isPinned,
       isArchived: m.isArchived,
       mutedUntil: m.mutedUntil,
+      isDeleted: m.isDeleted,
     };
   });
+
+  await redis.set(cacheKey, mappedChats, { ex: 60 * 60 * 24 }); // Cache for 24h
+  return mappedChats;
 }
 
 // ─── Get a Single Chat ────────────────────────────────────────────────────────

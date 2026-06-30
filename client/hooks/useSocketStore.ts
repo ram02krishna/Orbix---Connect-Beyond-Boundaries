@@ -132,7 +132,28 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     });
 
     socket.on("call:ice-candidate", (payload) => {
-      useCallStore.getState().handleIceCandidate(payload.candidate);
+      useCallStore.getState().handleIceCandidate(payload.candidate, payload.fromUserId);
+    });
+
+    // ─── WebRTC Group Call Signal Listeners ────────────────────────────────────
+    socket.on("call:incoming-group", (payload) => {
+      useCallStore.getState().receiveGroupCall(payload);
+    });
+
+    socket.on("call:participant-joined", (payload) => {
+      useCallStore.getState().handleParticipantJoined(payload.userId);
+    });
+
+    socket.on("call:participant-left", (payload) => {
+      useCallStore.getState().handleParticipantLeft(payload.userId);
+    });
+
+    socket.on("call:offer", (payload) => {
+      useCallStore.getState().handleGroupOffer(payload.fromUserId, payload.sdp, payload.callType);
+    });
+
+    socket.on("call:answer", (payload) => {
+      useCallStore.getState().handleGroupAnswer(payload.fromUserId, payload.sdp);
     });
 
     set({ socket });

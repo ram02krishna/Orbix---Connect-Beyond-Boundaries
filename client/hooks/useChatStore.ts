@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 export interface User {
   id: string;
@@ -113,17 +114,34 @@ interface ChatState {
   setOnlineStatus: (userId: string, status: string) => void;
   setOnlineStatuses: (statuses: Record<string, any>) => void;
   setHasMoreMessages: (chatId: string, hasMore: boolean) => void;
+  
+  isChatsLoading: boolean;
+  setIsChatsLoading: (val: boolean) => void;
+  clearStore: () => void;
 }
 
-export const useChatStore = create<ChatState>((set) => ({
-  chats: [],
-  messages: {},
-  selectedChatId: null,
-  typingStatuses: {},
-  onlineStatuses: {},
-  hasMoreMessages: {},
+export const useChatStore = create<ChatState>()(
+  persist(
+    (set) => ({
+      chats: [],
+      messages: {},
+      selectedChatId: null,
+      typingStatuses: {},
+      onlineStatuses: {},
+      hasMoreMessages: {},
+      isChatsLoading: true,
 
-  setChats: (chats) => set({ chats }),
+      setIsChatsLoading: (val) => set({ isChatsLoading: val }),
+      setChats: (chats) => set({ chats, isChatsLoading: false }),
+      clearStore: () => set({
+        chats: [],
+        messages: {},
+        selectedChatId: null,
+        typingStatuses: {},
+        onlineStatuses: {},
+        hasMoreMessages: {},
+        isChatsLoading: true
+      }),
 
   upsertChat: (chat) =>
     set((state) => {
@@ -423,4 +441,15 @@ export const useChatStore = create<ChatState>((set) => ({
     set((state) => ({
       hasMoreMessages: { ...state.hasMoreMessages, [chatId]: hasMore },
     })),
-}));
+    }),
+    {
+      name: "chat-store",
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        chats: state.chats,
+        messages: state.messages,
+        hasMoreMessages: state.hasMoreMessages,
+      }), // Only persist these
+    }
+  )
+);

@@ -10,6 +10,7 @@ import { ChatHeader } from "@components/chat/ChatHeader";
 import { MessageList } from "@components/chat/MessageList";
 import { MessageInput } from "@components/chat/MessageInput";
 import { ProfilePanel } from "@components/profile/ProfilePanel";
+import { ForwardMessageModal } from "@components/chat/ForwardMessageModal";
 import api from "@lib/api";
 
 const EMPTY_MESSAGES: any[] = [];
@@ -30,6 +31,7 @@ export default function ChatDetailPage({ params }: { params: Promise<{ chatId: s
   const addMessage = useChatStore((state) => state.addMessage);
 
   const [replyingTo, setReplyingTo] = useState<any | null>(null);
+  const [forwardingMessage, setForwardingMessage] = useState<any | null>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [loading, setLoading] = useState(() => {
     const cached = useChatStore.getState().messages[chatId];
@@ -213,6 +215,26 @@ export default function ChatDetailPage({ params }: { params: Promise<{ chatId: s
   const handleReply = useCallback((msg: any) => {
     setReplyingTo(msg);
   }, []);
+  
+  const handleForwardClick = useCallback((msg: any) => {
+    setForwardingMessage(msg);
+  }, []);
+
+  const handleExecuteForward = useCallback(async (targetChatId: string) => {
+    if (!forwardingMessage) return;
+    try {
+      const res = await api.post(`/messages/${targetChatId}`, {
+        content: forwardingMessage.content,
+        type: forwardingMessage.type,
+        attachments: forwardingMessage.attachments,
+      });
+      // Optionally route to the new chat
+      router.push(`/chats/${targetChatId}`);
+    } catch (err) {
+      console.error("Failed to execute forward:", err);
+      throw err;
+    }
+  }, [forwardingMessage, router]);
 
   const handleLoadMoreMessages = useCallback(async () => {
     if (loadingMore || messages.length === 0) return;
@@ -264,6 +286,7 @@ export default function ChatDetailPage({ params }: { params: Promise<{ chatId: s
           onReact={handleReact}
           onDelete={handleDeleteMessage}
           onEdit={handleEditMessage}
+          onForward={handleForwardClick}
           searchQuery={searchQuery}
           onLoadMore={handleLoadMoreMessages}
           loadingMore={loadingMore}
@@ -287,6 +310,14 @@ export default function ChatDetailPage({ params }: { params: Promise<{ chatId: s
             onClose={() => setIsProfileOpen(false)}
           />
         </div>
+      )}
+      
+      {forwardingMessage && (
+        <ForwardMessageModal
+          messageToForward={forwardingMessage}
+          onClose={() => setForwardingMessage(null)}
+          onForward={handleExecuteForward}
+        />
       )}
     </div>
   );

@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { useSocketStore } from "./useSocketStore";
-import { useChatStore } from "./useChatStore";
 import { useAuthStore } from "./useAuthStore";
 import { toast } from "sonner";
 
@@ -15,12 +14,23 @@ export type CallState = "idle" | "incoming" | "outgoing" | "connected";
 interface CallStoreState {
   callState: CallState;
   callType: "audio" | "video";
+  isGroupCall: boolean;
+  
+  // 1-to-1 specifics
   partner: CallPartner | null;
-  localStream: MediaStream | null;
   remoteStream: MediaStream | null;
+  peerConnection: RTCPeerConnection | null;
+
+  // Group Call specifics
+  groupChatId: string | null;
+  groupChatTitle: string | null;
+  peerConnections: Record<string, RTCPeerConnection>;
+  remoteStreams: Record<string, MediaStream>;
+  participants: Record<string, CallPartner>;
+  
+  localStream: MediaStream | null;
   isMuted: boolean;
   isCameraOff: boolean;
-  peerConnection: RTCPeerConnection | null;
   
   // Actions
   initiateCall: (targetUserId: string, targetName: string, targetAvatar: string | null, type: "audio" | "video") => Promise<void>;
@@ -28,14 +38,23 @@ interface CallStoreState {
   acceptCall: () => Promise<void>;
   declineCall: () => void;
   endCall: () => void;
+  
+  // Group Call Actions
+  initiateGroupCall: (chatId: string, chatTitle: string, type: "audio" | "video") => Promise<void>;
+  receiveGroupCall: (payload: { chatId: string, chatTitle: string, chatAvatar: string | null, fromUserId: string, fromUserName: string, fromUserAvatar: string | null, callType: "audio" | "video" }) => void;
+  acceptGroupCall: () => Promise<void>;
+  handleParticipantJoined: (userId: string) => Promise<void>;
+  handleParticipantLeft: (userId: string) => void;
+  handleGroupOffer: (fromUserId: string, sdp: any, callType: "audio" | "video") => Promise<void>;
+  handleGroupAnswer: (fromUserId: string, sdp: any) => Promise<void>;
+  
   toggleMute: () => void;
   toggleCamera: () => void;
-  handleIceCandidate: (candidate: any) => void;
+  handleIceCandidate: (candidate: any, fromUserId?: string) => void;
   handleAnswer: (sdp: any) => void;
   resetCallStore: () => void;
 }
 
-// Audio synth context for sound synthesis
 let audioCtx: AudioContext | null = null;
 let ringOsc1: OscillatorNode | null = null;
 let ringOsc2: OscillatorNode | null = null;
@@ -51,46 +70,32 @@ function startRingtone(type: "dial" | "ring") {
     if (audioCtx.state === "suspended") {
       void audioCtx.resume();
     }
-
     stopRingtone();
-
     ringGain = audioCtx.createGain();
     ringGain.gain.setValueAtTime(0.2, audioCtx.currentTime);
     ringGain.connect(audioCtx.destination);
-
     const playBeep = () => {
       if (!audioCtx || !ringGain) return;
-      
       ringOsc1 = audioCtx.createOscillator();
       ringOsc2 = audioCtx.createOscillator();
-      
       if (type === "dial") {
-        // Standard US ringback: 440Hz + 480Hz
         ringOsc1.frequency.setValueAtTime(440, audioCtx.currentTime);
         ringOsc2.frequency.setValueAtTime(480, audioCtx.currentTime);
       } else {
-        // Incoming ring: alternating 400Hz and 450Hz
         ringOsc1.frequency.setValueAtTime(400, audioCtx.currentTime);
         ringOsc2.frequency.setValueAtTime(450, audioCtx.currentTime);
       }
-
       ringOsc1.connect(ringGain);
       ringOsc2.connect(ringGain);
-      
       ringOsc1.start();
       ringOsc2.start();
-
-      // Stop beep after 1.5 seconds
       setTimeout(() => {
         try {
-          ringOsc1?.stop();
-          ringOsc2?.stop();
-          ringOsc1?.disconnect();
-          ringOsc2?.disconnect();
+          ringOsc1?.stop(); ringOsc2?.stop();
+          ringOsc1?.disconnect(); ringOsc2?.disconnect();
         } catch {}
       }, type === "dial" ? 1500 : 1200);
     };
-
     playBeep();
     ringInterval = setInterval(playBeep, type === "dial" ? 4000 : 3000);
   } catch (err) {
@@ -99,112 +104,130 @@ function startRingtone(type: "dial" | "ring") {
 }
 
 function stopRingtone() {
-  if (ringInterval) {
-    clearInterval(ringInterval);
-    ringInterval = null;
-  }
+  if (ringInterval) { clearInterval(ringInterval); ringInterval = null; }
   try {
-    ringOsc1?.stop();
-    ringOsc2?.stop();
-    ringOsc1?.disconnect();
-    ringOsc2?.disconnect();
+    ringOsc1?.stop(); ringOsc2?.stop();
+    ringOsc1?.disconnect(); ringOsc2?.disconnect();
     ringGain?.disconnect();
   } catch {}
-  ringOsc1 = null;
-  ringOsc2 = null;
-  ringGain = null;
+  ringOsc1 = null; ringOsc2 = null; ringGain = null;
 }
 
 const STUN_SERVERS: RTCConfiguration = {
   iceServers: [
     { urls: "stun:stun.l.google.com:19302" },
     { urls: "stun:stun1.l.google.com:19302" },
-    { urls: "stun:stun2.l.google.com:19302" }
+    { urls: "stun:stun2.l.google.com:19302" },
+    { urls: "stun:global.stun.twilio.com:3478" },
+    { urls: "stun:stun.cloudflare.com:3478" }
   ],
   bundlePolicy: "max-bundle",
   rtcpMuxPolicy: "require",
 };
 
 export const useCallStore = create<CallStoreState>((set, get) => {
-  
-  // Set up local/remote media helper
+  let pendingCandidates: any[] = [];
+  let pendingGroupCandidates: Record<string, any[]> = {};
+
   const cleanMedia = () => {
-    const { localStream, remoteStream, peerConnection } = get();
-    if (localStream) {
-      localStream.getTracks().forEach((track) => track.stop());
-    }
-    if (remoteStream) {
-      remoteStream.getTracks().forEach((track) => track.stop());
-    }
-    if (peerConnection) {
-      peerConnection.close();
-    }
+    const { localStream, remoteStream, peerConnection, peerConnections, remoteStreams } = get();
+    if (localStream) localStream.getTracks().forEach((track) => track.stop());
+    if (remoteStream) remoteStream.getTracks().forEach((track) => track.stop());
+    if (peerConnection) peerConnection.close();
+    
+    Object.values(peerConnections).forEach(pc => pc.close());
+    Object.values(remoteStreams).forEach(stream => stream.getTracks().forEach(track => track.stop()));
+
     stopRingtone();
+    pendingCandidates = [];
+    pendingGroupCandidates = {};
+  };
+
+  const createGroupPeerConnection = (userId: string, isInitiator: boolean) => {
+    const pc = new RTCPeerConnection(STUN_SERVERS);
+    const { localStream } = get();
+    
+    if (localStream) {
+      localStream.getTracks().forEach((track) => {
+        pc.addTrack(track, localStream);
+      });
+    }
+
+    pc.onicecandidate = (event) => {
+      if (event.candidate) {
+        const socket = useSocketStore.getState().socket;
+        if (socket) {
+          socket.emit("call:ice-candidate", {
+            targetUserId: userId,
+            candidate: event.candidate,
+            fromUserId: useAuthStore.getState().user?.id
+          });
+        }
+      }
+    };
+
+    pc.ontrack = (event) => {
+      if (event.streams && event.streams[0]) {
+        set(state => ({
+          remoteStreams: { ...state.remoteStreams, [userId]: event.streams[0] }
+        }));
+      }
+    };
+    
+    set(state => ({
+      peerConnections: { ...state.peerConnections, [userId]: pc }
+    }));
+    
+    return pc;
   };
 
   return {
     callState: "idle",
     callType: "audio",
+    isGroupCall: false,
     partner: null,
-    localStream: null,
     remoteStream: null,
+    peerConnection: null,
+    groupChatId: null,
+    groupChatTitle: null,
+    peerConnections: {},
+    remoteStreams: {},
+    participants: {},
+    localStream: null,
     isMuted: false,
     isCameraOff: false,
-    peerConnection: null,
 
     initiateCall: async (targetUserId, targetName, targetAvatar, type) => {
       cleanMedia();
       set({ 
-        callState: "outgoing", 
-        callType: type, 
+        callState: "outgoing", callType: type, isGroupCall: false,
         partner: { id: targetUserId, name: targetName, avatarUrl: targetAvatar },
-        isMuted: false,
-        isCameraOff: false
+        isMuted: false, isCameraOff: false
       });
-
       startRingtone("dial");
 
       try {
-        // Request AV permissions
         const constraints = {
-          audio: {
-            echoCancellation: true,
-            noiseSuppression: true,
-            autoGainControl: true,
-          },
-          video: type === "video" ? { 
-            width: { ideal: 1280, max: 1920 }, 
-            height: { ideal: 720, max: 1080 },
-            frameRate: { ideal: 30, max: 60 },
-            facingMode: "user" 
-          } : false
+          audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+          video: type === "video" ? { width: { ideal: 640, max: 1280 }, height: { ideal: 480, max: 720 }, frameRate: { ideal: 24, max: 30 }, facingMode: "user" } : false
         };
-
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
         set({ localStream: stream });
 
-        // Initialize PeerConnection
         const pc = new RTCPeerConnection(STUN_SERVERS);
+        set({ peerConnection: pc });
         
-        stream.getTracks().forEach((track) => {
-          pc.addTrack(track, stream);
-        });
+        stream.getTracks().forEach((track) => pc.addTrack(track, stream));
 
         pc.ontrack = (event) => {
-          if (event.streams && event.streams[0]) {
-            set({ remoteStream: event.streams[0] });
-          }
+          if (event.streams && event.streams[0]) set({ remoteStream: event.streams[0] });
         };
 
         pc.onicecandidate = (event) => {
           if (event.candidate) {
-            const socket = useSocketStore.getState().socket;
-            if (socket) {
-              socket.emit("call:ice-candidate", {
-                targetUserId,
-                candidate: event.candidate
-              });
-            }
+            useSocketStore.getState().socket?.emit("call:ice-candidate", {
+              targetUserId, candidate: event.candidate
+            });
           }
         };
 
@@ -212,19 +235,13 @@ export const useCallStore = create<CallStoreState>((set, get) => {
         await pc.setLocalDescription(offer);
 
         const socket = useSocketStore.getState().socket;
+        const user = useAuthStore.getState().user;
         if (socket) {
-          const user = useAuthStore.getState().user;
           socket.emit("call:initiate", {
-            targetUserId,
-            fromUserId: user?.id,
-            fromUserName: user?.name || "Someone",
-            fromUserAvatar: user?.avatarUrl || null,
-            sdp: offer,
-            callType: type
+            targetUserId, fromUserId: user?.id, fromUserName: user?.name, fromUserAvatar: user?.avatarUrl,
+            sdp: offer, callType: type
           });
         }
-
-        set({ peerConnection: pc });
       } catch (err) {
         console.error("WebRTC getUserMedia error:", err);
         toast.error("Failed to access camera or microphone");
@@ -235,86 +252,52 @@ export const useCallStore = create<CallStoreState>((set, get) => {
     receiveCall: (payload) => {
       cleanMedia();
       set({
-        callState: "incoming",
-        callType: payload.callType,
-        partner: {
-          id: payload.fromUserId,
-          name: payload.fromUserName,
-          avatarUrl: payload.fromUserAvatar
-        },
-        isMuted: false,
-        isCameraOff: false
+        callState: "incoming", callType: payload.callType, isGroupCall: false,
+        partner: { id: payload.fromUserId, name: payload.fromUserName, avatarUrl: payload.fromUserAvatar },
+        isMuted: false, isCameraOff: false
       });
-
       startRingtone("ring");
       
-      // Store temporary offer SDP in peerConnection ref structure
-      // Wait to create PeerConnection until user answers
       const pc = new RTCPeerConnection(STUN_SERVERS);
+      set({ peerConnection: pc });
+
       pc.onicecandidate = (event) => {
         if (event.candidate) {
-          const socket = useSocketStore.getState().socket;
-          if (socket) {
-            socket.emit("call:ice-candidate", {
-              targetUserId: payload.fromUserId,
-              candidate: event.candidate
-            });
-          }
+          useSocketStore.getState().socket?.emit("call:ice-candidate", {
+            targetUserId: payload.fromUserId, candidate: event.candidate
+          });
         }
       };
-
       pc.ontrack = (event) => {
-        if (event.streams && event.streams[0]) {
-          set({ remoteStream: event.streams[0] });
-        }
+        if (event.streams && event.streams[0]) set({ remoteStream: event.streams[0] });
       };
 
-      // Set remote offer immediately
       void pc.setRemoteDescription(new RTCSessionDescription(payload.sdp))
         .then(() => {
-          set({ peerConnection: pc });
-        });
+          pendingCandidates.forEach(c => void pc.addIceCandidate(new RTCIceCandidate(c)).catch(console.error));
+          pendingCandidates = [];
+        }).catch(console.error);
     },
 
     acceptCall: async () => {
       const { peerConnection, partner, callType } = get();
       if (!peerConnection || !partner) return;
-
       stopRingtone();
       set({ callState: "connected" });
 
       try {
         const constraints = {
-          audio: {
-            echoCancellation: true,
-            noiseSuppression: true,
-            autoGainControl: true,
-          },
-          video: callType === "video" ? { 
-            width: { ideal: 1280, max: 1920 }, 
-            height: { ideal: 720, max: 1080 },
-            frameRate: { ideal: 30, max: 60 },
-            facingMode: "user" 
-          } : false
+          audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+          video: callType === "video" ? { width: { ideal: 640, max: 1280 }, height: { ideal: 480, max: 720 }, frameRate: { ideal: 24, max: 30 }, facingMode: "user" } : false
         };
-
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
         set({ localStream: stream });
-
-        stream.getTracks().forEach((track) => {
-          peerConnection.addTrack(track, stream);
-        });
+        stream.getTracks().forEach((track) => peerConnection.addTrack(track, stream));
 
         const answer = await peerConnection.createAnswer();
         await peerConnection.setLocalDescription(answer);
 
-        const socket = useSocketStore.getState().socket;
-        if (socket) {
-          socket.emit("call:accept", {
-            targetUserId: partner.id,
-            sdp: answer
-          });
-        }
+        useSocketStore.getState().socket?.emit("call:accept", { targetUserId: partner.id, sdp: answer });
       } catch (err) {
         console.error("Error answering WebRTC call:", err);
         toast.error("Failed to answer call with camera/mic");
@@ -324,30 +307,161 @@ export const useCallStore = create<CallStoreState>((set, get) => {
 
     declineCall: () => {
       const { partner } = get();
-      const socket = useSocketStore.getState().socket;
-      if (socket && partner) {
-        socket.emit("call:decline", { targetUserId: partner.id });
-      }
-      cleanMedia();
-      set({ callState: "idle", partner: null, peerConnection: null, localStream: null, remoteStream: null });
+      if (partner) useSocketStore.getState().socket?.emit("call:decline", { targetUserId: partner.id });
+      get().resetCallStore();
     },
 
     endCall: () => {
-      const { partner } = get();
+      const { partner, isGroupCall, groupChatId } = get();
       const socket = useSocketStore.getState().socket;
-      if (socket && partner) {
-        socket.emit("call:hangup", { targetUserId: partner.id });
+      if (isGroupCall && groupChatId) {
+        socket?.emit("call:leave-group", { chatId: groupChatId });
+      } else if (partner) {
+        socket?.emit("call:hangup", { targetUserId: partner.id });
       }
+      get().resetCallStore();
+    },
+
+    // Group Call Logic
+    initiateGroupCall: async (chatId, chatTitle, type) => {
       cleanMedia();
-      set({ callState: "idle", partner: null, peerConnection: null, localStream: null, remoteStream: null });
+      set({ 
+        callState: "outgoing", callType: type, isGroupCall: true,
+        groupChatId: chatId, groupChatTitle: chatTitle,
+        isMuted: false, isCameraOff: false, peerConnections: {}, remoteStreams: {}, participants: {}
+      });
+      startRingtone("dial");
+
+      try {
+        const constraints = {
+          audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+          video: type === "video" ? { width: { ideal: 640 }, height: { ideal: 480 }, frameRate: { ideal: 15, max: 24 }, facingMode: "user" } : false
+        };
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        set({ localStream: stream });
+
+        const user = useAuthStore.getState().user;
+        useSocketStore.getState().socket?.emit("call:initiate-group", {
+          chatId, fromUserName: user?.name, fromUserAvatar: user?.avatarUrl, callType: type
+        });
+        
+        // As initiator, wait for others to join
+        set({ callState: "connected" });
+        stopRingtone();
+      } catch (err) {
+        console.error("Failed to initiate group call:", err);
+        toast.error("Failed to access camera or microphone");
+        get().resetCallStore();
+      }
+    },
+
+    receiveGroupCall: (payload) => {
+      // Ignore if already in a call
+      if (get().callState !== "idle") return;
+      cleanMedia();
+      set({
+        callState: "incoming", callType: payload.callType, isGroupCall: true,
+        groupChatId: payload.chatId, groupChatTitle: payload.chatTitle,
+        participants: {
+          [payload.fromUserId]: { id: payload.fromUserId, name: payload.fromUserName, avatarUrl: payload.fromUserAvatar }
+        },
+        isMuted: false, isCameraOff: false
+      });
+      startRingtone("ring");
+    },
+
+    acceptGroupCall: async () => {
+      const { groupChatId, callType } = get();
+      if (!groupChatId) return;
+      stopRingtone();
+      set({ callState: "connected" });
+
+      try {
+        const constraints = {
+          audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+          video: callType === "video" ? { width: { ideal: 640 }, height: { ideal: 480 }, frameRate: { ideal: 15, max: 24 }, facingMode: "user" } : false
+        };
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        set({ localStream: stream });
+
+        // Tell everyone in the group chat we joined, so they can send us offers
+        useSocketStore.getState().socket?.emit("call:join-group", { chatId: groupChatId });
+      } catch (err) {
+        console.error("Failed to answer group call:", err);
+        get().resetCallStore();
+      }
+    },
+
+    handleParticipantJoined: async (userId) => {
+      const { callState, isGroupCall, callType } = get();
+      if (callState !== "connected" || !isGroupCall) return;
+
+      const pc = createGroupPeerConnection(userId, true);
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+      
+      useSocketStore.getState().socket?.emit("call:offer", {
+        targetUserId: userId, sdp: offer, callType
+      });
+    },
+
+    handleParticipantLeft: (userId) => {
+      const { peerConnections, remoteStreams, participants } = get();
+      if (peerConnections[userId]) {
+        peerConnections[userId].close();
+        const newPcs = { ...peerConnections };
+        delete newPcs[userId];
+        
+        const newStreams = { ...remoteStreams };
+        delete newStreams[userId];
+        
+        const newParticipants = { ...participants };
+        delete newParticipants[userId];
+        
+        set({ peerConnections: newPcs, remoteStreams: newStreams, participants: newParticipants });
+      }
+    },
+
+    handleGroupOffer: async (fromUserId, sdp, callType) => {
+      const { callState, isGroupCall } = get();
+      if (callState !== "connected" || !isGroupCall) return;
+
+      const pc = createGroupPeerConnection(fromUserId, false);
+      await pc.setRemoteDescription(new RTCSessionDescription(sdp));
+      
+      const answer = await pc.createAnswer();
+      await pc.setLocalDescription(answer);
+
+      useSocketStore.getState().socket?.emit("call:answer", {
+        targetUserId: fromUserId, sdp: answer
+      });
+
+      // Process pending candidates
+      if (pendingGroupCandidates[fromUserId]) {
+        pendingGroupCandidates[fromUserId].forEach(c => {
+          void pc.addIceCandidate(new RTCIceCandidate(c)).catch(console.error);
+        });
+        delete pendingGroupCandidates[fromUserId];
+      }
+    },
+
+    handleGroupAnswer: async (fromUserId, sdp) => {
+      const pc = get().peerConnections[fromUserId];
+      if (pc) {
+        await pc.setRemoteDescription(new RTCSessionDescription(sdp));
+        if (pendingGroupCandidates[fromUserId]) {
+          pendingGroupCandidates[fromUserId].forEach(c => {
+            void pc.addIceCandidate(new RTCIceCandidate(c)).catch(console.error);
+          });
+          delete pendingGroupCandidates[fromUserId];
+        }
+      }
     },
 
     toggleMute: () => {
       const { localStream, isMuted } = get();
       if (localStream) {
-        localStream.getAudioTracks().forEach((track) => {
-          track.enabled = isMuted; // Toggle enablement (disabled if isMuted is currently false)
-        });
+        localStream.getAudioTracks().forEach((track) => track.enabled = isMuted);
         set({ isMuted: !isMuted });
       }
     },
@@ -355,18 +469,28 @@ export const useCallStore = create<CallStoreState>((set, get) => {
     toggleCamera: () => {
       const { localStream, isCameraOff } = get();
       if (localStream) {
-        localStream.getVideoTracks().forEach((track) => {
-          track.enabled = isCameraOff; // Toggle track
-        });
+        localStream.getVideoTracks().forEach((track) => track.enabled = isCameraOff);
         set({ isCameraOff: !isCameraOff });
       }
     },
 
-    handleIceCandidate: (candidate) => {
-      const { peerConnection } = get();
-      if (peerConnection) {
-        void peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
-          .catch((err) => console.error("Error adding IceCandidate:", err));
+    handleIceCandidate: (candidate, fromUserId) => {
+      const { isGroupCall, peerConnections, peerConnection } = get();
+      
+      if (isGroupCall && fromUserId) {
+        const pc = peerConnections[fromUserId];
+        if (pc && pc.remoteDescription) {
+          void pc.addIceCandidate(new RTCIceCandidate(candidate)).catch(console.error);
+        } else {
+          if (!pendingGroupCandidates[fromUserId]) pendingGroupCandidates[fromUserId] = [];
+          pendingGroupCandidates[fromUserId].push(candidate);
+        }
+      } else {
+        if (peerConnection && peerConnection.remoteDescription) {
+          void peerConnection.addIceCandidate(new RTCIceCandidate(candidate)).catch(console.error);
+        } else {
+          pendingCandidates.push(candidate);
+        }
       }
     },
 
@@ -376,18 +500,19 @@ export const useCallStore = create<CallStoreState>((set, get) => {
         stopRingtone();
         set({ callState: "connected" });
         void peerConnection.setRemoteDescription(new RTCSessionDescription(sdp))
-          .catch((err) => console.error("Error setting remote SDP answer:", err));
+          .then(() => {
+            pendingCandidates.forEach((c) => void peerConnection.addIceCandidate(new RTCIceCandidate(c)).catch(console.error));
+            pendingCandidates = [];
+          })
+          .catch(console.error);
       }
     },
 
     resetCallStore: () => {
       cleanMedia();
       set({
-        callState: "idle",
-        partner: null,
-        peerConnection: null,
-        localStream: null,
-        remoteStream: null
+        callState: "idle", isGroupCall: false, partner: null, peerConnection: null, localStream: null, remoteStream: null,
+        groupChatId: null, groupChatTitle: null, peerConnections: {}, remoteStreams: {}, participants: {}
       });
     }
   };

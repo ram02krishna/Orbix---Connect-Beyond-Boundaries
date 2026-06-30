@@ -409,7 +409,7 @@ body {
 }
 
 .dark .ios-bubble-me {
-  background: linear-gradient(135deg, rgba(0, 150, 100, 0.75) 0%, rgba(2, 90, 75, 0.9) 100%);
+  background: linear-gradient(135deg, rgba(6, 160, 248, 0.75) 0%, rgba(22, 97, 249, 0.9) 100%);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
@@ -422,10 +422,10 @@ body {
 }
 
 .dark .ios-bubble-other {
-  background: rgba(30, 41, 37, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  color: #f3f4f6;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 /* iOS context menu container */

@@ -88,7 +88,7 @@ const ChatItem = React.memo(function ChatItem({
       onContextMenu={onContextMenu}
       className={`flex items-center gap-3.5 px-4.5 py-3.5 cursor-pointer transition-all duration-200 rounded-xl border border-transparent select-none active:scale-[0.99] ${
         isSelected
-          ? "bg-white/70 dark:bg-[#203c30]/65 border-white/60 dark:border-white/10 shadow-md shadow-blue-500/5 text-zinc-950 dark:text-white"
+          ? "bg-white/70 dark:bg-[#1e293b]/80 border-white/60 dark:border-blue-500/20 shadow-md shadow-blue-500/10 text-zinc-950 dark:text-white"
           : "bg-white/20 dark:bg-white/2 border-zinc-200/30 dark:border-white/5 shadow-sm"
       }`}
     >
@@ -172,6 +172,7 @@ export function Sidebar() {
   const upsertChat = useChatStore((state) => state.upsertChat);
   const onlineStatuses = useChatStore((state) => state.onlineStatuses);
   const typingStatuses = useChatStore((state) => state.typingStatuses);
+  const isChatsLoading = useChatStore((state) => state.isChatsLoading);
 
   // Status Store hooks
   const fetchStatuses = useStatusStore((state) => state.fetchStatuses);
@@ -275,6 +276,7 @@ export function Sidebar() {
     } finally {
       disconnectSocket();
       logoutStore();
+      useChatStore.getState().clearStore();
       router.push("/login");
     }
   };
@@ -293,6 +295,21 @@ export function Sidebar() {
       setSearchResults([]);
 
       setSelectedChatId(chat.id);
+
+      // Pre-fetch messages instantly to eliminate the loading delay on the chat page
+      const cached = useChatStore.getState().messages[chat.id];
+      if (!cached || cached.length === 0) {
+        api.get(`/messages/${chat.id}`).then(res => {
+          const fetchedMessages = res.data.data.messages;
+          useChatStore.getState().setMessages(chat.id, fetchedMessages);
+          if (fetchedMessages.length < 30) {
+            useChatStore.getState().setHasMoreMessages(chat.id, false);
+          } else {
+            useChatStore.getState().setHasMoreMessages(chat.id, true);
+          }
+        }).catch(err => console.error("Prefetch failed:", err));
+      }
+
       router.push(`/chats/${chat.id}`);
     } catch (err) {
       console.error("Error creating direct chat:", err);
@@ -343,6 +360,21 @@ export function Sidebar() {
 
   const handleChatClick = useCallback((chatId: string) => {
     setSelectedChatId(chatId);
+
+    // Pre-fetch messages instantly to eliminate the loading delay on the chat page
+    const cached = useChatStore.getState().messages[chatId];
+    if (!cached || cached.length === 0) {
+      api.get(`/messages/${chatId}`).then(res => {
+        const fetchedMessages = res.data.data.messages;
+        useChatStore.getState().setMessages(chatId, fetchedMessages);
+        if (fetchedMessages.length < 30) {
+          useChatStore.getState().setHasMoreMessages(chatId, false);
+        } else {
+          useChatStore.getState().setHasMoreMessages(chatId, true);
+        }
+      }).catch(err => console.error("Prefetch failed:", err));
+    }
+
     router.push(`/chats/${chatId}`);
   }, [router, setSelectedChatId]);
 
@@ -544,7 +576,19 @@ export function Sidebar() {
           </p>
 
           {/* Chat List */}
-          {filteredChats.length === 0 ? (
+          {isChatsLoading ? (
+            <div className="space-y-1">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="flex items-center gap-3.5 px-4.5 py-3.5 rounded-xl border border-transparent animate-pulse">
+                  <div className="h-12 w-12 bg-zinc-200/60 dark:bg-zinc-800/60 rounded-full flex-shrink-0" />
+                  <div className="flex-1 space-y-2.5 py-1">
+                    <div className="h-3.5 w-1/3 bg-zinc-200/60 dark:bg-zinc-800/60 rounded" />
+                    <div className="h-3 w-2/3 bg-zinc-200/60 dark:bg-zinc-800/60 rounded" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : filteredChats.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center px-4">
               <div className="relative mb-4">
                 <div className="h-16 w-16 rounded-2xl flex items-center justify-center">

@@ -64,7 +64,7 @@ export function registerChatHandlers(io: Server, socket: Socket) {
     });
   });
 
-  // ─── WebRTC Voice/Video Calling Signaling ─────────────────────────────────
+  // ─── WebRTC Voice/Video Calling Signaling (1-to-1) ────────────────────────
   socket.on("call:initiate", async (payload: any) => {
     try {
       const { targetUserId, fromUserName, fromUserAvatar, sdp, callType } = payload;
@@ -83,7 +83,6 @@ export function registerChatHandlers(io: Server, socket: Socket) {
       });
 
       if (block) {
-        // Silently ignore the call initiation (mimics WhatsApp behavior)
         return;
       }
 
@@ -101,9 +100,7 @@ export function registerChatHandlers(io: Server, socket: Socket) {
 
   socket.on("call:accept", ({ targetUserId, sdp }: any) => {
     if (!targetUserId) return;
-    io.to(`user:${targetUserId}`).emit("call:answered", {
-      sdp
-    });
+    io.to(`user:${targetUserId}`).emit("call:answered", { sdp });
   });
 
   socket.on("call:decline", ({ targetUserId }: any) => {
@@ -116,10 +113,83 @@ export function registerChatHandlers(io: Server, socket: Socket) {
     io.to(`user:${targetUserId}`).emit("call:ended");
   });
 
-  socket.on("call:ice-candidate", ({ targetUserId, candidate }: any) => {
+  socket.on("call:ice-candidate", ({ targetUserId, candidate, fromUserId: customFromUserId }: any) => {
     if (!targetUserId) return;
+    // Pass fromUserId to identify who sent the candidate in group calls
     io.to(`user:${targetUserId}`).emit("call:ice-candidate", {
-      candidate
+      candidate,
+      fromUserId: customFromUserId || userId
+    });
+  });
+
+  // ─── WebRTC Group Calling Signaling (Mesh) ───────────────────────────────
+  socket.on("call:initiate-group", async (payload: any) => {
+    try {
+      const { chatId, fromUserName, fromUserAvatar, callType } = payload;
+      if (!chatId) return;
+      
+      const fromUserId = userId;
+
+      const chat = await prisma.chat.findUnique({
+        where: { id: chatId },
+        select: {
+          title: true,
+          photoUrl: true,
+          members: { select: { userId: true } }
+        }
+      });
+
+      if (chat) {
+        for (const member of chat.members) {
+          if (member.userId !== fromUserId) {
+            io.to(`user:${member.userId}`).emit("call:incoming-group", {
+              chatId,
+              chatTitle: chat.title,
+              chatAvatar: chat.photoUrl,
+              fromUserId,
+              fromUserName,
+              fromUserAvatar,
+              callType
+            });
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Error in call:initiate-group:", err);
+    }
+  });
+
+  socket.on("call:join-group", async ({ chatId }: any) => {
+    if (!chatId) return;
+    // Broadcast to the chat room that someone joined the call
+    // Note: the sender is already in the `chat:${chatId}` room.
+    socket.to(`chat:${chatId}`).emit("call:participant-joined", {
+      userId
+    });
+  });
+
+  socket.on("call:leave-group", ({ chatId }: any) => {
+    if (!chatId) return;
+    socket.to(`chat:${chatId}`).emit("call:participant-left", {
+      userId
+    });
+  });
+
+  // Signaling for mesh networking
+  socket.on("call:offer", ({ targetUserId, sdp, callType }: any) => {
+    if (!targetUserId) return;
+    io.to(`user:${targetUserId}`).emit("call:offer", {
+      fromUserId: userId,
+      sdp,
+      callType
+    });
+  });
+
+  socket.on("call:answer", ({ targetUserId, sdp }: any) => {
+    if (!targetUserId) return;
+    io.to(`user:${targetUserId}`).emit("call:answer", {
+      fromUserId: userId,
+      sdp
     });
   });
 }

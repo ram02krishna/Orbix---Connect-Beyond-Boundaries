@@ -67,7 +67,7 @@ export async function getMyChats(req: Request, res: Response) {
   
   // Extract all unique partner user IDs for direct chats to check their status
   const partnerIds = chats
-    .map((chat) => {
+    .map((chat: any) => {
       if (chat.type === "DIRECT") {
         const partner = chat.members.find((m: any) => m.userId !== req.user!.id)?.user;
         return partner?.id;

@@ -74,6 +74,7 @@ export function ChatHeader({
   const setChats = useChatStore((state) => state.setChats);
   const setSelectedChatId = useChatStore((state) => state.setSelectedChatId);
   const initiateCall = useCallStore((state) => state.initiateCall);
+  const initiateGroupCall = useCallStore((state) => state.initiateGroupCall);
 
   useEffect(() => {
     setMounted(true);
@@ -208,6 +209,25 @@ export function ChatHeader({
                 disabled={blockedUserIds.includes(partner.id)}
                 className="p-2.5 sm:p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] hover:text-zinc-950 dark:hover:text-white transition-all cursor-pointer mr-1 disabled:opacity-30 disabled:cursor-not-allowed"
                 title={blockedUserIds.includes(partner.id) ? "Cannot call blocked user" : "Video Call"}
+              >
+                <Video size={18} />
+              </button>
+            </>
+          )}
+
+          {!isSearchOpen && chat.type === "GROUP" && (
+            <>
+              <button
+                onClick={() => initiateGroupCall(chat.id, partner.name, "audio")}
+                className="p-2.5 sm:p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] hover:text-zinc-950 dark:hover:text-white transition-all cursor-pointer"
+                title="Group Voice Call"
+              >
+                <Phone size={18} />
+              </button>
+              <button
+                onClick={() => initiateGroupCall(chat.id, partner.name, "video")}
+                className="p-2.5 sm:p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] hover:text-zinc-950 dark:hover:text-white transition-all cursor-pointer mr-1"
+                title="Group Video Call"
               >
                 <Video size={18} />
               </button>

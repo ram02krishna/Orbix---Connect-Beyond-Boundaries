@@ -103,10 +103,26 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
   };
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    let file = e.target.files?.[0];
     if (!file) return;
 
     setUploading(true);
+    
+    // Check if the file is an image and compress it
+    if (file.type.startsWith("image/")) {
+      try {
+        const imageCompression = (await import("browser-image-compression")).default;
+        const options = {
+          maxSizeMB: 1, // compress down to 1MB
+          maxWidthOrHeight: 1920, // max 1080p resolution
+          useWebWorker: true
+        };
+        file = await imageCompression(file, options);
+      } catch (err) {
+        console.error("Compression error:", err);
+      }
+    }
+
     const formData = new FormData();
     formData.append("file", file);
     formData.append("chatId", chatId);
@@ -279,10 +295,10 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
       <div className="p-3 border-t border-[#e9edef]/40 dark:border-[#222e35]/20 bg-white/30 dark:bg-black/15 backdrop-blur-md relative z-20 text-zinc-900 dark:text-zinc-100 select-none">
 
       {replyingTo && (
-        <div className="flex items-center justify-between p-2.5 mb-3 bg-[#00a884]/10 border border-[#00a884]/20 rounded-lg text-xs">
-          <div className="flex items-start gap-2 border-l-4 border-[#00a884] pl-2.5 py-0.5">
+        <div className="flex items-center justify-between p-2.5 mb-3 bg-blue-500/10 border border-blue-500/20 rounded-lg text-xs">
+          <div className="flex items-start gap-2 border-l-4 border-blue-500 pl-2.5 py-0.5">
             <div>
-              <p className="font-bold text-[#00a884]">
+              <p className="font-bold text-blue-600 dark:text-blue-400">
                 Replying to {replyingTo.sender.name}
               </p>
               <p className="text-[#667781] dark:text-[#8696a0] truncate max-w-[200px] sm:max-w-md mt-0.5">

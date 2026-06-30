@@ -126,6 +126,7 @@ model Chat {
 
   @@index([type])
   @@index([createdBy])
+  @@index([updatedAt])
 }
 
 model ChatMember {
@@ -145,6 +146,7 @@ model ChatMember {
   @@unique([chatId, userId])
   @@index([chatId])
   @@index([userId])
+  @@index([userId, isDeleted])
 }
 
 model Message {
@@ -175,6 +177,7 @@ model Message {
   @@index([chatId])
   @@index([senderId])
   @@index([createdAt])
+  @@index([chatId, createdAt(sort: Desc)])
 }
 
 model Attachment {
