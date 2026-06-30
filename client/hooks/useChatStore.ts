@@ -82,6 +82,8 @@ export interface Chat {
   isPinned?: boolean;
   isArchived?: boolean;
   mutedUntil?: string | null;
+  restrictMessagingToAdmins?: boolean;
+  restrictInfoToAdmins?: boolean;
 }
 
 interface ChatState {
