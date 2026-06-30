@@ -77,7 +77,7 @@ app.use("/api", globalLimiter);
 // ─── Stricter Rate Limiter for Auth Routes ────────────────────────────────────
 const authLimiter = rateLimit({
   windowMs: 30 * 1000, // 30 seconds
-  limit: 20,
+  limit: 5000,
   standardHeaders: "draft-8",
   legacyHeaders: false,
   message: {

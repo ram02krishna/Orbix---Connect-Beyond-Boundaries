@@ -28,7 +28,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
   const chat = chats.find((c) => c.id === chatId);
 
   // Tabs: members (groups only), media, files, starred
-  const [activeTab, setActiveTab] = useState<"members" | "media" | "files" | "starred">(
+  const [activeTab, setActiveTab] = useState<"members" | "media" | "files" | "starred" | "settings">(
     chat?.type === "GROUP" ? "members" : "media"
   );
 
@@ -296,7 +296,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
               type="text"
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
-              className="flex-1 px-2.5 py-1.5 rounded-lg border border-[#b2e7a6]/60 dark:border-[#025041]/60 bg-white dark:bg-[#182229] text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none"
+              className="flex-1 px-2.5 py-1.5 rounded-lg border border-[#b2e7a6]/60 dark:border-[#025041]/60 bg-white dark:bg-[#182229] text-base text-zinc-900 dark:text-zinc-100 focus:outline-none"
               autoFocus
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleSaveTitle();
@@ -313,8 +313,8 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
           </div>
         ) : (
           <div className="flex items-center gap-2 max-w-full">
-            <h4 className="text-lg font-bold truncate text-zinc-950 dark:text-white">{partner.name}</h4>
-            {chat.type === "GROUP" && isGroupManager && (
+            <h4 className="text-xl font-bold truncate text-zinc-950 dark:text-white">{partner.name}</h4>
+            {chat.type === "GROUP" && (!chat.restrictInfoToAdmins || isGroupManager) && (
               <button
                 onClick={() => {
                   setNewTitle(chat.title || "");
@@ -329,10 +329,10 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
           </div>
         )}
 
-        <p className="text-xs font-semibold text-[#667781] dark:text-[#8696a0] mt-0.5">
+        <p className="text-base font-semibold text-[#667781] dark:text-[#8696a0] mt-0.5">
           {chat.type === "DIRECT" ? `@${partner.username}` : `Group created by you/others`}
         </p>
-        <p className="text-xs text-zinc-650 dark:text-zinc-400 mt-2 px-2 italic line-clamp-2 leading-relaxed">
+        <p className="text-base text-zinc-650 dark:text-zinc-400 mt-2 px-2 italic line-clamp-2 leading-relaxed">
           "{partner.bio}"
         </p>
 
@@ -341,14 +341,14 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
           <div className="w-full mt-3.5 space-y-2">
             {partner.email && (
               <div className="w-full flex flex-col items-start gap-0.5 px-3 py-2 rounded-xl border border-[#e9edef]/35 dark:border-white/5 bg-white/10 dark:bg-black/10 text-left">
-                <span className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 dark:text-zinc-500">Email Address</span>
-                <span className="text-sm font-semibold truncate w-full text-zinc-800 dark:text-zinc-200 select-all">{partner.email}</span>
+                <span className="text-base uppercase font-bold tracking-wider text-zinc-400 dark:text-zinc-500">Email Address</span>
+                <span className="text-base font-semibold truncate w-full text-zinc-800 dark:text-zinc-200 select-all">{partner.email}</span>
               </div>
             )}
             {partner.phone && (
               <div className="w-full flex flex-col items-start gap-0.5 px-3 py-2 rounded-xl border border-[#e9edef]/35 dark:border-white/5 bg-white/10 dark:bg-black/10 text-left">
-                <span className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 dark:text-zinc-500">Phone Number</span>
-                <span className="text-sm font-semibold truncate w-full text-zinc-800 dark:text-zinc-200 select-all">{partner.phone}</span>
+                <span className="text-base uppercase font-bold tracking-wider text-zinc-400 dark:text-zinc-500">Phone Number</span>
+                <span className="text-base font-semibold truncate w-full text-zinc-800 dark:text-zinc-200 select-all">{partner.phone}</span>
               </div>
             )}
             
@@ -374,7 +374,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
       </div>
 
       {/* Media / Files / Members Tabs */}
-      <div className="flex border-b border-[#e9edef] dark:border-[#222e35]/30 text-xs font-semibold overflow-x-auto no-scrollbar">
+      <div className="flex border-b border-[#e9edef] dark:border-[#222e35]/30 text-base font-semibold overflow-x-auto no-scrollbar">
         {chat.type === "GROUP" && (
           <button
             onClick={() => setActiveTab("members")}
@@ -385,6 +385,18 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
             }`}
           >
             Members ({chat.members.length})
+          </button>
+        )}
+        {chat.type === "GROUP" && isGroupManager && (
+          <button
+            onClick={() => setActiveTab("settings")}
+            className={`px-3 py-3 text-center border-b-2 flex-shrink-0 cursor-pointer transition-colors ${
+              activeTab === "settings"
+                ? "border-[#00a884] text-[#00a884] dark:border-blue-500 dark:text-blue-400"
+                : "border-transparent text-[#667781] hover:text-[#111b21] dark:text-zinc-400 dark:hover:text-[#e9edef]"
+            }`}
+          >
+            Settings
           </button>
         )}
         <button
@@ -422,6 +434,65 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
       {/* Tabs Content */}
       <div className="flex-1 overflow-y-auto p-4 scrollbar-thin">
         
+        {/* Settings Tab */}
+        {activeTab === "settings" && chat.type === "GROUP" && isGroupManager && (
+          <div className="space-y-4">
+            <h4 className="text-base font-bold text-zinc-900 dark:text-white">Group Permissions</h4>
+            
+            <div className="flex items-center justify-between p-3 bg-zinc-100 dark:bg-zinc-800/50 rounded-xl border border-zinc-200 dark:border-white/5">
+              <div>
+                <p className="text-base font-semibold text-zinc-900 dark:text-white">Send Messages</p>
+                <p className="text-base text-zinc-500">Allow all participants to send messages</p>
+              </div>
+              <div
+                onClick={async () => {
+                  try {
+                    await api.patch(`/chats/${chat.id}`, { restrictMessagingToAdmins: !chat.restrictMessagingToAdmins });
+                    useChatStore.getState().updateChat(chat.id, { restrictMessagingToAdmins: !chat.restrictMessagingToAdmins });
+                  } catch (err) {
+                    console.error("Failed to update setting", err);
+                  }
+                }}
+                className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
+                  !chat.restrictMessagingToAdmins ? "bg-brand-primary" : "bg-zinc-400 dark:bg-zinc-600"
+                }`}
+              >
+                <div
+                  className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${
+                    !chat.restrictMessagingToAdmins ? "translate-x-4" : ""
+                  }`}
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between p-3 bg-zinc-100 dark:bg-zinc-800/50 rounded-xl border border-zinc-200 dark:border-white/5">
+              <div>
+                <p className="text-base font-semibold text-zinc-900 dark:text-white">Edit Group Info</p>
+                <p className="text-base text-zinc-500">Allow all participants to edit group info</p>
+              </div>
+              <div
+                onClick={async () => {
+                  try {
+                    await api.patch(`/chats/${chat.id}`, { restrictInfoToAdmins: !chat.restrictInfoToAdmins });
+                    useChatStore.getState().updateChat(chat.id, { restrictInfoToAdmins: !chat.restrictInfoToAdmins });
+                  } catch (err) {
+                    console.error("Failed to update setting", err);
+                  }
+                }}
+                className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
+                  !chat.restrictInfoToAdmins ? "bg-brand-primary" : "bg-zinc-400 dark:bg-zinc-600"
+                }`}
+              >
+                <div
+                  className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${
+                    !chat.restrictInfoToAdmins ? "translate-x-4" : ""
+                  }`}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Members Tab */}
         {activeTab === "members" && chat.type === "GROUP" && (
           <div className="space-y-4">
@@ -431,20 +502,20 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
                 {!showAddMember ? (
                   <button
                     onClick={() => setShowAddMember(true)}
-                    className="flex items-center gap-2 text-xs font-bold text-[#00a884] dark:text-blue-400 hover:underline cursor-pointer"
+                    className="flex items-center gap-2 text-base font-bold text-[#00a884] dark:text-blue-400 hover:underline cursor-pointer"
                   >
                     <Plus size={14} className="stroke-[2.5px]" /> Add Member
                   </button>
                 ) : (
                   <div className="space-y-2 border border-zinc-200/50 dark:border-white/5 p-2 rounded-xl bg-black/5 dark:bg-black/10">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase">Search User</span>
+                      <span className="text-base font-bold text-zinc-400 dark:text-zinc-500 uppercase">Search User</span>
                       <button
                         onClick={() => {
                           setShowAddMember(false);
                           setMemberSearchQuery("");
                         }}
-                        className="text-[10px] font-bold text-red-500 hover:underline cursor-pointer"
+                        className="text-base font-bold text-red-500 hover:underline cursor-pointer"
                       >
                         Cancel
                       </button>
@@ -456,7 +527,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
                         value={memberSearchQuery}
                         onChange={(e) => setMemberSearchQuery(e.target.value)}
                         placeholder="Search username"
-                        className="w-full pl-8 pr-2 py-1.5 rounded-lg border border-zinc-200 dark:border-white/5 bg-white dark:bg-[#182229] text-xs focus:outline-none"
+                        className="w-full pl-8 pr-2 py-1.5 rounded-lg border border-zinc-200 dark:border-white/5 bg-white dark:bg-[#182229] text-base focus:outline-none"
                       />
                     </div>
 
@@ -464,7 +535,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
                     {searchingMembers ? (
                       <div className="flex justify-center py-2"><Loader2 size={14} className="animate-spin text-blue-500" /></div>
                     ) : memberSearchQuery.trim().length >= 2 && memberSearchResults.length === 0 ? (
-                      <p className="text-[10px] text-zinc-400 py-1 text-center">No users found</p>
+                      <p className="text-base text-zinc-400 py-1 text-center">No users found</p>
                     ) : (
                       <div className="max-h-36 overflow-y-auto space-y-1 pr-1 scrollbar-thin">
                         {memberSearchResults.map((u) => (
@@ -475,7 +546,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
                           >
                             <div className="flex items-center gap-2 min-w-0">
                               <Avatar src={u.avatarUrl} name={u.name} size="xs" />
-                              <span className="text-xs font-semibold truncate text-zinc-800 dark:text-zinc-200">{u.name}</span>
+                              <span className="text-base font-semibold truncate text-zinc-800 dark:text-zinc-200">{u.name}</span>
                             </div>
                             <button
                               disabled={actionInProgress === u.id}
@@ -509,15 +580,15 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
                     <div className="flex items-center gap-2.5 min-w-0">
                       <Avatar src={member.user.avatarUrl} name={member.user.name} size="sm" />
                       <div className="min-w-0">
-                        <p className="text-xs font-bold truncate text-zinc-900 dark:text-zinc-150">
+                        <p className="text-base font-bold truncate text-zinc-900 dark:text-zinc-150">
                           {isMe ? "You" : member.user.name}
                         </p>
-                        <p className="text-[10px] text-zinc-400 truncate">@{member.user.username}</p>
+                        <p className="text-base text-zinc-400 truncate">@{member.user.username}</p>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-1.5 flex-shrink-0">
-                      <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider ${roleBadgeColor}`}>
+                      <span className={`text-base font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider ${roleBadgeColor}`}>
                         {member.role}
                       </span>
                       {canBeRemoved && (
@@ -559,7 +630,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
           mediaFiles.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-40 text-zinc-450 dark:text-zinc-500">
               <Image size={28} className="mb-2 opacity-40" />
-              <span className="text-xs font-medium">No media shared</span>
+              <span className="text-base font-medium">No media shared</span>
             </div>
           ) : (
             <div className="grid grid-cols-3 gap-2">
@@ -584,7 +655,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
           documentFiles.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-40 text-zinc-450 dark:text-zinc-500">
               <FileText size={28} className="mb-2 opacity-40" />
-              <span className="text-xs font-medium">No documents shared</span>
+              <span className="text-base font-medium">No documents shared</span>
             </div>
           ) : (
             <div className="space-y-2">
@@ -598,8 +669,8 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
                     <FileText size={16} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold truncate text-[#111b21] dark:text-[#e9edef]">{att.fileName}</p>
-                    <p className="text-[10px] text-[#667781] dark:text-[#8696a0]">
+                    <p className="text-base font-semibold truncate text-[#111b21] dark:text-[#e9edef]">{att.fileName}</p>
+                    <p className="text-base text-[#667781] dark:text-[#8696a0]">
                       {(att.fileSize / 1024).toFixed(1)} KB
                     </p>
                   </div>
@@ -615,7 +686,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
           starredMessages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-40 text-zinc-450 dark:text-zinc-500">
               <Star size={28} className="mb-2 opacity-40 text-amber-500 fill-amber-500" />
-              <span className="text-xs font-medium">No starred messages</span>
+              <span className="text-base font-medium">No starred messages</span>
             </div>
           ) : (
             <div className="space-y-3">
@@ -624,11 +695,11 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
                   key={msg.id}
                   className="p-3 rounded-xl border border-zinc-200/60 dark:border-white/5 bg-zinc-50 dark:bg-white/5 relative group select-text"
                 >
-                  <div className="flex items-center justify-between gap-2 mb-1 text-[10px] font-bold text-zinc-400">
+                  <div className="flex items-center justify-between gap-2 mb-1 text-base font-bold text-zinc-400">
                     <span className="text-blue-650 dark:text-blue-400">{msg.senderName}</span>
                     <span>{new Date(msg.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
                   </div>
-                  <p className="text-xs text-zinc-800 dark:text-zinc-200 break-words line-clamp-3 select-all">
+                  <p className="text-base text-zinc-800 dark:text-zinc-200 break-words line-clamp-3 select-all">
                     {msg.content || (msg.type !== "TEXT" ? `[${msg.type}]` : "")}
                   </p>
                   <button

@@ -127,7 +127,7 @@ export function ChatHeader({
                 router.push("/chats");
               }
             }}
-            className="p-2 sm:p-1.5 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] hover:text-zinc-950 dark:hover:text-white transition-colors cursor-pointer"
+            className={`p-2 sm:p-1.5 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] hover:text-zinc-950 dark:hover:text-white transition-colors cursor-pointer ${isSearchOpen ? "" : "md:hidden"}`}
           >
             <ArrowLeft size={20} />
           </button>
@@ -140,7 +140,7 @@ export function ChatHeader({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery && setSearchQuery(e.target.value)}
                 placeholder="Search messages..."
-                className="w-full pl-9 pr-8 py-1.5 rounded-full border border-[#e9edef]/20 dark:border-white/5 ios-glass-input text-base md:text-sm text-zinc-900 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none"
+                className="w-full pl-9 pr-8 py-1.5 rounded-full border border-[#e9edef]/20 dark:border-white/5 ios-glass-input text-base md:text-base text-zinc-900 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none"
                 autoFocus
               />
               {searchQuery && (
@@ -167,7 +167,7 @@ export function ChatHeader({
                 </h4>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   {typingStatuses.length > 0 ? (
-                    <span className="flex items-center gap-1.5 text-xs font-semibold text-brand-primary">
+                    <span className="flex items-center gap-1.5 text-base font-semibold text-brand-primary">
                       <span className="flex gap-0.5 items-center">
                         <span className="typing-dot" />
                         <span className="typing-dot" />
@@ -176,12 +176,12 @@ export function ChatHeader({
                       typing...
                     </span>
                   ) : isOnline ? (
-                    <span className="flex items-center gap-1.5 text-xs font-bold text-blue-500">
+                    <span className="flex items-center gap-1.5 text-base font-bold text-blue-500">
                       <span className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse inline-block" />
                       Online
                     </span>
                   ) : (
-                    <span className="text-xs font-medium text-zinc-400 dark:text-zinc-500 first-letter:capitalize">
+                    <span className="text-base font-medium text-zinc-400 dark:text-zinc-500 first-letter:capitalize">
                       {chat.type === "DIRECT" 
                         ? formatLastSeen(onlineStatuses[partner.id]) 
                         : `${chat.members.length} members`}
@@ -240,7 +240,7 @@ export function ChatHeader({
                 if (setIsSearchOpen) setIsSearchOpen(false);
                 if (setSearchQuery) setSearchQuery("");
               }}
-              className="p-2 sm:p-1.5 rounded-full hover:bg-zinc-200/55 dark:hover:bg-zinc-700/40 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-red-500 hover:text-red-650 transition-colors cursor-pointer flex items-center justify-center font-bold text-xs"
+              className="p-2 sm:p-1.5 rounded-full hover:bg-zinc-200/55 dark:hover:bg-zinc-700/40 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-red-500 hover:text-red-650 transition-colors cursor-pointer flex items-center justify-center font-bold text-base"
               title="Close search"
             >
               <X size={18} />
@@ -287,7 +287,7 @@ export function ChatHeader({
             </div>
             <div className="space-y-1.5">
               <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">Delete Conversation?</h3>
-              <p className="text-xs text-[#667781] dark:text-[#8696a0] leading-relaxed">
+              <p className="text-base text-[#667781] dark:text-[#8696a0] leading-relaxed">
                 Are you sure you want to delete this conversation? This action will only remove it from your side.
               </p>
             </div>

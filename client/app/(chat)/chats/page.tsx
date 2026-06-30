@@ -32,11 +32,11 @@ export default function ChatsPage() {
         <h1 className="text-2xl font-light text-[#41525d] dark:text-[#e9edef] tracking-tight">
           Orbix Web
         </h1>
-        <p className="text-sm text-[#667781] dark:text-[#8696a0] mt-3 max-w-sm leading-relaxed">
+        <p className="text-base text-[#667781] dark:text-[#8696a0] mt-3 max-w-sm leading-relaxed">
           Send and receive messages in real-time. Link your phone to chat with friends, create groups, and share media.
         </p>
 
-        <div className="mt-12 flex items-center justify-center gap-1.5 text-xs text-[#8696a0] dark:text-[#667781]">
+        <div className="mt-12 flex items-center justify-center gap-1.5 text-base text-[#8696a0] dark:text-[#667781]">
           <Lock size={12} className="text-[#8696a0] dark:text-[#667781]" />
           <span>End-to-end encrypted</span>
         </div>

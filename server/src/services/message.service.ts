@@ -61,6 +61,10 @@ export async function sendMessage(
   const membership = chat.members.find(m => m.userId === senderId);
   if (!membership) throw new ApiError(403, "You are not in this chat");
 
+  if (chat.type === "GROUP" && chat.restrictMessagingToAdmins && type !== "SYSTEM" && membership.role === "MEMBER") {
+    throw new ApiError(403, "Only admins can send messages in this group");
+  }
+
   // If it's a direct chat, check for blocks
   let receiverBlockedMe = false;
   let iBlockedReceiver = false;

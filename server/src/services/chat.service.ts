@@ -299,7 +299,7 @@ export async function removeMember(chatId: string, requesterId: string, targetUs
 export async function updateGroupChat(
   chatId: string,
   userId: string,
-  data: { title?: string; photoUrl?: string }
+  data: { title?: string; photoUrl?: string; restrictMessagingToAdmins?: boolean; restrictInfoToAdmins?: boolean }
 ) {
   const chat = await prisma.chat.findUnique({
     where: { id: chatId },
@@ -311,7 +311,15 @@ export async function updateGroupChat(
 
   const member = chat.members.find((m) => m.userId === userId);
   if (!member) throw new ApiError(403, "You are not in this chat");
-  if (member.role === "MEMBER") throw new ApiError(403, "Only admins can update the group");
+  
+  if (member.role === "MEMBER") {
+    if (chat.restrictInfoToAdmins) {
+      throw new ApiError(403, "Only admins can update the group info");
+    }
+    if (data.restrictMessagingToAdmins !== undefined || data.restrictInfoToAdmins !== undefined) {
+      throw new ApiError(403, "Only admins can change group settings");
+    }
+  }
 
   return prisma.chat.update({ where: { id: chatId }, data });
 }

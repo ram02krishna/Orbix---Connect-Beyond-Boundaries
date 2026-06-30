@@ -7,7 +7,7 @@ import { rateLimit } from "express-rate-limit";
 // Strict — only 10 attempts per 15 minutes
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  limit: 10,
+  limit: 5000, // Increased for high scale / dev testing
   standardHeaders: "draft-8",
   legacyHeaders: false,
   message: {
@@ -20,7 +20,7 @@ export const authLimiter = rateLimit({
 // Very strict — 3 per minute
 export const otpLimiter = rateLimit({
   windowMs: 60 * 1000,
-  limit: 3,
+  limit: 500, // Increased to prevent block during high usage
   standardHeaders: "draft-8",
   legacyHeaders: false,
   message: {
@@ -44,7 +44,7 @@ export const uploadLimiter = rateLimit({
 // For general API routes — default
 export const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  limit: 200,
+  limit: 5000,
   standardHeaders: "draft-8",
   legacyHeaders: false,
   message: {

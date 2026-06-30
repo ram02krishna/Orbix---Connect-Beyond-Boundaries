@@ -104,20 +104,20 @@ const ChatItem = React.memo(function ChatItem({
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">
-          <p className="text-[15.5px] font-semibold truncate text-[#111b21] dark:text-[#e9edef] flex items-center">
+          <p className="text-base sm:text-base font-semibold truncate text-[#111b21] dark:text-[#e9edef] flex items-center">
             {chat.type === "DIRECT" ? firstName(partner.name) : (chat.title || "Group Chat")}
             {chat.isPinned && (
-              <span className="text-xs text-blue-500 font-bold ml-1.5 flex items-center" title="Pinned Chat">📌</span>
+              <span className="text-base text-blue-500 font-bold ml-1.5 flex items-center" title="Pinned Chat">📌</span>
             )}
           </p>
           {chat.lastMessage && (
-            <span className={cn("text-[11px] font-semibold flex-shrink-0", preview?.isUnread ? "text-blue-500 font-bold" : "text-[#667781] dark:text-[#8696a0]")}>
+            <span className={cn("text-base font-semibold flex-shrink-0", preview?.isUnread ? "text-blue-500 font-bold" : "text-[#667781] dark:text-[#8696a0]")}>
               {formatTime(chat.lastMessage.createdAt)}
             </span>
           )}
         </div>
 
-        <p className="text-[13px] text-[#667781] dark:text-[#8696a0] truncate mt-1.5 flex items-center">
+        <p className="text-base text-[#667781] dark:text-[#8696a0] truncate mt-1.5 flex items-center">
           {isTyping ? (
             <span className="text-[#06A0F8] font-bold dark:text-blue-400 flex items-center gap-1">
               <span className="flex gap-0.5 items-center">
@@ -149,7 +149,7 @@ const ChatItem = React.memo(function ChatItem({
       </div>
       {preview?.isUnread && (
         <div className="flex flex-col justify-center items-end ml-2">
-          <span className="bg-[#06A0F8] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center shadow-sm">
+          <span className="bg-[#06A0F8] text-white text-base font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center shadow-sm">
             new
           </span>
         </div>
@@ -407,10 +407,10 @@ export function Sidebar() {
               <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-blue-500 ring-2 ring-[#f0f2f5]/70 dark:ring-[#202c33]/70" />
             </div>
             <div className="hidden sm:block">
-              <p className="text-sm font-semibold truncate max-w-[120px] text-zinc-900 dark:text-[#e9edef] transition-colors">
+              <p className="text-lg font-bold truncate max-w-[150px] text-zinc-900 dark:text-[#e9edef] transition-colors">
                 {user?.name ? firstName(user.name) : ""}
               </p>
-              <p className="text-[10px] text-zinc-400 dark:text-zinc-500 font-medium">@{user?.username}</p>
+              <p className="text-base text-zinc-400 dark:text-zinc-500 font-medium">@{user?.username}</p>
             </div>
           </div>
 
@@ -476,7 +476,7 @@ export function Sidebar() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search or start new chat"
-              className="w-full pl-9 pr-8 py-2.5 sm:py-2 rounded-full ios-glass-input text-base md:text-sm text-zinc-800 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none"
+              className="w-full pl-9 pr-8 py-2.5 sm:py-2 rounded-full ios-glass-input text-base md:text-base text-zinc-800 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none"
             />
             {searchQuery && (
               <button
@@ -502,7 +502,7 @@ export function Sidebar() {
             <button
               key={tab.id}
               onClick={() => setFilterTab(tab.id as any)}
-              className={`px-3.5 py-1 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer select-none ${filterTab === tab.id
+              className={`px-3.5 py-1 text-base font-bold rounded-full transition-all duration-200 cursor-pointer select-none ${filterTab === tab.id
                 ? "bg-[#06A0F8] text-white shadow-md shadow-blue-500/20"
                 : "bg-zinc-200/50 dark:bg-zinc-800/40 text-[#54656f] dark:text-[#aebac1] hover:bg-zinc-300/40 dark:hover:bg-zinc-700/40"
                 }`}
@@ -527,7 +527,7 @@ export function Sidebar() {
                 transition={{ duration: 0.2 }}
                 className="mb-3 mt-2"
               >
-                <p className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500 px-2 mb-2 uppercase tracking-widest">
+                <p className="text-base font-bold text-zinc-400 dark:text-zinc-500 px-2 mb-2 uppercase tracking-widest">
                   Search Results
                 </p>
                 {searching ? (
@@ -543,7 +543,7 @@ export function Sidebar() {
                     ))}
                   </div>
                 ) : searchResults.length === 0 ? (
-                  <p className="text-xs text-zinc-400 dark:text-zinc-500 px-3 py-2">No users found</p>
+                  <p className="text-base text-zinc-400 dark:text-zinc-500 px-3 py-2">No users found</p>
                 ) : (
                   <div className="space-y-0.5">
                     {searchResults.map((u) => (
@@ -554,8 +554,8 @@ export function Sidebar() {
                       >
                         <Avatar src={u.avatarUrl} name={u.name} size="sm" />
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold truncate text-zinc-800 dark:text-zinc-200">{u.name}</p>
-                          <p className="text-xs text-zinc-400 truncate">@{u.username}</p>
+                          <p className="text-base font-semibold truncate text-zinc-800 dark:text-zinc-200">{u.name}</p>
+                          <p className="text-base text-zinc-400 truncate">@{u.username}</p>
                         </div>
                         <UserPlus size={15} className="text-brand-primary flex-shrink-0" />
                       </div>
@@ -568,7 +568,7 @@ export function Sidebar() {
           </AnimatePresence>
 
           {/* Recent Chats Label */}
-          <p className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500 px-2 mb-2 mt-3 uppercase tracking-widest">
+          <p className="text-base font-bold text-zinc-400 dark:text-zinc-500 px-2 mb-2 mt-3 uppercase tracking-widest">
             {filterTab === "all" && "Recent Chats"}
             {filterTab === "pinned" && "Pinned Chats"}
             {filterTab === "archived" && "Archived Chats"}
@@ -595,10 +595,10 @@ export function Sidebar() {
                   <img src="/logo.png" alt="Orbix Logo" className="w-12 h-12 object-contain opacity-70" />
                 </div>
               </div>
-              <p className="text-sm font-bold text-zinc-700 dark:text-zinc-300">
+              <p className="text-base font-bold text-zinc-700 dark:text-zinc-300">
                 {filterTab === "archived" ? "No archived chats" : filterTab === "pinned" ? "No pinned chats" : "No chats yet"}
               </p>
-              <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1.5 leading-relaxed max-w-[180px]">
+              <p className="text-base text-zinc-400 dark:text-zinc-500 mt-1.5 leading-relaxed max-w-[180px]">
                 {filterTab === "all" ? "Search for a username above to start chatting!" : "Your filters returned 0 items."}
               </p>
             </div>
@@ -637,7 +637,7 @@ export function Sidebar() {
         <div className="flex-1 overflow-y-auto px-3 pb-4 relative z-10 scrollbar-thin">
           {/* My Status */}
           <div className="mt-3">
-            <p className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500 px-2 mb-2 uppercase tracking-widest">
+            <p className="text-base font-bold text-zinc-400 dark:text-zinc-500 px-2 mb-2 uppercase tracking-widest">
               My Status
             </p>
             <div className="flex items-center justify-between px-2.5 py-3 rounded-xl border border-zinc-200/30 dark:border-white/5 bg-white/10 dark:bg-white/2">
@@ -661,8 +661,8 @@ export function Sidebar() {
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold truncate text-[#111b21] dark:text-[#e9edef]">My Status</p>
-                  <p className="text-xs text-[#667781] dark:text-[#8696a0] truncate mt-0.5">
+                  <p className="text-base font-semibold truncate text-[#111b21] dark:text-[#e9edef]">My Status</p>
+                  <p className="text-base text-[#667781] dark:text-[#8696a0] truncate mt-0.5">
                     {myStatus && myStatus.statuses.length > 0
                       ? `Latest update • ${formatTime(myStatus.statuses[myStatus.statuses.length - 1].createdAt)}`
                       : "Tap to add status update"}
@@ -681,7 +681,7 @@ export function Sidebar() {
           {/* Recent Updates */}
           {recentStatuses.length > 0 && (
             <div className="mt-4">
-              <p className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500 px-2 mb-2 uppercase tracking-widest">
+              <p className="text-base font-bold text-zinc-400 dark:text-zinc-500 px-2 mb-2 uppercase tracking-widest">
                 Recent Updates
               </p>
               <div className="space-y-1">
@@ -703,10 +703,10 @@ export function Sidebar() {
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold truncate text-[#111b21] dark:text-[#e9edef]">
+                        <p className="text-base font-semibold truncate text-[#111b21] dark:text-[#e9edef]">
                           {group.user.name}
                         </p>
-                        <p className="text-xs text-[#667781] dark:text-[#8696a0] truncate mt-0.5">
+                        <p className="text-base text-[#667781] dark:text-[#8696a0] truncate mt-0.5">
                           {formatTime(latestStatus.createdAt)}
                         </p>
                       </div>
@@ -720,7 +720,7 @@ export function Sidebar() {
           {/* Viewed Updates */}
           {viewedStatuses.length > 0 && (
             <div className="mt-4">
-              <p className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500 px-2 mb-2 uppercase tracking-widest">
+              <p className="text-base font-bold text-zinc-400 dark:text-zinc-500 px-2 mb-2 uppercase tracking-widest">
                 Viewed Updates
               </p>
               <div className="space-y-1">
@@ -742,10 +742,10 @@ export function Sidebar() {
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold truncate text-[#111b21] dark:text-[#e9edef]">
+                        <p className="text-base font-semibold truncate text-[#111b21] dark:text-[#e9edef]">
                           {group.user.name}
                         </p>
-                        <p className="text-xs text-[#667781] dark:text-[#8696a0] truncate mt-0.5">
+                        <p className="text-base text-[#667781] dark:text-[#8696a0] truncate mt-0.5">
                           {formatTime(latestStatus.createdAt)}
                         </p>
                       </div>
@@ -764,8 +764,8 @@ export function Sidebar() {
                   <CircleDot size={28} />
                 </div>
               </div>
-              <p className="text-sm font-bold text-zinc-700 dark:text-zinc-300">No status updates</p>
-              <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1.5 leading-relaxed max-w-[180px]">
+              <p className="text-base font-bold text-zinc-700 dark:text-zinc-300">No status updates</p>
+              <p className="text-base text-zinc-400 dark:text-zinc-500 mt-1.5 leading-relaxed max-w-[180px]">
                 Status updates disappear after 24 hours.
               </p>
             </div>
@@ -777,14 +777,13 @@ export function Sidebar() {
       {contextMenu && (
         <div
           style={{ top: contextMenu.y, left: contextMenu.x }}
-          className="fixed z-[100] w-44 py-1 ios-context-menu text-xs text-zinc-800 dark:text-[#e9edef] animate-fade-up select-none shadow-2xl"
+          className="fixed z-[100] w-44 py-1 ios-context-menu text-base text-zinc-800 dark:text-[#e9edef] animate-fade-up select-none shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >
           <button
             onClick={(e) => handleTogglePin(contextMenu.chatId, e)}
             className="w-full text-left px-4 py-2 font-semibold cursor-pointer transition-colors flex items-center gap-2"
           >
-            <span>📌</span>
             <span>
               {chats.find((c) => c.id === contextMenu.chatId)?.isPinned ? "Unpin Chat" : "Pin Chat"}
             </span>
@@ -793,7 +792,6 @@ export function Sidebar() {
             onClick={(e) => handleToggleArchive(contextMenu.chatId, e)}
             className="w-full text-left px-4 py-2 font-semibold cursor-pointer transition-colors border-t border-[#e9edef]/30 dark:border-white/5 flex items-center gap-2"
           >
-            <span>📥</span>
             <span>
               {chats.find((c) => c.id === contextMenu.chatId)?.isArchived ? "Unarchive Chat" : "Archive Chat"}
             </span>

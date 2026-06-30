@@ -59,7 +59,7 @@ export function MediaLightbox({ isOpen, onClose, mediaUrl, mediaType, fileName =
       <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-black/80 to-transparent flex items-center justify-between px-6 text-white z-50">
         <div className="flex items-center gap-2 min-w-0">
           {mediaType === "PDF" && <FileText size={18} className="text-blue-400 flex-shrink-0" />}
-          <span className="text-sm font-bold truncate max-w-xs md:max-w-md drop-shadow-md">{fileName}</span>
+          <span className="text-base font-bold truncate max-w-xs md:max-w-md drop-shadow-md">{fileName}</span>
         </div>
         <div className="flex items-center gap-3">
           <button
@@ -108,7 +108,7 @@ export function MediaLightbox({ isOpen, onClose, mediaUrl, mediaType, fileName =
             {iframeLoading && (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#1f2c34]/80 text-white gap-2 rounded-xl z-20">
                 <Loader2 className="animate-spin text-blue-400" size={32} />
-                <span className="text-xs font-semibold">Loading document...</span>
+                <span className="text-base font-semibold">Loading document...</span>
               </div>
             )}
             <iframe

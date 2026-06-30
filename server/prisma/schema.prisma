@@ -116,6 +116,8 @@ model Chat {
   photoUrl      String?
   createdBy     String
   lastMessageId String?
+  restrictMessagingToAdmins Boolean @default(false)
+  restrictInfoToAdmins      Boolean @default(false)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

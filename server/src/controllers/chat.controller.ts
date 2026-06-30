@@ -103,8 +103,8 @@ export async function getChat(req: Request, res: Response) {
 // PATCH /api/chats/:chatId
 // Update a group chat's name or photo (admins only)
 export async function updateChat(req: Request, res: Response) {
-  const { title, photoUrl } = req.body;
-  const chat = await chatService.updateGroupChat(req.params.chatId as string, req.user!.id, { title, photoUrl });
+  const { title, photoUrl, restrictMessagingToAdmins, restrictInfoToAdmins } = req.body;
+  const chat = await chatService.updateGroupChat(req.params.chatId as string, req.user!.id, { title, photoUrl, restrictMessagingToAdmins, restrictInfoToAdmins });
   sendSuccess(res, "Group updated", { chat });
 }
 

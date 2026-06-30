@@ -29,7 +29,7 @@ export function AuthCard({ children, title, subtitle }: AuthCardProps) {
           <Button
             variant="glass"
             size="sm"
-            className="flex items-center gap-1.5 text-xs font-semibold"
+            className="flex items-center gap-1.5 text-sm font-semibold"
           >
             <ArrowLeft size={14} />
             Back to Home
@@ -46,11 +46,11 @@ export function AuthCard({ children, title, subtitle }: AuthCardProps) {
         className="relative w-full max-w-md p-6 sm:p-8 rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg z-10"
       >
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">
+          <h2 className="text-3xl font-bold text-zinc-900 dark:text-white tracking-tight">
             {title}
           </h2>
           {subtitle && (
-            <p className="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="mt-1.5 text-base text-zinc-500 dark:text-zinc-400">
               {subtitle}
             </p>
           )}

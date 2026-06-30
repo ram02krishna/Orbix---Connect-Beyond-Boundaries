@@ -134,8 +134,8 @@ export function StatusViewer() {
           <div className="flex items-center gap-3">
             <Avatar src={group.user.avatarUrl} name={group.user.name} size="sm" className="ring-1 ring-blue-500" />
             <div>
-              <p className="text-sm font-semibold truncate leading-tight">{group.user.name}</p>
-              <p className="text-[10px] text-zinc-400 font-medium">
+              <p className="text-base font-semibold truncate leading-tight">{group.user.name}</p>
+              <p className="text-base text-zinc-400 font-medium">
                 {formatDistanceToNow(new Date(activeStatus.createdAt), { addSuffix: true })}
               </p>
             </div>
@@ -181,7 +181,7 @@ export function StatusViewer() {
                 className="max-h-[75%] w-full object-contain pointer-events-none"
               />
               {activeStatus.caption && (
-                <div className="absolute bottom-16 left-4 right-4 z-20 text-center px-4 py-3 rounded-2xl bg-black/60 backdrop-blur-md border border-white/5 text-sm leading-relaxed max-h-[120px] overflow-y-auto">
+                <div className="absolute bottom-16 left-4 right-4 z-20 text-center px-4 py-3 rounded-2xl bg-black/60 backdrop-blur-md border border-white/5 text-base leading-relaxed max-h-[120px] overflow-y-auto">
                   {activeStatus.caption}
                 </div>
               )}
@@ -203,7 +203,7 @@ export function StatusViewer() {
                 setIsPaused(true);
                 setShowViewers(true);
               }}
-              className="px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/5 text-xs font-semibold flex items-center gap-1.5 cursor-pointer shadow-lg transition-transform hover:scale-105"
+              className="px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/5 text-base font-semibold flex items-center gap-1.5 cursor-pointer shadow-lg transition-transform hover:scale-105"
             >
               <Eye size={14} />
               {activeStatus.views.length} Views
@@ -216,7 +216,7 @@ export function StatusViewer() {
         <div className="fixed inset-0 z-50 bg-black/55 backdrop-blur-xs flex items-end justify-center p-4">
           <div className="w-full max-w-md rounded-t-3xl border border-white/10 bg-zinc-900 shadow-2xl flex flex-col max-h-[50vh]">
             <div className="flex items-center justify-between p-4 border-b border-white/5">
-              <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-1.5">
+              <span className="text-base font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-1.5">
                 <Eye size={14} className="text-blue-500" />
                 Viewed By ({activeStatusViewers.length})
               </span>
@@ -233,7 +233,7 @@ export function StatusViewer() {
 
             <div className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-thin">
               {activeStatusViewers.length === 0 ? (
-                <div className="text-center py-8 text-xs text-zinc-500 font-medium">
+                <div className="text-center py-8 text-base text-zinc-500 font-medium">
                   No views yet
                 </div>
               ) : (
@@ -244,10 +244,10 @@ export function StatusViewer() {
                   >
                     <Avatar src={viewer.avatarUrl} name={viewer.name} size="xs" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-semibold truncate text-white leading-tight">{viewer.name}</p>
-                      <p className="text-[10px] text-zinc-500">@{viewer.username}</p>
+                      <p className="text-base font-semibold truncate text-white leading-tight">{viewer.name}</p>
+                      <p className="text-base text-zinc-500">@{viewer.username}</p>
                     </div>
-                    <span className="text-[10px] text-zinc-400 font-medium whitespace-nowrap">
+                    <span className="text-base text-zinc-400 font-medium whitespace-nowrap">
                       {formatDistanceToNow(new Date(viewer.viewedAt), { addSuffix: true })}
                     </span>
                   </div>

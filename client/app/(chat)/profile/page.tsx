@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Camera, Loader2, Save, BadgeCheck, Sun, Moon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuthStore } from "@hooks/useAuthStore";
+import imageCompression from "browser-image-compression";
 import { Avatar } from "@components/ui/Avatar";
 import { Input } from "@components/ui/Input";
 import { Button } from "@components/ui/Button";
@@ -65,10 +66,22 @@ export default function ProfilePage() {
     setSuccess("");
     setUploading(true);
 
-    const formData = new FormData();
-    formData.append("file", file);
+    const options = {
+      maxSizeMB: 0.5,
+      maxWidthOrHeight: 1024,
+      useWebWorker: true,
+    };
 
     try {
+      const compressedFile = await imageCompression(file, options);
+      const compressedImageFile = new File([compressedFile], file.name, {
+        type: compressedFile.type,
+        lastModified: Date.now(),
+      });
+
+      const formData = new FormData();
+      formData.append("file", compressedImageFile);
+
       const res = await api.post("/media/avatar", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -137,20 +150,20 @@ export default function ProfilePage() {
 
         <form onSubmit={handleUpdateProfile} className="space-y-5">
           {error && (
-            <div className="p-3.5 rounded-xl border border-red-500/20 bg-red-500/10 text-sm text-red-400 font-medium">
+            <div className="p-3.5 rounded-xl border border-red-500/20 bg-red-500/10 text-base text-red-400 font-medium">
               {error}
             </div>
           )}
 
           {success && (
-            <div className="p-3.5 rounded-xl border border-green-500/20 bg-green-500/10 text-sm text-green-400 font-medium">
+            <div className="p-3.5 rounded-xl border border-green-500/20 bg-green-500/10 text-base text-green-400 font-medium">
               {success}
             </div>
           )}
 
           {/* Full Name */}
           <div className="space-y-1">
-            <label className="text-sm font-semibold text-zinc-500 uppercase tracking-wider pl-1">
+            <label className="text-base font-semibold text-zinc-500 uppercase tracking-wider pl-1">
               Full Name
             </label>
             <Input
@@ -165,7 +178,7 @@ export default function ProfilePage() {
 
           {/* Username */}
           <div className="space-y-1">
-            <label className="text-sm font-semibold text-zinc-500 uppercase tracking-wider pl-1">
+            <label className="text-base font-semibold text-zinc-500 uppercase tracking-wider pl-1">
               Username
             </label>
             <Input
@@ -180,7 +193,7 @@ export default function ProfilePage() {
 
           {/* Bio */}
           <div className="space-y-1">
-            <label className="text-sm font-semibold text-zinc-500 uppercase tracking-wider pl-1">
+            <label className="text-base font-semibold text-zinc-500 uppercase tracking-wider pl-1">
               Bio
             </label>
             <textarea
@@ -196,11 +209,11 @@ export default function ProfilePage() {
 
           <div className="pt-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="p-3.5 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-200/40 dark:bg-white/5">
-              <p className="text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">Email</p>
+              <p className="text-base font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">Email</p>
               <p className="text-base font-semibold text-zinc-700 dark:text-zinc-300 truncate mt-1">{user?.email}</p>
             </div>
             <div className="p-3.5 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-200/40 dark:bg-white/5">
-              <p className="text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">Verification Status</p>
+              <p className="text-base font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">Verification Status</p>
               <p className="text-base font-semibold text-zinc-700 dark:text-zinc-300 mt-1">
                 {user?.emailVerified ? "Verified" : "Unverified"}
               </p>

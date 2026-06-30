@@ -102,7 +102,7 @@ export function NewGroupModal({ onClose, onGroupCreated }: NewGroupModalProps) {
           {/* Group details */}
           <div className="space-y-3">
             <div>
-              <label className="block text-[10px] uppercase font-bold tracking-wider text-zinc-450 dark:text-zinc-500 mb-1.5">
+              <label className="block text-base uppercase font-bold tracking-wider text-zinc-450 dark:text-zinc-500 mb-1.5">
                 Group Subject *
               </label>
               <input
@@ -111,11 +111,11 @@ export function NewGroupModal({ onClose, onGroupCreated }: NewGroupModalProps) {
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Type group name here..."
                 required
-                className="w-full px-4 py-2.5 rounded-xl border border-zinc-200/60 dark:border-white/5 ios-glass-input text-base sm:text-sm text-zinc-900 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none"
+                className="w-full px-4 py-2.5 rounded-xl border border-zinc-200/60 dark:border-white/5 ios-glass-input text-base sm:text-base text-zinc-900 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none"
               />
             </div>
             <div>
-              <label className="block text-[10px] uppercase font-bold tracking-wider text-zinc-450 dark:text-zinc-500 mb-1.5">
+              <label className="block text-base uppercase font-bold tracking-wider text-zinc-450 dark:text-zinc-500 mb-1.5">
                 Group Icon URL (Optional)
               </label>
               <input
@@ -123,14 +123,14 @@ export function NewGroupModal({ onClose, onGroupCreated }: NewGroupModalProps) {
                 value={photoUrl}
                 onChange={(e) => setPhotoUrl(e.target.value)}
                 placeholder="https://example.com/avatar.jpg"
-                className="w-full px-4 py-2.5 rounded-xl border border-zinc-200/60 dark:border-white/5 ios-glass-input text-base sm:text-sm text-zinc-900 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none"
+                className="w-full px-4 py-2.5 rounded-xl border border-zinc-200/60 dark:border-white/5 ios-glass-input text-base sm:text-base text-zinc-900 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none"
               />
             </div>
           </div>
 
           {/* Members Search & List */}
           <div className="flex-1 flex flex-col min-h-0">
-            <label className="block text-[10px] uppercase font-bold tracking-wider text-zinc-450 dark:text-zinc-500 mb-1.5">
+            <label className="block text-base uppercase font-bold tracking-wider text-zinc-450 dark:text-zinc-500 mb-1.5">
               Add Members ({selectedUsers.length} selected)
             </label>
 
@@ -141,7 +141,7 @@ export function NewGroupModal({ onClose, onGroupCreated }: NewGroupModalProps) {
                   <div
                     key={u.id}
                     onClick={() => toggleSelectUser(u)}
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-650 dark:text-blue-400 border border-blue-500/15 text-xs font-semibold cursor-pointer hover:bg-blue-500/20 transition-all select-none"
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-650 dark:text-blue-400 border border-blue-500/15 text-base font-semibold cursor-pointer hover:bg-blue-500/20 transition-all select-none"
                   >
                     <Avatar src={u.avatarUrl} name={u.name} size="xs" />
                     <span>{u.name.split(" ")[0]}</span>
@@ -159,7 +159,7 @@ export function NewGroupModal({ onClose, onGroupCreated }: NewGroupModalProps) {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search username (min 2 chars)"
-                className="w-full pl-9 pr-8 py-2.5 sm:py-2 rounded-xl border border-zinc-200/60 dark:border-white/5 ios-glass-input text-base sm:text-xs text-zinc-800 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none"
+                className="w-full pl-9 pr-8 py-2.5 sm:py-2 rounded-xl border border-zinc-200/60 dark:border-white/5 ios-glass-input text-base sm:text-base text-zinc-800 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none"
               />
               {searchQuery && (
                 <button
@@ -179,9 +179,9 @@ export function NewGroupModal({ onClose, onGroupCreated }: NewGroupModalProps) {
                   <Loader2 size={20} className="animate-spin text-blue-500" />
                 </div>
               ) : searchQuery.trim().length >= 2 && searchResults.length === 0 ? (
-                <p className="text-center text-xs text-zinc-400 dark:text-zinc-500 py-6">No users found</p>
+                <p className="text-center text-base text-zinc-400 dark:text-zinc-500 py-6">No users found</p>
               ) : searchQuery.trim().length < 2 ? (
-                <p className="text-center text-xs text-zinc-450 dark:text-zinc-500 py-6">
+                <p className="text-center text-base text-zinc-450 dark:text-zinc-500 py-6">
                   Search for users to add them to the group
                 </p>
               ) : (
@@ -199,8 +199,8 @@ export function NewGroupModal({ onClose, onGroupCreated }: NewGroupModalProps) {
                     >
                       <Avatar src={u.avatarUrl} name={u.name} size="sm" />
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-semibold truncate">{u.name}</p>
-                        <p className="text-[10px] text-zinc-450 truncate">@{u.username}</p>
+                        <p className="text-base font-semibold truncate">{u.name}</p>
+                        <p className="text-base text-zinc-450 truncate">@{u.username}</p>
                       </div>
                       <div
                         className={`h-4 w-4 rounded-md border flex items-center justify-center transition-colors ${

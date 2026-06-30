@@ -29,6 +29,11 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
   const partner = chat?.type === "DIRECT" ? chat.members.find(m => m.userId !== user?.id) : null;
   const isBlockedByMe = partner ? blockedUserIds.includes(partner.userId) : false;
 
+  // Check group permissions
+  const myMember = chat?.type === "GROUP" ? chat.members.find(m => m.userId === user?.id) : null;
+  const isGroupAdmin = myMember?.role === "OWNER" || myMember?.role === "ADMIN";
+  const cannotMessage = chat?.type === "GROUP" && chat.restrictMessagingToAdmins && !isGroupAdmin;
+
   // Audio recording states
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -269,33 +274,33 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
+  if (isBlockedByMe) {
+    return (
+      <div className="p-4 bg-zinc-100 dark:bg-[#202c33] border-t border-[#e9edef] dark:border-[#222e35]/30">
+        <div className="flex flex-col items-center justify-center p-3 text-center">
+          <p className="text-base font-semibold text-zinc-900 dark:text-[#e9edef]">You blocked this contact</p>
+          <p className="text-base text-zinc-500 dark:text-[#8696a0] mt-1">Tap to unblock and send a message.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (cannotMessage) {
+    return (
+      <div className="p-4 bg-zinc-100 dark:bg-[#202c33] border-t border-[#e9edef] dark:border-[#222e35]/30 flex items-center justify-center">
+        <p className="text-base text-[#8696a0] font-medium bg-[#111b21]/5 dark:bg-white/5 py-2 px-4 rounded-xl">
+          Only admins can send messages
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="relative">
-      {isBlockedByMe && (
-        <div className="absolute inset-0 bg-zinc-50 dark:bg-zinc-950 flex flex-col items-center justify-center z-50 rounded-b-2xl border-t border-zinc-200 dark:border-zinc-800 gap-2">
-          <p className="text-zinc-500 font-medium text-sm">
-            You have blocked this user so you can not message, voice call or video call.
-          </p>
-          <button
-            onClick={async () => {
-              try {
-                await api.delete(`/users/block/${partner?.userId}`);
-                useAuthStore.getState().removeBlockedUser(partner!.userId);
-              } catch (err) {
-                console.error("Failed to unblock", err);
-              }
-            }}
-            className="px-4 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded-full text-sm font-medium transition-colors"
-          >
-            Unblock
-          </button>
-        </div>
-      )}
-
       <div className="p-3 border-t border-[#e9edef]/40 dark:border-[#222e35]/20 bg-white/30 dark:bg-black/15 backdrop-blur-md relative z-20 text-zinc-900 dark:text-zinc-100 select-none">
 
       {replyingTo && (
-        <div className="flex items-center justify-between p-2.5 mb-3 bg-blue-500/10 border border-blue-500/20 rounded-lg text-xs">
+        <div className="flex items-center justify-between p-2.5 mb-3 bg-blue-500/10 border border-blue-500/20 rounded-lg text-base">
           <div className="flex items-start gap-2 border-l-4 border-blue-500 pl-2.5 py-0.5">
             <div>
               <p className="font-bold text-blue-600 dark:text-blue-400">
@@ -320,8 +325,8 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
           <div className="flex-1 flex items-center justify-between bg-zinc-150 dark:bg-[#1f2c34] px-4 py-2.5 rounded-xl border border-zinc-200/40 dark:border-white/5">
             <div className="flex items-center gap-2.5">
               <span className="h-2.5 w-2.5 rounded-full bg-red-500 animate-pulse inline-block" />
-              <span className="text-xs font-bold text-red-500 uppercase tracking-wider">Recording</span>
-              <span className="text-sm font-semibold text-zinc-650 dark:text-zinc-300 ml-1">
+              <span className="text-base font-bold text-red-500 uppercase tracking-wider">Recording</span>
+              <span className="text-base font-semibold text-zinc-650 dark:text-zinc-300 ml-1">
                 {formatDuration(recordingTime)}
               </span>
             </div>
@@ -405,7 +410,7 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
                 onChange={handleInputChange}
                 placeholder={uploading ? "Uploading file..." : "Type a message"}
                 disabled={uploading}
-                className="w-full px-4 py-2.5 rounded-xl border border-[#e9edef]/20 dark:border-white/5 ios-glass-input text-zinc-900 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none transition-all text-base md:text-sm disabled:opacity-50"
+                className="w-full px-4 py-2.5 rounded-xl border border-[#e9edef]/20 dark:border-white/5 ios-glass-input text-zinc-900 dark:text-[#e9edef] placeholder-[#667781] dark:placeholder-[#8696a0] focus:outline-none transition-all text-base md:text-base disabled:opacity-50"
               />
           </div>
 

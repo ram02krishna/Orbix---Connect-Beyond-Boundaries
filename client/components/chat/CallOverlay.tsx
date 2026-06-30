@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useCallStore } from "@hooks/useCallStore";
-import { Phone, PhoneOff, Mic, MicOff, Video, VideoOff } from "lucide-react";
+import { Phone, PhoneOff, Mic, MicOff, Video, VideoOff, Volume2, Volume1, MonitorUp, MonitorOff } from "lucide-react";
 import { Avatar } from "@components/ui/Avatar";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -47,10 +47,13 @@ export function CallOverlay() {
     endCall,
     toggleMute,
     toggleCamera,
+    toggleScreenShare,
+    isScreenSharing,
   } = useCallStore();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [callDuration, setCallDuration] = useState(0);
+  const [isSpeaker, setIsSpeaker] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Duration timer when connected
@@ -111,48 +114,66 @@ export function CallOverlay() {
         <div className="absolute top-1/4 left-1/4 h-[500px] w-[500px] rounded-full bg-blue-600/10 blur-[120px] pointer-events-none animate-pulse-slow z-0" />
         <div className="absolute bottom-1/4 right-1/4 h-[500px] w-[500px] rounded-full bg-brand-primary/10 blur-[120px] pointer-events-none animate-pulse z-0" />
 
-        {/* Real-time Video Feeds */}
-        {callState === "connected" && callType === "video" && (
-          <div ref={containerRef} className="absolute inset-0 h-full w-full bg-black z-10 flex">
-            {/* Group Call Grid or Single Remote Video */}
-            {isGroupCall ? (
-              <div className={`w-full h-full grid ${gridCols} gap-1 p-1`}>
-                {activeRemoteStreams.map(([userId, stream]) => (
-                  <div key={userId} className="relative bg-zinc-900 rounded-lg overflow-hidden border border-white/10">
-                    <VideoStream stream={stream} />
-                    <div className="absolute bottom-2 left-2 bg-black/50 px-2 py-1 rounded text-xs">
-                      {participants[userId]?.name || "Participant"}
-                    </div>
-                  </div>
-                ))}
-                {numStreams === 0 && (
-                  <div className="col-span-full h-full flex flex-col items-center justify-center bg-zinc-950/90 text-zinc-400">
-                    <p className="text-sm font-semibold animate-pulse">Waiting for others to join...</p>
-                  </div>
+        {/* Real-time Feeds */}
+        {callState === "connected" && (
+          <>
+            {/* Hidden Audio Elements for Voice Calls */}
+            {callType === "audio" && (
+              <div className="hidden">
+                {isGroupCall ? (
+                  activeRemoteStreams.map(([userId, stream]) => (
+                    <VideoStream key={userId} stream={stream} />
+                  ))
+                ) : (
+                  remoteStream && <VideoStream stream={remoteStream} />
                 )}
               </div>
-            ) : (
-              remoteStream ? (
-                <VideoStream stream={remoteStream} />
-              ) : (
-                <div className="h-full w-full flex flex-col items-center justify-center bg-zinc-950/90 text-zinc-400 gap-3">
-                  <Avatar src={displayAvatar} name={displayName || "?"} size="xl" />
-                  <p className="text-sm font-semibold animate-pulse">Waiting for video stream...</p>
-                </div>
-              )
             )}
 
-            {/* Local Video Picture-in-Picture */}
-            {!isCameraOff && localStream && (
-              <motion.div 
-                drag
-                dragConstraints={containerRef}
-                className="absolute top-4 right-4 sm:top-6 sm:right-6 w-24 h-36 sm:w-32 sm:h-44 rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-zinc-900 z-20 cursor-grab active:cursor-grabbing"
-              >
-                <VideoStream stream={localStream} isLocal={true} />
-              </motion.div>
+            {/* Visual Video Feeds for Video Calls */}
+            {callType === "video" && (
+              <div ref={containerRef} className="absolute inset-0 h-full w-full bg-black z-10 flex">
+                {/* Group Call Grid or Single Remote Video */}
+                {isGroupCall ? (
+                  <div className={`w-full h-full grid ${gridCols} gap-1 p-1`}>
+                    {activeRemoteStreams.map(([userId, stream]) => (
+                      <div key={userId} className="relative bg-zinc-900 rounded-lg overflow-hidden border border-white/10">
+                        <VideoStream stream={stream} />
+                        <div className="absolute bottom-2 left-2 bg-black/50 px-2 py-1 rounded text-base">
+                          {participants[userId]?.name || "Participant"}
+                        </div>
+                      </div>
+                    ))}
+                    {numStreams === 0 && (
+                      <div className="col-span-full h-full flex flex-col items-center justify-center bg-zinc-950/90 text-zinc-400">
+                        <p className="text-base font-semibold animate-pulse">Waiting for others to join...</p>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  remoteStream ? (
+                    <VideoStream stream={remoteStream} />
+                  ) : (
+                    <div className="h-full w-full flex flex-col items-center justify-center bg-zinc-950/90 text-zinc-400 gap-3">
+                      <Avatar src={displayAvatar} name={displayName || "?"} size="xl" />
+                      <p className="text-base font-semibold animate-pulse">Waiting for video stream...</p>
+                    </div>
+                  )
+                )}
+
+                {/* Local Video Picture-in-Picture */}
+                {!isCameraOff && localStream && (
+                  <motion.div 
+                    drag
+                    dragConstraints={containerRef}
+                    className="absolute top-4 right-4 sm:top-6 sm:right-6 w-24 h-36 sm:w-32 sm:h-44 rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-zinc-900 z-20 cursor-grab active:cursor-grabbing"
+                  >
+                    <VideoStream stream={localStream} isLocal={true} />
+                  </motion.div>
+                )}
+              </div>
             )}
-          </div>
+          </>
         )}
 
         {/* Content Pane */}
@@ -161,7 +182,7 @@ export function CallOverlay() {
           <div className="space-y-4 mt-8 pointer-events-none">
             <div className="flex justify-center">
               {callState === "connected" && callType === "video" ? (
-                <div className="px-4 py-1.5 rounded-full bg-black/40 border border-white/10 backdrop-blur-md text-xs font-semibold tracking-wide pointer-events-auto">
+                <div className="px-4 py-1.5 rounded-full bg-black/40 border border-white/10 backdrop-blur-md text-base font-semibold tracking-wide pointer-events-auto">
                   {formatTime(callDuration)}
                 </div>
               ) : (
@@ -182,7 +203,7 @@ export function CallOverlay() {
               <h2 className="text-2xl font-bold tracking-tight text-white drop-shadow-md">
                 {displayName}
               </h2>
-              <p className="text-sm font-medium text-blue-400 drop-shadow-sm tracking-wide">
+              <p className="text-base font-medium text-blue-400 drop-shadow-sm tracking-wide">
                 {callState === "outgoing" && "Calling..."}
                 {callState === "incoming" && `Incoming ${isGroupCall ? "Group " : ""}${callType === "video" ? "Video" : "Voice"} Call`}
                 {callState === "connected" && (
@@ -205,7 +226,7 @@ export function CallOverlay() {
                   <div className="h-16 w-16 rounded-full bg-red-600 hover:bg-red-700 active:scale-95 flex items-center justify-center shadow-lg transition-all duration-150 cursor-pointer">
                     <PhoneOff size={26} className="text-white transform rotate-135" />
                   </div>
-                  <span className="text-xs text-zinc-400 group-hover:text-zinc-200 transition-colors font-medium">Decline</span>
+                  <span className="text-base text-zinc-400 group-hover:text-zinc-200 transition-colors font-medium">Decline</span>
                 </button>
 
                 <button
@@ -215,7 +236,7 @@ export function CallOverlay() {
                   <div className="h-16 w-16 rounded-full bg-blue-500 hover:bg-blue-600 active:scale-95 flex items-center justify-center shadow-lg transition-all duration-150 cursor-pointer animate-bounce">
                     <Phone size={26} className="text-white" />
                   </div>
-                  <span className="text-xs text-zinc-400 group-hover:text-zinc-200 transition-colors font-medium">Accept</span>
+                  <span className="text-base text-zinc-400 group-hover:text-zinc-200 transition-colors font-medium">Accept</span>
                 </button>
               </div>
             )}
@@ -251,6 +272,36 @@ export function CallOverlay() {
                       {isCameraOff ? <VideoOff size={20} /> : <Video size={20} />}
                     </button>
                   )}
+
+                  {callType === "video" && (
+                    <button
+                      onClick={toggleScreenShare}
+                      disabled={callState === "outgoing"}
+                      className={`h-12 w-12 rounded-full flex items-center justify-center border transition-all duration-150 active:scale-95 cursor-pointer disabled:opacity-40 disabled:pointer-events-none ${
+                        isScreenSharing
+                          ? "bg-brand-primary/80 border-brand-primary text-white"
+                          : "bg-white/10 border-white/15 text-white hover:bg-white/20"
+                      }`}
+                      title={isScreenSharing ? "Stop Screen Share" : "Share Screen"}
+                    >
+                      {isScreenSharing ? <MonitorOff size={20} /> : <MonitorUp size={20} />}
+                    </button>
+                  )}
+
+                  {callType === "audio" && (
+                    <button
+                      onClick={() => setIsSpeaker(!isSpeaker)}
+                      disabled={callState === "outgoing"}
+                      className={`h-12 w-12 rounded-full flex items-center justify-center border transition-all duration-150 active:scale-95 cursor-pointer disabled:opacity-40 disabled:pointer-events-none ${
+                        isSpeaker
+                          ? "bg-white/10 border-white/15 text-white hover:bg-white/20"
+                          : "bg-red-500/80 border-red-500 text-white"
+                      }`}
+                      title={isSpeaker ? "Speaker On" : "Speaker Off"}
+                    >
+                      {isSpeaker ? <Volume2 size={20} /> : <Volume1 size={20} />}
+                    </button>
+                  )}
                 </div>
 
                 <button
@@ -260,7 +311,7 @@ export function CallOverlay() {
                   <div className="h-16 w-16 rounded-full bg-red-600 hover:bg-red-700 active:scale-95 flex items-center justify-center shadow-lg transition-all duration-150 cursor-pointer">
                     <PhoneOff size={26} className="text-white" />
                   </div>
-                  <span className="text-xs text-zinc-400 group-hover:text-zinc-200 transition-colors font-medium">
+                  <span className="text-base text-zinc-400 group-hover:text-zinc-200 transition-colors font-medium">
                     {callState === "outgoing" ? "Cancel" : "End Call"}
                   </span>
                 </button>

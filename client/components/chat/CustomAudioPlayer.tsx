@@ -145,7 +145,7 @@ export function CustomAudioPlayer({ src, isSelf = false }: CustomAudioPlayerProp
           />
         </div>
         <div
-          className={`flex items-center justify-between text-[10px] font-semibold leading-none ${
+          className={`flex items-center justify-between text-base font-semibold leading-none ${
             isSelf ? "text-blue-100/90" : "text-zinc-500 dark:text-zinc-400"
           }`}
         >

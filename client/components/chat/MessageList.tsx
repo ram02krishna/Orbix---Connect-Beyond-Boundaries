@@ -120,7 +120,7 @@ export function MessageList({
           style={wallpaperStyles[customWallpaper]}
         >
           <div className="flex justify-center mb-4">
-            <span className="flex items-center gap-2 text-[10px] font-bold text-blue-600 dark:text-blue-400 bg-white/80 dark:bg-[#1f2c34]/80 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm border border-[#e9edef]/15 dark:border-white/5 animate-pulse uppercase tracking-wider">
+            <span className="flex items-center gap-2 text-base font-bold text-blue-600 dark:text-blue-400 bg-white/80 dark:bg-[#1f2c34]/80 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm border border-[#e9edef]/15 dark:border-white/5 animate-pulse uppercase tracking-wider">
               <span className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-ping" />
               Syncing history...
             </span>
@@ -169,7 +169,7 @@ export function MessageList({
             <MessageSquareOff size={32} className="text-blue-500 dark:text-blue-400" />
           </div>
           <p className="text-base font-bold text-[#111b21] dark:text-[#e9edef] mb-1.5">No messages yet</p>
-          <p className="text-xs text-[#667781] dark:text-[#8696a0] text-center max-w-[240px] leading-relaxed">
+          <p className="text-base text-[#667781] dark:text-[#8696a0] text-center max-w-[240px] leading-relaxed">
             Send a message below to start the conversation in real-time. Say hello! 👋
           </p>
         </motion.div>
@@ -184,8 +184,8 @@ export function MessageList({
         style={wallpaperStyles[customWallpaper]}
       >
         <div className="bg-white/90 dark:bg-[#1f2c34]/90 px-6 py-5 rounded-xl border border-[#e9edef] dark:border-[#222e35]/30 shadow-[0_1.5px_1px_rgba(0,0,0,0.06)] flex flex-col items-center">
-          <p className="text-sm font-bold text-[#111b21] dark:text-[#e9edef]">No matches found</p>
-          <p className="text-xs text-[#667781] dark:text-[#8696a0] text-center max-w-xs mt-1.5 leading-relaxed">
+          <p className="text-base font-bold text-[#111b21] dark:text-[#e9edef]">No matches found</p>
+          <p className="text-base text-[#667781] dark:text-[#8696a0] text-center max-w-xs mt-1.5 leading-relaxed">
             No messages in this chat match your search query.
           </p>
         </div>
@@ -213,7 +213,7 @@ export function MessageList({
           components={{
             Header: () => loadingMore ? (
               <div className="flex justify-center py-4 select-none">
-                <span className="flex items-center gap-2 text-xs font-semibold text-blue-600 dark:text-blue-400 bg-white/70 dark:bg-[#1f2c34]/70 backdrop-blur-md px-3 py-1.5 rounded-full shadow border border-[#e9edef]/20 dark:border-white/5 animate-fade-in">
+                <span className="flex items-center gap-2 text-base font-semibold text-blue-600 dark:text-blue-400 bg-white/70 dark:bg-[#1f2c34]/70 backdrop-blur-md px-3 py-1.5 rounded-full shadow border border-[#e9edef]/20 dark:border-white/5 animate-fade-in">
                   <span className="h-1.5 w-1.5 rounded-full bg-blue-550 animate-ping" />
                   Loading previous messages...
                 </span>
@@ -224,7 +224,7 @@ export function MessageList({
             if (item.type === "date") {
               return (
                 <div className="flex justify-center my-4 select-none w-full">
-                  <span className="text-[11px] font-medium text-[#54656f] dark:text-[#8696a0] px-3.5 py-1.5 bg-white dark:bg-[#1f2c34] rounded-lg shadow-[0_1px_0.5px_rgba(0,0,0,0.08)] border border-[#e9edef]/60 dark:border-transparent">
+                  <span className="text-base font-medium text-[#54656f] dark:text-[#8696a0] px-3.5 py-1.5 bg-white dark:bg-[#1f2c34] rounded-lg shadow-[0_1px_0.5px_rgba(0,0,0,0.08)] border border-[#e9edef]/60 dark:border-transparent">
                     {formatDateHeader(item.value)}
                   </span>
                 </div>

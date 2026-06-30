@@ -41,7 +41,7 @@ const envSchema = z.object({
 
   // ─── Rate Limiting ─────────────────────────────────────
   RATE_LIMIT_WINDOW_MS: z.string().default("900000"),
-  RATE_LIMIT_MAX_REQUESTS: z.string().default("100"),
+  RATE_LIMIT_MAX_REQUESTS: z.string().default("5000"),
 });
 
 const parsed = envSchema.safeParse(process.env);

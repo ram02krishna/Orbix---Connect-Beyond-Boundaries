@@ -20,6 +20,8 @@ const createGroupSchema = z.object({
 const updateGroupSchema = z.object({
   title: z.string().min(1, "Group title cannot be empty").max(100, "Title is too long").optional(),
   photoUrl: z.string().url("Invalid photo URL").optional().or(z.literal("")),
+  restrictMessagingToAdmins: z.boolean().optional(),
+  restrictInfoToAdmins: z.boolean().optional(),
 });
 
 const addMemberSchema = z.object({

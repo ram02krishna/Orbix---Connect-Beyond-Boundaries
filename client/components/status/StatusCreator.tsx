@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import { useState, useRef } from "react";
-import { X, Image as ImageIcon, Send, Type, Palette } from "lucide-react";
+import { Image as ImageIcon, Type, X, ChevronRight, Palette, RefreshCcw, Send } from "lucide-react";
+import imageCompression from "browser-image-compression";
 import { useStatusStore } from "@hooks/useStatusStore";
 import api from "@lib/api";
 import { toast } from "sonner";
@@ -68,10 +69,20 @@ export function StatusCreator({ onClose }: StatusCreatorProps) {
           setUploading(false);
           return;
         }
-        
         // Upload image to Cloudinary
+        const options = {
+          maxSizeMB: 0.5,
+          maxWidthOrHeight: 1280,
+          useWebWorker: true
+        };
+        const compressedFile = await imageCompression(imageFile, options);
+        const compressedImageFile = new File([compressedFile], imageFile.name, {
+          type: compressedFile.type,
+          lastModified: Date.now(),
+        });
+
         const formData = new FormData();
-        formData.append("file", imageFile);
+        formData.append("file", compressedImageFile);
 
         const uploadRes = await api.post("/media/upload", formData, {
           headers: { "Content-Type": "multipart/form-data" },
@@ -113,7 +124,7 @@ export function StatusCreator({ onClose }: StatusCreatorProps) {
         <div className="flex p-2 border-b border-white/10 gap-2">
           <button
             onClick={() => setMode("text")}
-            className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all duration-200 ${
+            className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-base font-semibold cursor-pointer transition-all duration-200 ${
               mode === "text"
                 ? "bg-blue-500 text-white shadow-lg shadow-blue-500/25"
                 : "text-zinc-650 dark:text-zinc-300 hover:bg-white/10"
@@ -124,7 +135,7 @@ export function StatusCreator({ onClose }: StatusCreatorProps) {
           </button>
           <button
             onClick={() => setMode("photo")}
-            className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all duration-200 ${
+            className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-base font-semibold cursor-pointer transition-all duration-200 ${
               mode === "photo"
                 ? "bg-blue-500 text-white shadow-lg shadow-blue-500/25"
                 : "text-zinc-650 dark:text-zinc-300 hover:bg-white/10"
@@ -181,8 +192,8 @@ export function StatusCreator({ onClose }: StatusCreatorProps) {
                   <div className="h-10 w-10 rounded-full bg-blue-500/10 dark:bg-blue-500/5 flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
                     <ImageIcon size={20} />
                   </div>
-                  <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Click to select photo</span>
-                  <span className="text-[10px] text-zinc-400 dark:text-zinc-500">Supports JPG, PNG</span>
+                  <span className="text-base font-semibold text-zinc-700 dark:text-zinc-300">Click to select photo</span>
+                  <span className="text-base text-zinc-400 dark:text-zinc-500">Supports JPG, PNG</span>
                 </div>
               ) : (
                 <div className="w-full relative rounded-2xl overflow-hidden aspect-video bg-black flex items-center justify-center group border border-white/10">
@@ -212,7 +223,7 @@ export function StatusCreator({ onClose }: StatusCreatorProps) {
                 onChange={(e) => setCaption(e.target.value)}
                 placeholder="Add a caption..."
                 maxLength={100}
-                className="w-full px-4 py-2.5 rounded-full ios-glass-input text-base sm:text-xs text-zinc-800 dark:text-white focus:outline-none"
+                className="w-full px-4 py-2.5 rounded-full ios-glass-input text-base sm:text-base text-zinc-800 dark:text-white focus:outline-none"
               />
             </div>
           )}
@@ -222,14 +233,14 @@ export function StatusCreator({ onClose }: StatusCreatorProps) {
         <div className="p-4 border-t border-white/10 flex gap-3 bg-white/5">
           <button
             onClick={onClose}
-            className="flex-1 py-2.5 rounded-2xl text-xs font-bold text-zinc-700 dark:text-zinc-300 hover:bg-white/10 cursor-pointer transition-colors"
+            className="flex-1 py-2.5 rounded-2xl text-base font-bold text-zinc-700 dark:text-zinc-300 hover:bg-white/10 cursor-pointer transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={handlePost}
             disabled={uploading}
-            className="flex-1 py-2.5 rounded-2xl bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-200"
+            className="flex-1 py-2.5 rounded-2xl bg-blue-500 hover:bg-blue-600 text-white text-base font-bold shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-200"
           >
             {uploading ? (
               <span className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />

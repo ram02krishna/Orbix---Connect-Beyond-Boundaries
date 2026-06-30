@@ -271,8 +271,8 @@ export default function SettingsPage() {
             <ArrowLeft size={20} />
           </button>
           <div>
-            <h2 className="text-lg font-bold text-[#111b21] dark:text-[#e9edef] leading-tight">Settings & Security</h2>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">Customize your security profile, push updates, and active logins.</p>
+            <h2 className="text-2xl font-bold text-[#111b21] dark:text-[#e9edef] leading-tight">Settings & Security</h2>
+            <p className="text-base text-zinc-500 dark:text-zinc-400 mt-1">Customize your security profile, push updates, and active logins.</p>
           </div>
         </div>
       </div>
@@ -284,7 +284,7 @@ export default function SettingsPage() {
         <div className="w-full md:w-64 border-b md:border-b-0 md:border-r border-zinc-200/50 dark:border-white/5 bg-white/70 dark:bg-[#111b21]/50 backdrop-blur-md p-4 flex flex-row md:flex-col gap-2.5 overflow-x-auto md:overflow-x-visible flex-shrink-0 select-none">
           <button
             onClick={() => { setActiveTab("profile"); setError(""); setSuccessMsg(""); }}
-            className={`flex items-center justify-center md:justify-start gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all cursor-pointer whitespace-nowrap w-full ${
+            className={`flex items-center justify-center md:justify-start gap-3 px-4 py-3 rounded-xl text-base font-bold transition-all cursor-pointer whitespace-nowrap w-full ${
               activeTab === "profile"
                 ? "bg-blue-500 text-white shadow-md shadow-blue-500/10"
                 : "text-zinc-600 dark:text-zinc-400 hover:bg-black/5 dark:hover:bg-white/5"
@@ -296,7 +296,7 @@ export default function SettingsPage() {
 
           <button
             onClick={() => { setActiveTab("notifications"); setError(""); setSuccessMsg(""); }}
-            className={`flex items-center justify-center md:justify-start gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all cursor-pointer whitespace-nowrap w-full ${
+            className={`flex items-center justify-center md:justify-start gap-3 px-4 py-3 rounded-xl text-base font-bold transition-all cursor-pointer whitespace-nowrap w-full ${
               activeTab === "notifications"
                 ? "bg-blue-500 text-white shadow-md shadow-blue-500/10"
                 : "text-zinc-600 dark:text-zinc-400 hover:bg-black/5 dark:hover:bg-white/5"
@@ -308,7 +308,7 @@ export default function SettingsPage() {
 
           <button
             onClick={() => { setActiveTab("security"); setError(""); setSuccessMsg(""); }}
-            className={`flex items-center justify-center md:justify-start gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all cursor-pointer whitespace-nowrap w-full ${
+            className={`flex items-center justify-center md:justify-start gap-3 px-4 py-3 rounded-xl text-base font-bold transition-all cursor-pointer whitespace-nowrap w-full ${
               activeTab === "security"
                 ? "bg-blue-500 text-white shadow-md shadow-blue-500/10"
                 : "text-zinc-600 dark:text-zinc-400 hover:bg-black/5 dark:hover:bg-white/5"
@@ -324,12 +324,12 @@ export default function SettingsPage() {
           
           {/* Notification status bars */}
           {error && (
-            <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/10 text-sm text-red-400 font-semibold animate-pulse-slow">
+            <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/10 text-base text-red-400 font-semibold animate-pulse-slow">
               {error}
             </div>
           )}
           {successMsg && (
-            <div className="p-4 rounded-xl border border-blue-500/20 bg-blue-500/10 text-sm text-blue-400 font-semibold animate-pulse-slow">
+            <div className="p-4 rounded-xl border border-blue-500/20 bg-blue-500/10 text-base text-blue-400 font-semibold animate-pulse-slow">
               {successMsg}
             </div>
           )}
@@ -338,59 +338,59 @@ export default function SettingsPage() {
           {activeTab === "profile" && (
             <form onSubmit={handleSaveProfile} className="space-y-6">
               <div className="bg-white dark:bg-[#111b21] rounded-2xl border border-zinc-200/50 dark:border-white/5 p-6 shadow-sm space-y-5">
-                <h3 className="text-base font-bold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider">Public Profile</h3>
+                <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider">Public Profile</h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">Display Name</label>
+                    <label className="text-base font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">Display Name</label>
                     <input
                       type="text"
                       value={profileName}
                       onChange={(e) => setProfileName(e.target.value)}
                       required
                       placeholder="e.g. John Doe"
-                      className="w-full text-base sm:text-sm px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-800 dark:text-zinc-100"
+                      className="w-full text-base sm:text-base px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-800 dark:text-zinc-100"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">Username</label>
+                    <label className="text-base font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">Username</label>
                     <input
                       type="text"
                       value={profileUsername}
                       onChange={(e) => setProfileUsername(e.target.value)}
                       required
                       placeholder="e.g. johndoe"
-                      className="w-full text-base sm:text-sm px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-800 dark:text-zinc-100"
+                      className="w-full text-base sm:text-base px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-800 dark:text-zinc-100"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">Avatar Image URL</label>
+                  <label className="text-base font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">Avatar Image URL</label>
                   <input
                     type="url"
                     value={profileAvatar}
                     onChange={(e) => setProfileAvatar(e.target.value)}
                     placeholder="https://example.com/avatar.jpg"
-                    className="w-full text-base sm:text-sm px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-800 dark:text-zinc-100"
+                    className="w-full text-base sm:text-base px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-800 dark:text-zinc-100"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">Biography</label>
+                  <label className="text-base font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">Biography</label>
                   <textarea
                     value={profileBio}
                     onChange={(e) => setProfileBio(e.target.value)}
                     placeholder="Tell us about yourself..."
                     rows={3}
-                    className="w-full text-base sm:text-sm px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-800 dark:text-zinc-100 resize-none"
+                    className="w-full text-base sm:text-base px-4 py-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-800 dark:text-zinc-100 resize-none"
                   />
                 </div>
               </div>
 
               <div className="flex justify-end">
-                <Button type="submit" disabled={savingProfile} className="bg-blue-500 hover:bg-blue-600 font-semibold px-6 py-2.5 cursor-pointer text-sm">
+                <Button type="submit" disabled={savingProfile} className="bg-blue-500 hover:bg-blue-600 font-semibold px-6 py-2.5 cursor-pointer text-base">
                   {savingProfile ? (
                     <>
                       <Loader2 className="animate-spin mr-1.5" size={15} />
@@ -412,8 +412,8 @@ export default function SettingsPage() {
               {/* Push permission control */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-3.5 border-b border-zinc-150/40 dark:border-white/5 gap-3">
                 <div className="space-y-0.5">
-                  <p className="text-sm font-bold text-zinc-900 dark:text-zinc-200">System Permission Status</p>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-450">
+                  <p className="text-base font-bold text-zinc-900 dark:text-zinc-200">System Permission Status</p>
+                  <p className="text-base text-zinc-500 dark:text-zinc-450">
                     Status: <span className="font-bold capitalize">{permissionStatus}</span>
                   </p>
                 </div>
@@ -421,12 +421,12 @@ export default function SettingsPage() {
                   <Button
                     type="button"
                     onClick={handleRequestPermission}
-                    className="bg-blue-500 hover:bg-blue-600 text-xs font-bold px-4 py-2 cursor-pointer"
+                    className="bg-blue-500 hover:bg-blue-600 text-base font-bold px-4 py-2 cursor-pointer"
                   >
                     Enable Notifications
                   </Button>
                 ) : (
-                  <span className="text-xs font-bold bg-blue-500/25 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 select-none">
+                  <span className="text-base font-bold bg-blue-500/25 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 select-none">
                     <Check size={13} /> Active
                   </span>
                 )}
@@ -435,8 +435,8 @@ export default function SettingsPage() {
               {/* Enable alerts */}
               <div className="flex items-center justify-between py-3.5 border-b border-zinc-150/40 dark:border-white/5">
                 <div className="space-y-0.5">
-                  <p className="text-sm font-bold text-zinc-900 dark:text-zinc-200">Show Alerts</p>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-450">Receive browser notifications for new messages when minimized.</p>
+                  <p className="text-base font-bold text-zinc-900 dark:text-zinc-200">Show Alerts</p>
+                  <p className="text-base text-zinc-500 dark:text-zinc-450">Receive browser notifications for new messages when minimized.</p>
                 </div>
                 <button
                   type="button"
@@ -457,8 +457,8 @@ export default function SettingsPage() {
               {/* Play sounds */}
               <div className="flex items-center justify-between py-3.5 border-b border-zinc-150/40 dark:border-white/5">
                 <div className="space-y-0.5">
-                  <p className="text-sm font-bold text-zinc-900 dark:text-zinc-200">Conversation Tones</p>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-450">Play sounds for incoming and outgoing messages.</p>
+                  <p className="text-base font-bold text-zinc-900 dark:text-zinc-200">Conversation Tones</p>
+                  <p className="text-base text-zinc-500 dark:text-zinc-450">Play sounds for incoming and outgoing messages.</p>
                 </div>
                 <button
                   type="button"
@@ -478,8 +478,8 @@ export default function SettingsPage() {
               {/* Message text previews */}
               <div className="flex items-center justify-between py-3.5">
                 <div className="space-y-0.5">
-                  <p className="text-sm font-bold text-zinc-900 dark:text-zinc-200">Show Previews</p>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-450">Show sender name and message details inside push banner.</p>
+                  <p className="text-base font-bold text-zinc-900 dark:text-zinc-200">Show Previews</p>
+                  <p className="text-base text-zinc-500 dark:text-zinc-450">Show sender name and message details inside push banner.</p>
                 </div>
                 <button
                   type="button"
@@ -509,8 +509,8 @@ export default function SettingsPage() {
                 {/* Read receipts */}
                 <div className="flex items-center justify-between py-3.5 border-b border-zinc-150/40 dark:border-white/5">
                   <div className="space-y-0.5">
-                    <p className="text-sm font-bold text-zinc-900 dark:text-zinc-200">Read Receipts</p>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-450">Let others know when you have read their messages.</p>
+                    <p className="text-base font-bold text-zinc-900 dark:text-zinc-200">Read Receipts</p>
+                    <p className="text-base text-zinc-500 dark:text-zinc-450">Let others know when you have read their messages.</p>
                   </div>
                   <button
                     type="button"
@@ -530,8 +530,8 @@ export default function SettingsPage() {
                 {/* Auto logout */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-3.5 border-b border-zinc-150/40 dark:border-white/5 gap-3">
                   <div className="space-y-0.5">
-                    <p className="text-sm font-bold text-zinc-900 dark:text-zinc-200">Inactive Lockout</p>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-450">Auto disconnect session after a set time of inactivity.</p>
+                    <p className="text-base font-bold text-zinc-900 dark:text-zinc-200">Inactive Lockout</p>
+                    <p className="text-base text-zinc-500 dark:text-zinc-450">Auto disconnect session after a set time of inactivity.</p>
                   </div>
                   <CustomSelect
                     value={autoLock}
@@ -554,8 +554,8 @@ export default function SettingsPage() {
                 <div className="space-y-4 py-1">
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <p className="text-sm font-bold text-zinc-900 dark:text-zinc-200">Local PIN Screen Lock</p>
-                      <p className="text-xs text-zinc-500 dark:text-zinc-450">Encrypt and locks view until a 4-digit PIN code is typed.</p>
+                      <p className="text-base font-bold text-zinc-900 dark:text-zinc-200">Local PIN Screen Lock</p>
+                      <p className="text-base text-zinc-500 dark:text-zinc-450">Encrypt and locks view until a 4-digit PIN code is typed.</p>
                     </div>
                     <button
                       type="button"
@@ -581,7 +581,7 @@ export default function SettingsPage() {
                           maxLength={4}
                           placeholder="Set 4-digit PIN"
                           onChange={(e) => setScreenLockPin(e.target.value.replace(/\D/g, ""))}
-                          className="w-full text-base sm:text-sm px-4 py-2.5 pr-10 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-800 dark:text-zinc-100 font-mono tracking-widest text-center"
+                          className="w-full text-base sm:text-base px-4 py-2.5 pr-10 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-800 dark:text-zinc-100 font-mono tracking-widest text-center"
                         />
                         <button
                           type="button"
@@ -598,8 +598,8 @@ export default function SettingsPage() {
                 {/* Simulated 2FA toggle */}
                 <div className="flex items-center justify-between py-3.5 border-b border-zinc-150/40 dark:border-white/5">
                   <div className="space-y-0.5">
-                    <p className="text-sm font-bold text-zinc-900 dark:text-zinc-200">Two-Factor Authentication (2FA)</p>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-450">Secure logins with Google Authenticator or secondary email OTP codes.</p>
+                    <p className="text-base font-bold text-zinc-900 dark:text-zinc-200">Two-Factor Authentication (2FA)</p>
+                    <p className="text-base text-zinc-500 dark:text-zinc-450">Secure logins with Google Authenticator or secondary email OTP codes.</p>
                   </div>
                   <button
                     type="button"
@@ -626,7 +626,7 @@ export default function SettingsPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-base font-bold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider">Device Logins</h3>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">Manage actively signed-in platforms.</p>
+                    <p className="text-base text-zinc-500 dark:text-zinc-400 mt-1">Manage actively signed-in platforms.</p>
                   </div>
 
                   {sessions.length > 1 && (
@@ -635,7 +635,7 @@ export default function SettingsPage() {
                       size="sm"
                       onClick={handleRevokeAllOthers}
                       disabled={revokingAll}
-                      className="text-red-450 hover:text-red-400 font-bold cursor-pointer text-xs uppercase tracking-wide"
+                      className="text-red-450 hover:text-red-400 font-bold cursor-pointer text-base uppercase tracking-wide"
                     >
                       {revokingAll ? "Revoking..." : "Log out all other devices"}
                     </Button>
@@ -661,7 +661,7 @@ export default function SettingsPage() {
                     ))}
                   </div>
                 ) : sessions.length === 0 ? (
-                  <div className="text-sm text-zinc-500 py-2">No active device logins found.</div>
+                  <div className="text-base text-zinc-500 py-2">No active device logins found.</div>
                 ) : (
                   <div className="space-y-3">
                     {sessions.map((session) => (
@@ -675,15 +675,15 @@ export default function SettingsPage() {
                           </div>
 
                           <div>
-                            <p className="text-sm font-bold text-zinc-900 dark:text-zinc-200 flex items-center gap-2">
+                            <p className="text-base font-bold text-zinc-900 dark:text-zinc-200 flex items-center gap-2">
                               {session.deviceName || "Web Client"}
                               {session.isCurrent && (
-                                <span className="text-[10px] bg-blue-500/20 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded font-bold uppercase tracking-wider">
+                                <span className="text-base bg-blue-500/20 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded font-bold uppercase tracking-wider">
                                   Current
                                 </span>
                               )}
                             </p>
-                            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1.5 leading-normal">
+                            <p className="text-base text-zinc-500 dark:text-zinc-400 mt-1.5 leading-normal">
                               IP: {session.ipAddress || "127.0.0.1"} ({session.location || "Unknown Location"}) • Active{" "}
                               {new Date(session.lastSeenAt).toLocaleString([], {
                                 month: "short",
@@ -751,7 +751,7 @@ function CustomSelect({ value, onChange, options }: CustomSelectProps) {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between text-sm px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-800 dark:text-zinc-250 font-bold cursor-pointer select-none"
+        className="w-full flex items-center justify-between text-base px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/60 focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-800 dark:text-zinc-250 font-bold cursor-pointer select-none"
       >
         <span>{selectedOption ? selectedOption.label : "Select..."}</span>
         <svg
@@ -774,7 +774,7 @@ function CustomSelect({ value, onChange, options }: CustomSelectProps) {
                 onChange(opt.value);
                 setIsOpen(false);
               }}
-              className={`w-full text-left text-sm px-4 py-2 hover:bg-blue-500/10 hover:text-blue-500 transition-colors ${
+              className={`w-full text-left text-base px-4 py-2 hover:bg-blue-500/10 hover:text-blue-500 transition-colors ${
                 opt.value === value
                   ? "text-blue-500 bg-blue-500/5 font-bold"
                   : "text-zinc-700 dark:text-zinc-300"

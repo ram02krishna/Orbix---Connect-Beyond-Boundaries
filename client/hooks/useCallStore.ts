@@ -31,6 +31,7 @@ interface CallStoreState {
   localStream: MediaStream | null;
   isMuted: boolean;
   isCameraOff: boolean;
+  isScreenSharing: boolean;
   
   // Actions
   initiateCall: (targetUserId: string, targetName: string, targetAvatar: string | null, type: "audio" | "video") => Promise<void>;
@@ -50,6 +51,7 @@ interface CallStoreState {
   
   toggleMute: () => void;
   toggleCamera: () => void;
+  toggleScreenShare: () => Promise<void>;
   handleIceCandidate: (candidate: any, fromUserId?: string) => void;
   handleAnswer: (sdp: any) => void;
   resetCallStore: () => void;
@@ -196,13 +198,14 @@ export const useCallStore = create<CallStoreState>((set, get) => {
     localStream: null,
     isMuted: false,
     isCameraOff: false,
+    isScreenSharing: false,
 
     initiateCall: async (targetUserId, targetName, targetAvatar, type) => {
       cleanMedia();
       set({ 
         callState: "outgoing", callType: type, isGroupCall: false,
         partner: { id: targetUserId, name: targetName, avatarUrl: targetAvatar },
-        isMuted: false, isCameraOff: false
+        isMuted: false, isCameraOff: false, isScreenSharing: false
       });
       startRingtone("dial");
 
@@ -254,7 +257,7 @@ export const useCallStore = create<CallStoreState>((set, get) => {
       set({
         callState: "incoming", callType: payload.callType, isGroupCall: false,
         partner: { id: payload.fromUserId, name: payload.fromUserName, avatarUrl: payload.fromUserAvatar },
-        isMuted: false, isCameraOff: false
+        isMuted: false, isCameraOff: false, isScreenSharing: false
       });
       startRingtone("ring");
       
@@ -328,7 +331,7 @@ export const useCallStore = create<CallStoreState>((set, get) => {
       set({ 
         callState: "outgoing", callType: type, isGroupCall: true,
         groupChatId: chatId, groupChatTitle: chatTitle,
-        isMuted: false, isCameraOff: false, peerConnections: {}, remoteStreams: {}, participants: {}
+        isMuted: false, isCameraOff: false, isScreenSharing: false, peerConnections: {}, remoteStreams: {}, participants: {}
       });
       startRingtone("dial");
 
@@ -345,9 +348,8 @@ export const useCallStore = create<CallStoreState>((set, get) => {
           chatId, fromUserName: user?.name, fromUserAvatar: user?.avatarUrl, callType: type
         });
         
-        // As initiator, wait for others to join
-        set({ callState: "connected" });
-        stopRingtone();
+        // As initiator, wait for others to join (stay in outgoing state)
+
       } catch (err) {
         console.error("Failed to initiate group call:", err);
         toast.error("Failed to access camera or microphone");
@@ -365,7 +367,7 @@ export const useCallStore = create<CallStoreState>((set, get) => {
         participants: {
           [payload.fromUserId]: { id: payload.fromUserId, name: payload.fromUserName, avatarUrl: payload.fromUserAvatar }
         },
-        isMuted: false, isCameraOff: false
+        isMuted: false, isCameraOff: false, isScreenSharing: false
       });
       startRingtone("ring");
     },
@@ -394,7 +396,12 @@ export const useCallStore = create<CallStoreState>((set, get) => {
 
     handleParticipantJoined: async (userId) => {
       const { callState, isGroupCall, callType } = get();
-      if (callState !== "connected" || !isGroupCall) return;
+      if ((callState !== "connected" && callState !== "outgoing") || !isGroupCall) return;
+
+      if (callState === "outgoing") {
+        set({ callState: "connected" });
+        stopRingtone();
+      }
 
       const pc = createGroupPeerConnection(userId, true);
       const offer = await pc.createOffer();
@@ -424,7 +431,12 @@ export const useCallStore = create<CallStoreState>((set, get) => {
 
     handleGroupOffer: async (fromUserId, sdp, callType) => {
       const { callState, isGroupCall } = get();
-      if (callState !== "connected" || !isGroupCall) return;
+      if ((callState !== "connected" && callState !== "outgoing") || !isGroupCall) return;
+
+      if (callState === "outgoing") {
+        set({ callState: "connected" });
+        stopRingtone();
+      }
 
       const pc = createGroupPeerConnection(fromUserId, false);
       await pc.setRemoteDescription(new RTCSessionDescription(sdp));
@@ -467,10 +479,77 @@ export const useCallStore = create<CallStoreState>((set, get) => {
     },
 
     toggleCamera: () => {
-      const { localStream, isCameraOff } = get();
-      if (localStream) {
+      const { localStream, isCameraOff, isScreenSharing, toggleScreenShare } = get();
+      if (isScreenSharing) {
+        void toggleScreenShare();
+      } else if (localStream) {
         localStream.getVideoTracks().forEach((track) => track.enabled = isCameraOff);
         set({ isCameraOff: !isCameraOff });
+      }
+    },
+
+    toggleScreenShare: async () => {
+      const { localStream, isScreenSharing, peerConnection, peerConnections, isCameraOff } = get();
+      if (!localStream) return;
+
+      try {
+        if (!isScreenSharing) {
+          const displayStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+          const screenTrack = displayStream.getVideoTracks()[0];
+          
+          screenTrack.onended = () => {
+             get().toggleScreenShare().catch(console.error);
+          };
+
+          const oldTrack = localStream.getVideoTracks()[0];
+          if (oldTrack) {
+            localStream.removeTrack(oldTrack);
+            // Optionally stop the old camera track here if you want to completely release it:
+            // oldTrack.stop();
+          }
+          localStream.addTrack(screenTrack);
+
+          if (peerConnection) {
+            const sender = peerConnection.getSenders().find(s => s.track?.kind === "video");
+            if (sender) sender.replaceTrack(screenTrack).catch(console.error);
+          }
+          Object.values(peerConnections).forEach(pc => {
+            const sender = pc.getSenders().find(s => s.track?.kind === "video");
+            if (sender) sender.replaceTrack(screenTrack).catch(console.error);
+          });
+
+          set({ isScreenSharing: true, isCameraOff: false });
+        } else {
+          // Revert to camera
+          const constraints = { video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: "user" } };
+          const cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
+          const cameraTrack = cameraStream.getVideoTracks()[0];
+          
+          // Stop the screen track
+          const oldTrack = localStream.getVideoTracks()[0];
+          if (oldTrack) {
+            oldTrack.stop();
+            localStream.removeTrack(oldTrack);
+          }
+          
+          if (isCameraOff) {
+            cameraTrack.enabled = false;
+          }
+          localStream.addTrack(cameraTrack);
+
+          if (peerConnection) {
+            const sender = peerConnection.getSenders().find(s => s.track?.kind === "video");
+            if (sender) sender.replaceTrack(cameraTrack).catch(console.error);
+          }
+          Object.values(peerConnections).forEach(pc => {
+            const sender = pc.getSenders().find(s => s.track?.kind === "video");
+            if (sender) sender.replaceTrack(cameraTrack).catch(console.error);
+          });
+
+          set({ isScreenSharing: false });
+        }
+      } catch (err) {
+        console.error("Screen sharing error:", err);
       }
     },
 

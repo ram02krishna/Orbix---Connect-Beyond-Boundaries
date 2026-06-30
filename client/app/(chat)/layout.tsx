@@ -94,10 +94,10 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
           </div>
         </div>
         <div className="text-center space-y-1">
-          <p className="text-sm font-bold text-zinc-900 dark:text-white">
+          <p className="text-base font-bold text-zinc-900 dark:text-white">
             Chat<span className="text-brand-primary">Flow</span>
           </p>
-          <p className="text-xs text-zinc-400 dark:text-zinc-500">Connecting...</p>
+          <p className="text-base text-zinc-400 dark:text-zinc-500">Connecting...</p>
         </div>
       </div>
     );

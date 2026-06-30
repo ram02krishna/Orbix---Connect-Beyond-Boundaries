@@ -96,8 +96,10 @@ export default function ChatDetailPage({ params }: { params: Promise<{ chatId: s
       }
     };
 
-    void fetchMessages();
-  }, [chatId, setMessages]);
+    if (isConnected) {
+      void fetchMessages();
+    }
+  }, [chatId, setMessages, isConnected]);
 
   // 3. Mark messages as read when chatId changes or new messages arrive
   useEffect(() => {

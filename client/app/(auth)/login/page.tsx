@@ -63,13 +63,13 @@ export default function LoginPage() {
     <AuthCard title="Welcome Back" subtitle="Sign in to your Orbix account">
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="p-3.5 rounded-xl border border-red-500/20 bg-red-500/10 text-sm text-red-400 font-medium">
+          <div className="p-3.5 rounded-xl border border-red-500/20 bg-red-500/10 text-base text-red-400 font-medium">
             {error}
           </div>
         )}
 
         <div className="space-y-1">
-          <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider pl-1">
+          <label className="text-sm font-bold text-zinc-400 uppercase tracking-wider pl-1">
             Username or Phone
           </label>
           <Input
@@ -84,12 +84,12 @@ export default function LoginPage() {
 
         <div className="space-y-1">
           <div className="flex items-center justify-between pl-1">
-            <label className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+            <label className="text-sm font-bold text-zinc-400 uppercase tracking-wider">
               Password
             </label>
             <Link
               href="/forgot-password"
-              className="text-xs text-brand-primary hover:text-brand-hover font-medium transition-colors"
+              className="text-sm text-brand-primary hover:text-brand-hover font-medium transition-colors"
             >
               Forgot Password?
             </Link>
@@ -119,11 +119,11 @@ export default function LoginPage() {
           {loading ? "Signing in..." : "Sign In"}
         </Button>
 
-        <p className="text-center text-sm text-zinc-500 mt-6">
+        <p className="text-center text-base text-zinc-500 mt-6">
           Don't have an account?{" "}
           <Link
             href="/signup"
-            className="text-brand-primary hover:text-brand-hover font-semibold transition-colors"
+            className="text-brand-primary hover:text-brand-hover font-bold transition-colors"
           >
             Sign Up
           </Link>
