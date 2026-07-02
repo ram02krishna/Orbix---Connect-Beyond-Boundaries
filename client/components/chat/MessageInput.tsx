@@ -111,6 +111,19 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
     let file = e.target.files?.[0];
     if (!file) return;
 
+    let msgType = "FILE";
+    if (file.type.startsWith("image/")) msgType = "IMAGE";
+    else if (file.type.startsWith("video/")) msgType = "VIDEO";
+    else if (file.type.startsWith("audio/")) msgType = "AUDIO";
+
+    const maxSize = msgType === "IMAGE" ? 10 * 1024 * 1024 : msgType === "VIDEO" ? 100 * 1024 * 1024 : 50 * 1024 * 1024;
+    
+    if (file.size > maxSize) {
+      alert(`File is too large. Maximum size is ${maxSize / 1024 / 1024}MB.`);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
     setUploading(true);
     
     // Check if the file is an image and compress it
@@ -128,18 +141,29 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
       }
     }
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("chatId", chatId);
-
     try {
-      const res = await api.post("/media/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      // 1. Get signature from our backend
+      const sigRes = await api.get(`/media/signature?folder=chat-app/${chatId || "general"}`);
+      const { signature, timestamp, cloudName, apiKey, folder } = sigRes.data.data;
+
+      // 2. Upload directly to Cloudinary
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("api_key", apiKey);
+      formData.append("timestamp", timestamp.toString());
+      formData.append("signature", signature);
+      formData.append("folder", folder);
+
+      const cloudinaryRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
+        method: "POST",
+        body: formData,
       });
 
-      const uploadedFile = res.data.data.file;
+      if (!cloudinaryRes.ok) {
+        throw new Error("Failed to upload to Cloudinary");
+      }
+
+      const uploadedFile = await cloudinaryRes.json();
 
       let msgType = "FILE";
       if (file.type.startsWith("image/")) msgType = "IMAGE";
@@ -150,16 +174,18 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
         fileName: file.name,
         fileType: msgType,
         fileSize: file.size,
-        fileUrl: uploadedFile.url,
+        fileUrl: uploadedFile.secure_url,
         mimeType: file.type,
-        thumbUrl: uploadedFile.thumbUrl || null,
+        thumbUrl: msgType === "IMAGE" || msgType === "VIDEO" 
+          ? uploadedFile.secure_url.replace("/upload/", "/upload/c_fill,h_300,w_300/") 
+          : null,
       };
 
       await onSendMessage(file.name, msgType, replyingTo?.id || null, [attachment]);
       if (replyingTo) onCancelReply();
     } catch (err: any) {
       console.error("File upload error:", err);
-      alert(err.response?.data?.message || "File upload failed.");
+      alert(err.message || err.response?.data?.message || "File upload failed.");
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -235,25 +261,42 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
   };
 
   const uploadAudioFile = async (file: File) => {
+    if (file.size > 50 * 1024 * 1024) {
+      alert("Audio file is too large. Maximum size is 50MB.");
+      return;
+    }
+
     setUploading(true);
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("chatId", chatId);
 
     try {
-      const res = await api.post("/media/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      // 1. Get signature from our backend
+      const sigRes = await api.get(`/media/signature?folder=chat-app/${chatId || "general"}`);
+      const { signature, timestamp, cloudName, apiKey, folder } = sigRes.data.data;
+
+      // 2. Upload directly to Cloudinary
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("api_key", apiKey);
+      formData.append("timestamp", timestamp.toString());
+      formData.append("signature", signature);
+      formData.append("folder", folder);
+
+      const cloudinaryRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
+        method: "POST",
+        body: formData,
       });
 
-      const uploadedFile = res.data.data.file;
+      if (!cloudinaryRes.ok) {
+        throw new Error("Failed to upload to Cloudinary");
+      }
+
+      const uploadedFile = await cloudinaryRes.json();
 
       const attachment = {
         fileName: file.name,
         fileType: "AUDIO",
         fileSize: file.size,
-        fileUrl: uploadedFile.url,
+        fileUrl: uploadedFile.secure_url,
         mimeType: file.type,
         thumbUrl: null,
       };
@@ -262,7 +305,7 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
       if (replyingTo) onCancelReply();
     } catch (err: any) {
       console.error("Audio message upload error:", err);
-      alert(err.response?.data?.message || "Failed to upload audio message.");
+      alert(err.message || err.response?.data?.message || "Failed to upload audio message.");
     } finally {
       setUploading(false);
     }
@@ -297,7 +340,7 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
 
   return (
     <div className="relative">
-      <div className="p-3 border-t border-[#e9edef]/40 dark:border-[#222e35]/20 bg-white/30 dark:bg-black/15 backdrop-blur-md relative z-20 text-zinc-900 dark:text-zinc-100 select-none">
+      <div className="p-3 border-t border-[#e9edef]/60 dark:border-[#222e35]/40 bg-[#f0f2f5]/65 dark:bg-[#202c33]/70 backdrop-blur-md relative z-20 text-zinc-900 dark:text-zinc-100 select-none">
 
       {replyingTo && (
         <div className="flex items-center justify-between p-2.5 mb-3 bg-blue-500/10 border border-blue-500/20 rounded-lg text-base">

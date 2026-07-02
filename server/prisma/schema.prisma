@@ -159,6 +159,7 @@ model Message {
   content   String?
   status    MessageStatus @default(SENT)
   replyToId String?
+  metadata  Json?         // Stores link previews or AI metadata
   editedAt  DateTime?
   deletedAt DateTime?
   deletedForUsers String[] @default([])

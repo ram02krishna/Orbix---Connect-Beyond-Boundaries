@@ -98,6 +98,16 @@ export async function sendMessage(
     if (!original) throw new ApiError(404, "The message you're replying to doesn't exist");
   }
 
+  // Extract link preview if it's a TEXT message and contains a URL
+  let metadata: any = null;
+  if (type === "TEXT" && content) {
+    const { extractLinkPreview } = await import("./link-preview.service.js");
+    const preview = await extractLinkPreview(content);
+    if (preview) {
+      metadata = preview;
+    }
+  }
+
   // Create the message, then update the chat's lastMessage in one go
   const message = await prisma.message.create({
     data: {
@@ -105,6 +115,7 @@ export async function sendMessage(
       senderId,
       content: content ? encryptMessage(content) : content,
       type,
+      metadata,
       replyToId,
       deletedForUsers: receiverBlockedMe && chat.members.find(m => m.userId !== senderId) 
         ? [chat.members.find(m => m.userId !== senderId)!.userId] 

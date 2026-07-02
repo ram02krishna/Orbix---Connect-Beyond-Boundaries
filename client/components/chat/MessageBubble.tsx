@@ -448,7 +448,6 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
             </div>
           )}
 
-          {/* Message text or Edit input block */}
           {isEditing ? (
             <div className="flex flex-col gap-2.5 min-w-[220px] mt-1 select-none">
               <input
@@ -488,33 +487,74 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
           ) : (
             (!message.attachments || message.attachments.length === 0 || message.content !== message.attachments[0]?.fileName || isDeleted) &&
             message.type !== "AUDIO" && (
-              <p className="select-text">
-                {isDeleted
-                  ? "This message was deleted."
-                  : (() => {
-                      const text = message.content || "";
-                      if (!searchQuery || !text) return text;
-                      const parts = text.split(
-                        new RegExp(`(${searchQuery.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&")})`, "gi")
-                      );
-                      return (
-                        <span>
-                          {parts.map((part: string, index: number) =>
-                            part.toLowerCase() === searchQuery.toLowerCase() ? (
-                              <mark
-                                key={index}
-                                className="bg-amber-300 text-black px-0.5 rounded font-semibold animate-pulse-slow select-text"
-                              >
-                                {part}
-                              </mark>
-                            ) : (
-                              part
-                            )
-                          )}
-                        </span>
-                      );
-                    })()}
-              </p>
+              <div className="flex flex-col gap-2">
+                <p className="select-text">
+                  {isDeleted
+                    ? "This message was deleted."
+                    : (() => {
+                        const text = message.content || "";
+                        if (!searchQuery || !text) return text;
+                        const parts = text.split(
+                          new RegExp(`(${searchQuery.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&")})`, "gi")
+                        );
+                        return (
+                          <span>
+                            {parts.map((part: string, index: number) =>
+                              part.toLowerCase() === searchQuery.toLowerCase() ? (
+                                <mark
+                                  key={index}
+                                  className="bg-amber-300 text-black px-0.5 rounded font-semibold animate-pulse-slow select-text"
+                                >
+                                  {part}
+                                </mark>
+                              ) : (
+                                part
+                              )
+                            )}
+                          </span>
+                        );
+                      })()}
+                </p>
+                {!isDeleted && message.metadata?.type === "link_preview" && (
+                  <a
+                    href={message.metadata.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(
+                      "flex flex-col mt-1 mb-1 rounded-xl overflow-hidden border transition-all cursor-pointer hover:opacity-90 active:scale-[0.98]",
+                      isSelf 
+                        ? "bg-black/10 border-white/20 hover:bg-black/20 text-white" 
+                        : "bg-black/5 dark:bg-black/20 border-zinc-200 dark:border-white/10 hover:bg-black/10 dark:hover:bg-black/30 text-zinc-900 dark:text-white"
+                    )}
+                  >
+                    {message.metadata.image && (
+                      <div className="w-full h-32 bg-zinc-200 dark:bg-zinc-800 flex-shrink-0">
+                        <img 
+                          src={message.metadata.image} 
+                          alt="Preview" 
+                          className="w-full h-full object-cover" 
+                          loading="lazy"
+                        />
+                      </div>
+                    )}
+                    <div className="p-3 flex flex-col gap-1">
+                      {message.metadata.siteName && (
+                        <p className={cn("text-xs font-semibold uppercase tracking-wider", isSelf ? "text-white/70" : "text-zinc-500 dark:text-zinc-400")}>
+                          {message.metadata.siteName}
+                        </p>
+                      )}
+                      <p className="text-sm font-bold line-clamp-2 leading-tight">
+                        {message.metadata.title || message.metadata.url}
+                      </p>
+                      {message.metadata.description && (
+                        <p className={cn("text-xs line-clamp-2 mt-0.5", isSelf ? "text-white/80" : "text-zinc-600 dark:text-zinc-300")}>
+                          {message.metadata.description}
+                        </p>
+                      )}
+                    </div>
+                  </a>
+                )}
+              </div>
             )
           )}
           {!isDeleted && (

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useAuthStore } from "../hooks/useAuthStore";
-
+import { useSocketStore } from "../hooks/useSocketStore";
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 const api = axios.create({
@@ -50,6 +50,9 @@ api.interceptors.response.use(
 
         const { accessToken } = refreshResponse.data.data;
         useAuthStore.getState().setAccessToken(accessToken);
+
+        // Connect/reconnect the socket with the fresh access token
+        useSocketStore.getState().connectSocket(accessToken);
 
         // Update authorization header and replay the original request
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;

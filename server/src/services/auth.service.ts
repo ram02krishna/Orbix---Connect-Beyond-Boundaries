@@ -119,8 +119,8 @@ export async function login(input: LoginInput) {
   const refreshToken = createRefreshToken(user.id, sessionId);
   const refreshTokenHash = await argon2.hash(refreshToken);
 
-  // Sessions expire in 7 days (matches JWT_REFRESH_EXPIRES_IN)
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  // Sessions expire in 365 days (matches JWT_REFRESH_EXPIRES_IN)
+  const expiresAt = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
 
   // Enforce session limit: if there are 3 or more active sessions, revoke the oldest ones to make space
   const activeSessions = await prisma.session.findMany({

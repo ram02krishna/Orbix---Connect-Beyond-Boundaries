@@ -46,7 +46,7 @@ export async function login(req: Request, res: Response) {
     httpOnly: true,
     secure: isProd,                         // HTTPS only in production
     sameSite: isProd ? "none" : "strict",   // cross-domain in prod, strict locally
-    maxAge: 7 * 24 * 60 * 60 * 1000,        // 7 days in milliseconds
+    maxAge: 365 * 24 * 60 * 60 * 1000,      // 365 days in milliseconds
   });
 
   sendSuccess(res, "Logged in successfully", { accessToken, user });

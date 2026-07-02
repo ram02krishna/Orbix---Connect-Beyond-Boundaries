@@ -4,51 +4,51 @@ import * as mediaService from "../services/media.service.js";
 import { sendSuccess } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 
-// POST /api/media/upload
-// Upload a file and attach it to a message
-// Expects multipart/form-data with a field named "file"
-// Body also needs: messageId OR chatId (for pre-upload before sending)
-export async function uploadFile(req: Request, res: Response) {
-  // Multer puts the file on req.file
-  if (!req.file) throw new ApiError(400, "No file provided");
+// GET /api/media/signature
+// Generate a Cloudinary upload signature for direct uploads
+export async function getSignature(req: Request, res: Response) {
+  const folder = req.query.folder as string;
 
-  const { chatId } = req.body;
-
-  // Make sure the uploader is in the chat they're uploading to
-  if (chatId) {
-    const membership = await prisma.chatMember.findUnique({
-      where: { chatId_userId: { chatId, userId: req.user!.id } },
-    });
-    if (!membership) throw new ApiError(403, "You are not in this chat");
+  if (!folder) {
+    throw new ApiError(400, "Folder is required");
   }
 
-  const uploaded = await mediaService.uploadFile(
-    req.file.buffer,
-    req.file.mimetype,
-    `chat-app/${chatId ?? "general"}`
-  );
+  // Basic validation to restrict where users can upload
+  if (!folder.startsWith("chat-app/")) {
+    throw new ApiError(400, "Invalid folder path");
+  }
 
-  sendSuccess(res, "File uploaded", { file: uploaded }, 201);
+  // If uploading to a specific chat, verify membership
+  const isAvatar = folder === "chat-app/avatars";
+  const isGeneral = folder === "chat-app/general";
+  
+  if (!isAvatar && !isGeneral) {
+    const chatId = folder.split("chat-app/")[1];
+    if (chatId) {
+      const membership = await prisma.chatMember.findUnique({
+        where: { chatId_userId: { chatId, userId: req.user!.id } },
+      });
+      if (!membership) throw new ApiError(403, "You are not in this chat");
+    }
+  }
+
+  const signatureData = mediaService.generateUploadSignature(folder);
+  sendSuccess(res, "Signature generated", signatureData);
 }
 
-// POST /api/media/avatar
-// Upload a profile avatar
-export async function uploadAvatar(req: Request, res: Response) {
-  if (!req.file) throw new ApiError(400, "No file provided");
-
-  const uploaded = await mediaService.uploadFile(
-    req.file.buffer,
-    req.file.mimetype,
-    `chat-app/avatars`
-  );
+// PATCH /api/media/avatar
+// Update the user's avatarUrl in the database after direct upload
+export async function updateAvatarUrl(req: Request, res: Response) {
+  const { avatarUrl } = req.body;
+  if (!avatarUrl) throw new ApiError(400, "avatarUrl is required");
 
   // Update the user's avatarUrl in the database
   await prisma.user.update({
     where: { id: req.user!.id },
-    data: { avatarUrl: uploaded.url },
+    data: { avatarUrl },
   });
 
-  sendSuccess(res, "Avatar updated", { avatarUrl: uploaded.url });
+  sendSuccess(res, "Avatar updated", { avatarUrl });
 }
 
 // GET /api/media/download

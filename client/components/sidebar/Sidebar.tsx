@@ -396,7 +396,7 @@ export function Sidebar() {
 
       {/* Sidebar Header (Translucent glass) */}
       {activePane === "chats" ? (
-        <div className="px-4 py-3 flex items-center justify-between border-b border-[#e9edef]/60 dark:border-[#222e35]/40 bg-[#f0f2f5]/65 dark:bg-[#202c33]/70 backdrop-blur-md relative z-10">
+        <div className="px-4 h-[60px] flex items-center justify-between border-b border-[#e9edef]/60 dark:border-[#222e35]/40 bg-[#f0f2f5]/65 dark:bg-[#202c33]/70 backdrop-blur-md relative z-10">
           {/* User info */}
           <div
             className="flex items-center gap-3 cursor-pointer group rounded-full p-1 -m-1 transition-all duration-200"
@@ -447,7 +447,7 @@ export function Sidebar() {
           </div>
         </div>
       ) : (
-        <div className="px-4 py-3 flex items-center justify-between border-b border-[#e9edef]/60 dark:border-[#222e35]/40 bg-[#f0f2f5]/65 dark:bg-[#202c33]/70 backdrop-blur-md relative z-10">
+        <div className="px-4 h-[60px] flex items-center justify-between border-b border-[#e9edef]/60 dark:border-[#222e35]/40 bg-[#f0f2f5]/65 dark:bg-[#202c33]/70 backdrop-blur-md relative z-10">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setActivePane("chats")}

@@ -115,7 +115,7 @@ export function ChatHeader({
 
   return (
     <>
-      <div className="flex items-center justify-between px-4 py-2 border-b border-[#e9edef]/40 dark:border-[#222e35]/20 bg-white/30 dark:bg-black/15 backdrop-blur-md relative z-20 text-[#111b21] dark:text-[#e9edef] select-none shadow-sm">
+      <div className="flex items-center justify-between px-4 h-[60px] border-b border-[#e9edef]/60 dark:border-[#222e35]/40 bg-[#f0f2f5]/65 dark:bg-[#202c33]/70 backdrop-blur-md relative z-20 text-[#111b21] dark:text-[#e9edef] select-none shadow-sm">
         <div className="flex-1 flex items-center gap-3">
           <button
             onClick={() => {

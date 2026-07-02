@@ -62,6 +62,12 @@ export default function ProfilePage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    if (file.size > 10 * 1024 * 1024) {
+      alert("Image is too large. Maximum size is 10MB.");
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
     setError("");
     setSuccess("");
     setUploading(true);
@@ -79,21 +85,39 @@ export default function ProfilePage() {
         lastModified: Date.now(),
       });
 
+      // 1. Get signature for avatars
+      const sigRes = await api.get(`/media/signature?folder=chat-app/avatars`);
+      const { signature, timestamp, cloudName, apiKey, folder } = sigRes.data.data;
+
+      // 2. Upload directly to Cloudinary
       const formData = new FormData();
       formData.append("file", compressedImageFile);
+      formData.append("api_key", apiKey);
+      formData.append("timestamp", timestamp.toString());
+      formData.append("signature", signature);
+      formData.append("folder", folder);
 
-      const res = await api.post("/media/avatar", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      const cloudinaryRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
+        method: "POST",
+        body: formData,
       });
 
-      const { avatarUrl } = res.data.data;
-      updateUser({ avatarUrl });
+      if (!cloudinaryRes.ok) {
+        throw new Error("Failed to upload avatar to Cloudinary");
+      }
+
+      const uploadedFile = await cloudinaryRes.json();
+
+      // 3. Update the avatar URL in our backend
+      await api.patch("/media/avatar", {
+        avatarUrl: uploadedFile.secure_url,
+      });
+
+      updateUser({ avatarUrl: uploadedFile.secure_url });
       setSuccess("Profile picture updated successfully!");
     } catch (err: any) {
       console.error(err);
-      setError(err.response?.data?.message || "Failed to upload avatar.");
+      setError(err.message || err.response?.data?.message || "Failed to upload avatar.");
     } finally {
       setUploading(false);
     }

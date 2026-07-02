@@ -8,6 +8,10 @@ import { SOCKET_EVENTS } from "./events.js";
  * These are the "partners" who need to be notified when the user's presence changes.
  */
 async function getChatPartners(userId: string): Promise<string[]> {
+  const cacheKey = `user:partners:${userId}`;
+  const cached = await redis.get<string[]>(cacheKey);
+  if (cached) return cached;
+
   const members = await prisma.chatMember.findMany({
     where: {
       chat: {
@@ -19,7 +23,12 @@ async function getChatPartners(userId: string): Promise<string[]> {
     },
     select: { userId: true },
   });
-  return [...new Set(members.map((m) => m.userId))];
+  
+  const partners = [...new Set(members.map((m) => m.userId))];
+  
+  // Cache for 5 minutes to prevent DB spikes during reconnect storms
+  await redis.set(cacheKey, partners, { ex: 300 });
+  return partners;
 }
 
 /**

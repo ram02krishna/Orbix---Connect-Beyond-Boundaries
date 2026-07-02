@@ -30,59 +30,23 @@ const MAX_SIZES: Record<string, number> = {
 // We use multer.memoryStorage() so the file comes in as a Buffer.
 // We then stream it to Cloudinary manually instead of saving it to disk.
 
-export async function uploadFile(
-  buffer: Buffer,
-  mimeType: string,
-  folder = "chat-app/attachments"
-): Promise<{
-  url: string;
-  publicId: string;
-  thumbUrl?: string;
-  fileType: string;
-}> {
-  const resourceType = ALLOWED_TYPES[mimeType];
+export function generateUploadSignature(folder: string = "chat-app/attachments") {
+  const timestamp = Math.round(new Date().getTime() / 1000);
 
-  if (!resourceType) {
-    throw new ApiError(400, `File type "${mimeType}" is not allowed`);
-  }
-
-  if (buffer.length > MAX_SIZES[resourceType]) {
-    const maxMB = MAX_SIZES[resourceType] / 1024 / 1024;
-    throw new ApiError(400, `File is too large. Maximum size is ${maxMB}MB`);
-  }
-
-  // Upload by wrapping the stream in a Promise
-  const result = await new Promise<{
-    secure_url: string;
-    public_id: string;
-    eager?: Array<{ secure_url: string }>;
-  }>((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream(
-      {
-        folder,
-        resource_type: resourceType,
-        // Auto-generate thumbnails for images and videos
-        ...(resourceType === "image" && {
-          eager: [{ width: 300, height: 300, crop: "fill", quality: "auto" }],
-        }),
-        ...(resourceType === "video" && {
-          eager: [{ width: 320, height: 240, crop: "fill", format: "jpg" }],
-        }),
-      },
-      (error, result) => {
-        if (error || !result) reject(error ?? new Error("Upload failed"));
-        else resolve(result);
-      }
-    );
-
-    stream.end(buffer);
-  });
+  const signature = cloudinary.utils.api_sign_request(
+    {
+      timestamp,
+      folder,
+    },
+    cloudinary.config().api_secret!
+  );
 
   return {
-    url: result.secure_url,
-    publicId: result.public_id,
-    thumbUrl: result.eager?.[0]?.secure_url,
-    fileType: resourceType,
+    signature,
+    timestamp,
+    cloudName: cloudinary.config().cloud_name,
+    apiKey: cloudinary.config().api_key,
+    folder,
   };
 }
 

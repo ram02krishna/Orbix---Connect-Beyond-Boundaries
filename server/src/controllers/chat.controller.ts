@@ -230,5 +230,3 @@ export async function markChatAsRead(req: Request, res: Response) {
 
   sendSuccess(res, "Chat marked as read", { count: readMessageIds.length });
 }
-
-
