@@ -2,69 +2,73 @@
 
 ![Orbix Banner](https://via.placeholder.com/1200x400.png?text=Orbix+-+Connect+Beyond+Boundaries)
 
-Orbix is a full-stack, real-time chat application designed to provide seamless and instant communication. Built with a modern tech stack, Orbix features a highly responsive UI, secure authentication, real-time messaging, and media sharing capabilities.
+Orbix is a highly sophisticated, full-stack real-time chat application designed to provide seamless and instant communication. Built with a modern tech stack and a beautifully crafted UI, Orbix delivers a premium user experience featuring secure authentication, rich media sharing, peer-to-peer calling, and interactive statuses.
 
-##  Features
+## ✨ Key Features
 
-- **Audio & Video Calls:** Seamless, real-time peer-to-peer audio and video calling powered by `WebRTC`.
-- **Real-Time Messaging:** Instant message delivery using WebSockets via `Socket.io` (includes typing indicators, read receipts, etc.).
-- **Advanced User Presence:** Real-time online/offline status tracking.
-- **Secure Authentication:** JWT-based authentication with password hashing using `Argon2`.
-- **Responsive & Beautiful UI:** Built with `Next.js`, `React 19`, `Tailwind CSS`, `Framer Motion`, and `Radix UI` components.
-- **State Management:** Efficient data fetching and caching with `@tanstack/react-query` and global state management with `Zustand`.
-- **Media Sharing:** File and image uploading integrated with `Cloudinary` and `Multer`.
-- **Database ORM:** Robust database interactions using `Prisma ORM`.
-- **Scalable Architecture:** Redis integration via `@upstash/redis` and Socket.io Redis adapter for multi-instance scalability.
-- **Email Notifications:** Built-in email support using `Nodemailer`.
-- **Security:** Enhanced backend security with `Helmet` and `express-rate-limit`.
+### Core Messaging
+- **Real-Time Communication:** Instant message delivery using WebSockets (`Socket.io`) with typing indicators and read receipts.
+- **Direct & Group Chats:** Support for one-on-one conversations and fully-featured group chats with customizable roles (Owner, Admin, Member).
+- **Rich Media Sharing:** Share images, videos, audio clips, and files seamlessly via Cloudinary integration.
+- **Emoji Reactions:** Express yourself by reacting to specific messages.
+- **Message Management:** Reply to, edit, or delete messages (for everyone or just yourself).
+
+### Advanced Communication
+- **Voice & Video Calls:** Crystal-clear, peer-to-peer audio and video calling powered by `WebRTC`.
+- **Status Updates (Stories):** Post ephemeral photo, video, or text statuses that expire, and see who viewed them.
+- **User Presence:** Real-time online/offline status tracking, showing exactly when friends are active.
+
+### Privacy & Security
+- **Secure Authentication:** JWT-based authentication with high-security password hashing using `Argon2`.
+- **User Blocking:** Maintain your privacy by blocking unwanted users from messaging or calling you.
+- **Granular Group Permissions:** Admins can restrict messaging and chat info modifications to maintain order in large groups.
+- **Email & Phone Verification:** Ensure account authenticity via verification codes (powered by `Nodemailer`).
+
+### Performance & Scalability
+- **Modern Tech Stack:** Built on `Next.js 15` (App Router) and `React 19`.
+- **Optimized Data Flow:** Efficient data fetching and caching with `@tanstack/react-query` and global state management with `Zustand`.
+- **Scalable Architecture:** Redis integration via `@upstash/redis` and Socket.io Redis adapter for multi-instance horizontal scaling.
 
 ---
 
-##  Tech Stack
+## 🛠️ Tech Stack
 
-###  Frontend (Client)
-- **Framework:** [Next.js](https://nextjs.org/) (v15)
-- **Library:** [React](https://react.dev/) (v19)
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS
-- **Animations:** Framer Motion
-- **State Management:** Zustand, React Query
-- **UI Components:** Radix UI, Lucide React
-- **Forms & Validation:** React Hook Form, Zod
-- **Real-Time Client:** Socket.io-client, WebRTC
-- **HTTP Client:** Axios
+### Frontend (Client)
+- **Framework:** Next.js (v15) & React (v19)
+- **Styling:** Tailwind CSS & Framer Motion for beautiful, fluid animations.
+- **State Management:** Zustand (Global State) & React Query (Data Fetching/Caching)
+- **UI Components:** Radix UI & Lucide React
+- **Forms & Validation:** React Hook Form & Zod
+- **Real-Time & Calls:** Socket.io-client, WebRTC
 
-###  Backend (Server)
-- **Runtime:** Node.js
-- **Framework:** Express.js
+### Backend (Server)
+- **Runtime & Framework:** Node.js, Express.js
 - **Language:** TypeScript
 - **Real-Time Engine:** Socket.io
-- **ORM:** Prisma
-- **Database:** PostgreSQL / MySQL (Configurable via Prisma)
+- **ORM & Database:** Prisma ORM with PostgreSQL
 - **Caching & Pub/Sub:** Redis (@upstash/redis)
-- **Authentication:** JSON Web Tokens (JWT), Argon2
-- **Cloud Storage:** Cloudinary
-- **Email Services:** Nodemailer
+- **Authentication:** JWT, Argon2
+- **Cloud Services:** Cloudinary (Media), Nodemailer (Emails)
+- **Security:** Helmet, express-rate-limit
 
 ---
 
-##  Project Structure
+## 📂 Project Structure
 
-The project is organized into a monorepo-style structure containing both the client and server codebases.
+The project is structured as a monorepo containing both the client and server codebases.
 
 ```text
-ChatApplication/
+Orbix/
 ├── client/                 # Next.js frontend application
-│   ├── app/                # Next.js App Router pages and layouts
-│   ├── components/         # Reusable React components (Radix UI, etc.)
+│   ├── app/                # Next.js App Router layout and pages
+│   ├── components/         # Reusable UI components
 │   ├── hooks/              # Custom React hooks
-│   ├── lib/                # Utility functions and configurations
-│   ├── public/             # Static assets
+│   ├── lib/                # Utility functions
 │   └── package.json        # Frontend dependencies
 │
 ├── server/                 # Express.js backend application
-│   ├── src/                # Backend source code (Controllers, Routes, Models)
-│   ├── prisma/             # Database schema and migrations
+│   ├── src/                # Backend source code (Controllers, Routes, Middlewares, Sockets, Services)
+│   ├── prisma/             # Database schema and seed data
 │   ├── dist/               # Compiled TypeScript code
 │   └── package.json        # Backend dependencies
 │
@@ -73,50 +77,67 @@ ChatApplication/
 
 ---
 
-## Getting Started
+## 🚀 Getting Started
 
 Follow these instructions to set up the project locally.
 
 ### Prerequisites
 - Node.js (v20.0.0 or higher)
-- npm or yarn or pnpm
-- PostgreSQL / MySQL Database
-- Redis Instance (Optional for dev, required for prod)
+- npm, yarn, or pnpm
+- PostgreSQL Database
+- Redis Instance (Optional for local dev, required for production scaling)
 - Cloudinary Account (for media uploads)
 
 ### 1. Clone the repository
 ```bash
-git clone <your-repository-url>
-cd ChatApplication
+git clone https://github.com/ram02krishna/Orbix---Connect-Beyond-Boundaries.git
+cd Orbix---Connect-Beyond-Boundaries
 ```
 
 ### 2. Backend Setup
+Navigate to the server directory and install dependencies:
 ```bash
 cd server
 npm install
-
-# Set up environment variables
+```
+Configure environment variables:
+```bash
 cp .env.example .env
-# Edit .env with your Database URL, JWT Secret, Cloudinary credentials, etc.
+```
+Edit `.env` with your credentials:
+- `DATABASE_URL` (PostgreSQL connection string)
+- `JWT_SECRET`
+- Cloudinary credentials (`CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`)
+- Redis credentials (if applicable)
 
-# Generate Prisma Client & push schema
+Initialize the database:
+```bash
 npm run db:generate
 npm run db:push
+# Optional: Seed the database
+npm run db:seed
+```
 
-# Start the development server
+Start the backend development server:
+```bash
 npm run dev
 ```
 
 ### 3. Frontend Setup
+Open a new terminal and navigate to the client directory:
 ```bash
-cd ../client
+cd client
 npm install
+```
 
-# Set up environment variables
+Configure environment variables:
+```bash
 cp .env.local.example .env.local
-# Edit .env.local with your backend API URL, etc.
+```
+Edit `.env.local` to point to your backend API (default is usually `http://localhost:5000` depending on your setup).
 
-# Start the Next.js development server
+Start the Next.js development server:
+```bash
 npm run dev
 ```
 
