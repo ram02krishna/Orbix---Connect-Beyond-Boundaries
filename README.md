@@ -12,8 +12,6 @@ Orbix is a full-stack real-time chat application designed to provide seamless an
 - **Real-Time Communication:** Instant message delivery using WebSockets (`Socket.io`) with active typing indicators.
 - **Direct & Group Chats:** Support for one-on-one conversations and fully-featured group chats managed by the group creator.
 - **Rich Media Sharing:** Share images, videos, audio clips, and files seamlessly via Cloudinary integration.
-- **Emoji Reactions:** Express yourself by reacting directly to specific messages.
-- **Message Management:** Reply to, edit, or delete messages with real-time UI updates.
 
 ### Advanced Communication
 - **Voice & Video Calls:** Crystal-clear, peer-to-peer audio and video calling powered by `WebRTC`.
@@ -31,7 +29,7 @@ Orbix is a full-stack real-time chat application designed to provide seamless an
 
 ### Frontend (Client)
 - **Framework:** Next.js (v15) & React (v19)
-- **Styling:** Tailwind CSS (v4) & Framer Motion
+- **Styling:** Tailwind CSS (v4)
 - **State Management:** Zustand (Global Store) & React Query (Data Fetching/Caching)
 - **UI Components:** Radix UI & Lucide React
 - **Real-Time & Calls:** Socket.io-client, WebRTC
@@ -97,8 +95,11 @@ cd Orbix---Connect-Beyond-Boundaries
 3. Edit `.env` with your credentials:
    - `DATABASE_URL` (PostgreSQL connection string)
    - `JWT_SECRET` (JWT signing key)
+   - `COOKIE_SECRET` (Cookie signing secret)
    - Cloudinary credentials (`CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`)
    - Redis credentials (`UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`)
+   - Email/SMTP credentials (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`)
+   - Rate limiting options (`RATE_LIMIT_WINDOW_MS`, `RATE_LIMIT_MAX_REQUESTS`)
 4. Initialize the database schema:
    ```bash
    npm run db:generate
@@ -119,7 +120,9 @@ cd Orbix---Connect-Beyond-Boundaries
    ```bash
    cp .env.local.example .env.local
    ```
-3. Edit `.env.local` to point to your backend API URL.
+3. Edit `.env.local` to point to your backend API URL and WebSocket URL:
+   - `NEXT_PUBLIC_API_URL` (e.g., `http://localhost:5000/api`)
+   - `NEXT_PUBLIC_WS_URL` (e.g., `http://localhost:5000`)
 4. Start the Next.js development server:
    ```bash
    npm run dev
