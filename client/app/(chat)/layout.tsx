@@ -84,7 +84,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
   const isRootChats = pathname === "/chats";
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 relative select-none">
+    <div className="flex h-[100dvh] w-full overflow-hidden bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 relative select-none">
       {/* Main Dashboard Layout Container */}
       <div className="flex w-full h-full relative z-10">
         <div

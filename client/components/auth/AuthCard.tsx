@@ -18,7 +18,7 @@ export function AuthCard({ children, title, subtitle }: AuthCardProps) {
   }, []);
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center p-4 overflow-hidden bg-white dark:bg-zinc-950 select-none">
+    <div className="relative flex min-h-[100dvh] items-center justify-center p-4 overflow-hidden bg-white dark:bg-zinc-950 select-none">
 
       {/* Card */}  
       <div

@@ -77,30 +77,37 @@ function startRingtone(type: "dial" | "ring") {
     const volume = useCallStore.getState().ringVolume;
     ringGain.gain.setValueAtTime(volume, audioCtx.currentTime);
     ringGain.connect(audioCtx.destination);
+    
     const playBeep = () => {
       if (!audioCtx || !ringGain) return;
-      const osc1 = audioCtx.createOscillator();
-      const osc2 = audioCtx.createOscillator();
+      const now = audioCtx.currentTime;
       if (type === "dial") {
-        osc1.frequency.setValueAtTime(440, audioCtx.currentTime);
-        osc2.frequency.setValueAtTime(480, audioCtx.currentTime);
+        const osc1 = audioCtx.createOscillator();
+        const osc2 = audioCtx.createOscillator();
+        osc1.frequency.setValueAtTime(440, now);
+        osc2.frequency.setValueAtTime(480, now);
+        osc1.connect(ringGain);
+        osc2.connect(ringGain);
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + 1.5);
+        osc2.stop(now + 1.5);
       } else {
-        osc1.frequency.setValueAtTime(400, audioCtx.currentTime);
-        osc2.frequency.setValueAtTime(450, audioCtx.currentTime);
+        // Charming melody for incoming ringtone
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        notes.forEach((freq, i) => {
+          const osc = audioCtx!.createOscillator();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(freq, now + i * 0.15);
+          osc.connect(ringGain!);
+          osc.start(now + i * 0.15);
+          osc.stop(now + i * 0.15 + 0.3);
+        });
       }
-      osc1.connect(ringGain);
-      osc2.connect(ringGain);
-      osc1.start();
-      osc2.start();
-      setTimeout(() => {
-        try {
-          osc1.stop(); osc2.stop();
-          osc1.disconnect(); osc2.disconnect();
-        } catch {}
-      }, type === "dial" ? 1500 : 1200);
     };
+    
     playBeep();
-    ringInterval = setInterval(playBeep, type === "dial" ? 4000 : 3000);
+    ringInterval = setInterval(playBeep, type === "dial" ? 4000 : 2500);
   } catch (err) {
     console.error("Failed to start synthetic ringtone:", err);
   }
@@ -222,7 +229,14 @@ export const useCallStore = create<CallStoreState>((set, get) => {
 
       try {
         const constraints = {
-          audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+          audio: { 
+            echoCancellation: true, 
+            noiseSuppression: true, 
+            autoGainControl: true,
+            googEchoCancellation: true,
+            googAutoGainControl: true,
+            googNoiseSuppression: true
+          } as any,
           video: type === "video" ? {
             width: { ideal: 1280 },
             height: { ideal: 720 },
@@ -306,7 +320,14 @@ export const useCallStore = create<CallStoreState>((set, get) => {
 
       try {
         const constraints = {
-          audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+          audio: { 
+            echoCancellation: true, 
+            noiseSuppression: true, 
+            autoGainControl: true,
+            googEchoCancellation: true,
+            googAutoGainControl: true,
+            googNoiseSuppression: true
+          } as any,
           video: callType === "video" ? {
             width: { ideal: 1280 },
             height: { ideal: 720 },
@@ -358,7 +379,14 @@ export const useCallStore = create<CallStoreState>((set, get) => {
 
       try {
         const constraints = {
-          audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+          audio: { 
+            echoCancellation: true, 
+            noiseSuppression: true, 
+            autoGainControl: true,
+            googEchoCancellation: true,
+            googAutoGainControl: true,
+            googNoiseSuppression: true
+          } as any,
           video: type === "video" ? {
             width: { ideal: 1280 },
             height: { ideal: 720 },
@@ -406,7 +434,14 @@ export const useCallStore = create<CallStoreState>((set, get) => {
 
       try {
         const constraints = {
-          audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+          audio: { 
+            echoCancellation: true, 
+            noiseSuppression: true, 
+            autoGainControl: true,
+            googEchoCancellation: true,
+            googAutoGainControl: true,
+            googNoiseSuppression: true
+          } as any,
           video: callType === "video" ? { width: { ideal: 640 }, height: { ideal: 480 }, frameRate: { ideal: 15, max: 24 }, facingMode: "user" } : false
         };
         const stream = await navigator.mediaDevices.getUserMedia(constraints);

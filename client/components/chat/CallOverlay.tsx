@@ -150,7 +150,7 @@ export function CallOverlay() {
           <>
             {/* Hidden Audio Elements for Voice Calls */}
             {callType === "audio" && (
-              <div className="hidden">
+              <div className="absolute w-0 h-0 opacity-0 pointer-events-none">
                 {isGroupCall ? (
                   activeRemoteStreams.map(([userId, stream]) => (
                     <VideoStream key={userId} stream={stream} />

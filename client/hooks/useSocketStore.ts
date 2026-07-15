@@ -28,6 +28,11 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     const socket = io(WS_BASE_URL, {
       auth: { token },
       transports: ["websocket"],
+      reconnection: true,
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      timeout: 60000,
     });
 
     socket.on("connect", () => {
