@@ -1,33 +1,29 @@
 # Orbix - Connect Beyond Boundaries
 
-![Orbix Banner](https://via.placeholder.com/1200x400.png?text=Orbix+-+Connect+Beyond+Boundaries)
+![Orbix Banner](https://via.placeholder.com/1200x400.png?text=Orbix+-+Connect+Beyond+Boundaries&bg=0284c7&fg=ffffff)
 
-Orbix is a highly sophisticated, full-stack real-time chat application designed to provide seamless and instant communication. Built with a modern tech stack and a beautifully crafted UI, Orbix delivers a premium user experience featuring secure authentication, rich media sharing, peer-to-peer calling, and interactive statuses.
+Orbix is a full-stack real-time chat application designed to provide seamless and instant communication. Built with a modern tech stack and a beautifully crafted UI using a cohesive **blue color theme**, Orbix delivers a premium user experience featuring secure authentication, rich media sharing, peer-to-peer calling, and real-time messaging.
+
+---
 
 ## ✨ Key Features
 
 ### Core Messaging
-- **Real-Time Communication:** Instant message delivery using WebSockets (`Socket.io`) with typing indicators and read receipts.
-- **Direct & Group Chats:** Support for one-on-one conversations and fully-featured group chats with customizable roles (Owner, Admin, Member).
+- **Real-Time Communication:** Instant message delivery using WebSockets (`Socket.io`) with active typing indicators.
+- **Direct & Group Chats:** Support for one-on-one conversations and fully-featured group chats managed by the group creator.
 - **Rich Media Sharing:** Share images, videos, audio clips, and files seamlessly via Cloudinary integration.
-- **Emoji Reactions:** Express yourself by reacting to specific messages.
-- **Message Management:** Reply to, edit, or delete messages (for everyone or just yourself).
+- **Emoji Reactions:** Express yourself by reacting directly to specific messages.
+- **Message Management:** Reply to, edit, or delete messages with real-time UI updates.
 
 ### Advanced Communication
 - **Voice & Video Calls:** Crystal-clear, peer-to-peer audio and video calling powered by `WebRTC`.
-- **Status Updates (Stories):** Post ephemeral photo, video, or text statuses that expire, and see who viewed them.
-- **User Presence:** Real-time online/offline status tracking, showing exactly when friends are active.
+- **User Presence:** Real-time online/offline status tracking, showing exactly when contacts are active.
+- **Unified Blue Theme**: Consistent layout matching bluish brand logos, with instant and fluid transitions without layout spinners.
 
 ### Privacy & Security
-- **Secure Authentication:** JWT-based authentication with high-security password hashing using `Argon2`.
-- **User Blocking:** Maintain your privacy by blocking unwanted users from messaging or calling you.
-- **Granular Group Permissions:** Admins can restrict messaging and chat info modifications to maintain order in large groups.
-- **Email & Phone Verification:** Ensure account authenticity via verification codes (powered by `Nodemailer`).
-
-### Performance & Scalability
-- **Modern Tech Stack:** Built on `Next.js 15` (App Router) and `React 19`.
-- **Optimized Data Flow:** Efficient data fetching and caching with `@tanstack/react-query` and global state management with `Zustand`.
-- **Scalable Architecture:** Redis integration via `@upstash/redis` and Socket.io Redis adapter for multi-instance horizontal scaling.
+- **Secure Authentication**: Robust JWT-based authentication using generic security tokens.
+- **Email Verification**: Ensure account authenticity via custom verification codes (powered by `Nodemailer` & `Redis`).
+- **Data Protection**: Deterministic encryption for user emails, keeping identity searchable but secure in PostgreSQL.
 
 ---
 
@@ -35,27 +31,22 @@ Orbix is a highly sophisticated, full-stack real-time chat application designed 
 
 ### Frontend (Client)
 - **Framework:** Next.js (v15) & React (v19)
-- **Styling:** Tailwind CSS & Framer Motion for beautiful, fluid animations.
-- **State Management:** Zustand (Global State) & React Query (Data Fetching/Caching)
+- **Styling:** Tailwind CSS (v4) & Framer Motion
+- **State Management:** Zustand (Global Store) & React Query (Data Fetching/Caching)
 - **UI Components:** Radix UI & Lucide React
-- **Forms & Validation:** React Hook Form & Zod
 - **Real-Time & Calls:** Socket.io-client, WebRTC
 
 ### Backend (Server)
-- **Runtime & Framework:** Node.js, Express.js
-- **Language:** TypeScript
+- **Framework:** Node.js, Express.js (TypeScript)
 - **Real-Time Engine:** Socket.io
 - **ORM & Database:** Prisma ORM with PostgreSQL
 - **Caching & Pub/Sub:** Redis (@upstash/redis)
-- **Authentication:** JWT, Argon2
-- **Cloud Services:** Cloudinary (Media), Nodemailer (Emails)
+- **Authentication:** JWT, Argon2 password hashing
 - **Security:** Helmet, express-rate-limit
 
 ---
 
 ## 📂 Project Structure
-
-The project is structured as a monorepo containing both the client and server codebases.
 
 ```text
 Orbix/
@@ -69,7 +60,6 @@ Orbix/
 ├── server/                 # Express.js backend application
 │   ├── src/                # Backend source code (Controllers, Routes, Middlewares, Sockets, Services)
 │   ├── prisma/             # Database schema and seed data
-│   ├── dist/               # Compiled TypeScript code
 │   └── package.json        # Backend dependencies
 │
 └── README.md               # Project documentation
@@ -85,7 +75,7 @@ Follow these instructions to set up the project locally.
 - Node.js (v20.0.0 or higher)
 - npm, yarn, or pnpm
 - PostgreSQL Database
-- Redis Instance (Optional for local dev, required for production scaling)
+- Redis Instance (or Upstash account)
 - Cloudinary Account (for media uploads)
 
 ### 1. Clone the repository
@@ -95,60 +85,53 @@ cd Orbix---Connect-Beyond-Boundaries
 ```
 
 ### 2. Backend Setup
-Navigate to the server directory and install dependencies:
-```bash
-cd server
-npm install
-```
-Configure environment variables:
-```bash
-cp .env.example .env
-```
-Edit `.env` with your credentials:
-- `DATABASE_URL` (PostgreSQL connection string)
-- `JWT_SECRET`
-- Cloudinary credentials (`CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`)
-- Redis credentials (if applicable)
-
-Initialize the database:
-```bash
-npm run db:generate
-npm run db:push
-# Optional: Seed the database
-npm run db:seed
-```
-
-Start the backend development server:
-```bash
-npm run dev
-```
+1. Navigate to the server directory and install dependencies:
+   ```bash
+   cd server
+   npm install
+   ```
+2. Configure environment variables:
+   ```bash
+   cp .env.example .env
+   ```
+3. Edit `.env` with your credentials:
+   - `DATABASE_URL` (PostgreSQL connection string)
+   - `JWT_SECRET` (JWT signing key)
+   - Cloudinary credentials (`CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`)
+   - Redis credentials (`UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`)
+4. Initialize the database schema:
+   ```bash
+   npm run db:generate
+   npm run db:push
+   ```
+5. Start the backend dev server:
+   ```bash
+   npm run dev
+   ```
 
 ### 3. Frontend Setup
-Open a new terminal and navigate to the client directory:
-```bash
-cd client
-npm install
-```
+1. Navigate to the client directory:
+   ```bash
+   cd ../client
+   npm install
+   ```
+2. Configure environment variables:
+   ```bash
+   cp .env.local.example .env.local
+   ```
+3. Edit `.env.local` to point to your backend API URL.
+4. Start the Next.js development server:
+   ```bash
+   npm run dev
+   ```
 
-Configure environment variables:
-```bash
-cp .env.local.example .env.local
-```
-Edit `.env.local` to point to your backend API (default is usually `http://localhost:5000` depending on your setup).
-
-Start the Next.js development server:
-```bash
-npm run dev
-```
-
-The client will be running on `http://localhost:3000` and the server on `http://localhost:5000` (or as configured).
+The client will be running on `http://localhost:3000` and the server on `http://localhost:5000`.
 
 ---
 
 ## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome! 
-Feel free to check the [issues page](#) if you want to contribute.
 
 ## 📝 License
 

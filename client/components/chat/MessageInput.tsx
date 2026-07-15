@@ -11,28 +11,21 @@ import api from "@lib/api";
 interface MessageInputProps {
   chatId: string;
   onSendMessage: (content: string, type: string, replyToId?: string | null, attachments?: any[]) => Promise<void>;
-  replyingTo: any | null;
-  onCancelReply: () => void;
+  replyingTo?: any | null;
+  onCancelReply?: () => void;
 }
 
 export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply }: MessageInputProps) {
   const socket = useSocketStore((state) => state.socket);
   const user = useAuthStore((state) => state.user);
-  const blockedUserIds = useAuthStore((state) => state.blockedUserIds);
   const chat = useChatStore((state) => state.chats.find(c => c.id === chatId));
 
   const [text, setText] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [uploading, setUploading] = useState(false);
 
-  // Check if we've blocked this user
-  const partner = chat?.type === "DIRECT" ? chat.members.find(m => m.userId !== user?.id) : null;
-  const isBlockedByMe = partner ? blockedUserIds.includes(partner.userId) : false;
-
-  // Check group permissions
-  const myMember = chat?.type === "GROUP" ? chat.members.find(m => m.userId === user?.id) : null;
-  const isGroupAdmin = myMember?.role === "OWNER" || myMember?.role === "ADMIN";
-  const cannotMessage = chat?.type === "GROUP" && chat.restrictMessagingToAdmins && !isGroupAdmin;
+  const isBlockedByMe = false;
+  const cannotMessage = false;
 
   // Audio recording states
   const [isRecording, setIsRecording] = useState(false);
@@ -96,7 +89,7 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
       setText("");
 
       await onSendMessage(content, "TEXT", replyingTo?.id || null);
-      if (replyingTo) onCancelReply();
+      if (replyingTo && onCancelReply) onCancelReply();
     } catch (err) {
       console.error("Failed to send message:", err);
     }
@@ -182,7 +175,7 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
       };
 
       await onSendMessage(file.name, msgType, replyingTo?.id || null, [attachment]);
-      if (replyingTo) onCancelReply();
+      if (replyingTo && onCancelReply) onCancelReply();
     } catch (err: any) {
       console.error("File upload error:", err);
       alert(err.message || err.response?.data?.message || "File upload failed.");
@@ -302,7 +295,7 @@ export function MessageInput({ chatId, onSendMessage, replyingTo, onCancelReply 
       };
 
       await onSendMessage("Voice Message", "AUDIO", replyingTo?.id || null, [attachment]);
-      if (replyingTo) onCancelReply();
+      if (replyingTo && onCancelReply) onCancelReply();
     } catch (err: any) {
       console.error("Audio message upload error:", err);
       alert(err.message || err.response?.data?.message || "Failed to upload audio message.");

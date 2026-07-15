@@ -24,9 +24,4 @@ router.use(authenticate);
 router.get("/me", userController.getMe);
 router.patch("/me", validate(updateMeSchema), userController.updateMe);
 router.get("/search", userController.searchUsers);
-router.get("/blocked", userController.getBlockedUsers);
-router.get("/:username", userController.getUserByUsername);
-router.post("/block/:userId", userController.blockUser);
-router.delete("/block/:userId", userController.unblockUser);
-
 export default router;

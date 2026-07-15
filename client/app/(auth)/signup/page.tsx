@@ -16,7 +16,6 @@ export default function SignupPage() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -32,7 +31,6 @@ export default function SignupPage() {
         name,
         username,
         email,
-        phone,
         password,
       });
 
@@ -93,20 +91,6 @@ export default function SignupPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
-            required
-            disabled={loading}
-          />
-        </div>
-
-        <div className="space-y-1">
-          <label className="text-sm font-bold text-zinc-400 uppercase tracking-wider pl-1">
-            Phone Number
-          </label>
-          <Input
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="+919876543201"
             required
             disabled={loading}
           />

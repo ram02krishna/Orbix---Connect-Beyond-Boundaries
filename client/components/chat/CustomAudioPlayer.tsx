@@ -105,8 +105,8 @@ export function CustomAudioPlayer({ src, isSelf = false }: CustomAudioPlayerProp
         disabled={loading}
         className={`h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 cursor-pointer transition-all active:scale-95 disabled:opacity-50 ${
           isSelf
-            ? "bg-white text-blue-600 hover:bg-white/95 hover:shadow-md"
-            : "bg-blue-500 hover:bg-blue-600 text-white"
+            ? "bg-white text-zinc-700 hover:bg-white/95 hover:shadow-md"
+            : "bg-zinc-600 hover:bg-zinc-700 text-white"
         }`}
       >
         {loading ? (
@@ -129,7 +129,7 @@ export function CustomAudioPlayer({ src, isSelf = false }: CustomAudioPlayerProp
             onChange={handleSeek}
             disabled={loading || duration === 0}
             className={`w-full h-1 rounded-lg appearance-none cursor-pointer focus:outline-none ${
-              isSelf ? "accent-white bg-white/20" : "accent-blue-500 bg-zinc-250 dark:bg-zinc-700"
+              isSelf ? "accent-white bg-white/20" : "accent-zinc-600 bg-zinc-250 dark:bg-zinc-700"
             }`}
             style={{
               background: `linear-gradient(to right, ${

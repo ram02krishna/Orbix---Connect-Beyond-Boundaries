@@ -12,14 +12,10 @@ interface UserProfile {
 
 interface AuthState {
   user: UserProfile | null;
-  accessToken: string | null;
-  blockedUserIds: string[];
+  token: string | null;
   setAuth: (user: UserProfile, token: string) => void;
-  setAccessToken: (token: string) => void;
+  setToken: (token: string) => void;
   updateUser: (fields: Partial<UserProfile>) => void;
-  setBlockedUsers: (userIds: string[]) => void;
-  addBlockedUser: (userId: string) => void;
-  removeBlockedUser: (userId: string) => void;
   logout: () => void;
 }
 
@@ -27,24 +23,14 @@ export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       user: null,
-      accessToken: null,
-      blockedUserIds: [],
-      setAuth: (user, token) => set({ user, accessToken: token }),
-      setAccessToken: (token) => set({ accessToken: token }),
+      token: null,
+      setAuth: (user, token) => set({ user, token }),
+      setToken: (token) => set({ token }),
       updateUser: (fields) =>
-        set((state) => ({
-          user: state.user ? { ...state.user, ...fields } : null,
-        })),
-      setBlockedUsers: (userIds) => set({ blockedUserIds: userIds }),
-      addBlockedUser: (userId) =>
-        set((state) => ({
-          blockedUserIds: state.blockedUserIds.includes(userId) ? state.blockedUserIds : [...state.blockedUserIds, userId]
-        })),
-      removeBlockedUser: (userId) =>
-        set((state) => ({
-          blockedUserIds: state.blockedUserIds.filter(id => id !== userId)
-        })),
-      logout: () => set({ user: null, accessToken: null, blockedUserIds: [] }),
+          set((state) => ({
+            user: state.user ? { ...state.user, ...fields } : null,
+          })),
+      logout: () => set({ user: null, token: null }),
     }),
     {
       name: "orbix-auth", 

@@ -15,16 +15,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           "inline-flex items-center justify-center rounded-xl font-semibold transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50 disabled:opacity-50 disabled:pointer-events-none cursor-pointer select-none border border-transparent",
           {
             // Primary
-            "bg-brand-primary text-white hover:bg-brand-hover active:bg-brand-hover":
-              variant === "primary",
-            // Shimmer
-            "shimmer-button text-white border-none":
-              variant === "shimmer",
+            "bg-zinc-900 text-white hover:bg-zinc-800 active:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200 dark:active:bg-zinc-300":
+              variant === "primary" || variant === "shimmer",
             // Secondary
             "bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-100 hover:bg-zinc-200 dark:hover:bg-zinc-700 active:bg-zinc-300 dark:active:bg-zinc-600":
               variant === "secondary",
-            // Glass — subtle frosted look
-            "bg-white/10 dark:bg-white/5 border border-zinc-200 dark:border-white/10 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/10 active:bg-zinc-200 dark:active:bg-white/15 backdrop-blur-sm":
+            // Glass 
+            "bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-white dark:hover:bg-zinc-700 active:bg-zinc-100":
               variant === "glass",
             // Ghost — text only
             "text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/5":

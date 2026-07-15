@@ -10,7 +10,6 @@ import { ChatHeader } from "@components/chat/ChatHeader";
 import { MessageList } from "@components/chat/MessageList";
 import { MessageInput } from "@components/chat/MessageInput";
 import { ProfilePanel } from "@components/profile/ProfilePanel";
-import { ForwardMessageModal } from "@components/chat/ForwardMessageModal";
 import api from "@lib/api";
 
 const EMPTY_MESSAGES: any[] = [];
@@ -30,9 +29,7 @@ export default function ChatDetailPage({ params }: { params: Promise<{ chatId: s
   const setMessages = useChatStore((state) => state.setMessages);
   const addMessage = useChatStore((state) => state.addMessage);
 
-  const [replyingTo, setReplyingTo] = useState<any | null>(null);
-  const [forwardingMessage, setForwardingMessage] = useState<any | null>(null);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [showProfilePanel, setShowProfilePanel] = useState(false);
   const [loading, setLoading] = useState(() => {
     const cached = useChatStore.getState().messages[chatId];
     return !cached || cached.length === 0;
@@ -69,6 +66,7 @@ export default function ChatDetailPage({ params }: { params: Promise<{ chatId: s
     return () => {
       if (socket) {
         socket.emit("chat:leave", { chatId });
+        setSelectedChatId(null);
       }
     };
   }, [chatId, socket, isConnected, setSelectedChatId]);
@@ -101,37 +99,36 @@ export default function ChatDetailPage({ params }: { params: Promise<{ chatId: s
     }
   }, [chatId, setMessages, isConnected]);
 
-  // 3. Mark messages as read when chatId changes or new messages arrive
+  // 3. Mark messages as read when chat is opened or new messages load in
   useEffect(() => {
-    if (!chatId || !user?.id) return;
+    if (!socket || !isConnected || !user?.id || messages.length === 0) return;
 
-    // Check if there are any unread messages from other users
-    const hasUnread = messages.some(
-      (m) => m.senderId !== user.id && (!m.reads || !m.reads.some((r: any) => r.userId === user.id))
+    // Emit message:read for all messages from others that haven't been read by me yet
+    const unreadMessages = messages.filter(
+      (m) =>
+        m.senderId !== user.id &&
+        !m.id.startsWith("temp-") &&
+        !m.receipts?.some((r: any) => r.userId === user.id && r.readAt)
     );
 
-    if (hasUnread) {
-      api.post(`/chats/${chatId}/read`).catch((err) => {
-        console.error("Failed to mark chat messages as read:", err);
-      });
+    for (const msg of unreadMessages) {
+      socket.emit("message:read", { messageId: msg.id, chatId });
     }
-  }, [chatId, messages, user?.id]);
+  }, [chatId, messages, user?.id, socket, isConnected]);
 
-  const handleSendMessage = useCallback(async (
+  const sendMyMessage = useCallback(async (
     content: string,
     type: string,
     replyToId?: string | null,
     attachments?: any[]
   ) => {
     const tempId = `temp-${Date.now()}`;
-    const optimisticMessage: any = {
+    const tempMsg: any = {
       id: tempId,
       chatId,
       senderId: user?.id || "",
       type,
       content,
-      editedAt: null,
-      deletedAt: null,
       createdAt: new Date().toISOString(),
       sender: {
         id: user?.id || "",
@@ -139,20 +136,17 @@ export default function ChatDetailPage({ params }: { params: Promise<{ chatId: s
         username: user?.username || "me",
         avatarUrl: user?.avatarUrl || null,
       },
-      replyTo: replyToId ? messages.find((m) => m.id === replyToId) : null,
-      reactions: [],
-      reads: [],
       attachments: attachments || [],
       isSending: true,
+      receipts: [],
     };
 
-    addMessage(chatId, optimisticMessage);
+    addMessage(chatId, tempMsg);
 
     try {
       const res = await api.post(`/messages/${chatId}`, {
         content,
         type,
-        replyToId,
         attachments,
       });
 
@@ -162,7 +156,7 @@ export default function ChatDetailPage({ params }: { params: Promise<{ chatId: s
       console.error("Error sending message:", err);
       useChatStore.getState().failOptimisticMessage(chatId, tempId);
     }
-  }, [chatId, addMessage, user, messages]);
+  }, [chatId, addMessage, user]);
 
   const handleRetryMessage = useCallback(async (msg: any) => {
     const tempId = msg.id;
@@ -172,7 +166,6 @@ export default function ChatDetailPage({ params }: { params: Promise<{ chatId: s
       const res = await api.post(`/messages/${chatId}`, {
         content: msg.content,
         type: msg.type,
-        replyToId: msg.replyTo?.id || null,
         attachments: msg.attachments || [],
       });
       const message = res.data.data.message;
@@ -183,62 +176,7 @@ export default function ChatDetailPage({ params }: { params: Promise<{ chatId: s
     }
   }, [chatId]);
 
-  const handleReact = useCallback(async (messageId: string, emoji: string) => {
-    if (messageId.startsWith("temp-")) return;
-    try {
-      await api.post(`/messages/${messageId}/react`, { emoji });
-    } catch (err) {
-      console.error("Error toggling reaction:", err);
-    }
-  }, []);
-
-  const handleDeleteMessage = useCallback(async (messageId: string, mode: "me" | "everyone") => {
-    if (messageId.startsWith("temp-")) {
-      useChatStore.getState().deleteMessage(chatId, messageId, "me");
-      return;
-    }
-    try {
-      await api.delete(`/messages/${messageId}?mode=${mode}`);
-    } catch (err) {
-      console.error("Error deleting message:", err);
-    }
-  }, [chatId]);
-
-  const handleEditMessage = useCallback(async (messageId: string, content: string) => {
-    if (messageId.startsWith("temp-")) return;
-    try {
-      await api.patch(`/messages/${messageId}`, { content });
-    } catch (err) {
-      console.error("Error editing message:", err);
-      throw err;
-    }
-  }, []);
-
-  const handleReply = useCallback((msg: any) => {
-    setReplyingTo(msg);
-  }, []);
-  
-  const handleForwardClick = useCallback((msg: any) => {
-    setForwardingMessage(msg);
-  }, []);
-
-  const handleExecuteForward = useCallback(async (targetChatId: string) => {
-    if (!forwardingMessage) return;
-    try {
-      const res = await api.post(`/messages/${targetChatId}`, {
-        content: forwardingMessage.content,
-        type: forwardingMessage.type,
-        attachments: forwardingMessage.attachments,
-      });
-      // Optionally route to the new chat
-      router.push(`/chats/${targetChatId}`);
-    } catch (err) {
-      console.error("Failed to execute forward:", err);
-      throw err;
-    }
-  }, [forwardingMessage, router]);
-
-  const handleLoadMoreMessages = useCallback(async () => {
+  const loadOlderMessages = useCallback(async () => {
     if (loadingMore || messages.length === 0) return;
     const hasMore = useChatStore.getState().hasMoreMessages[chatId] !== false;
     if (!hasMore) return;
@@ -264,17 +202,13 @@ export default function ChatDetailPage({ params }: { params: Promise<{ chatId: s
   }, [chatId, messages, loadingMore]);
 
   return (
-    <div className="flex-1 flex h-full min-w-0 bg-[#f9fafb] dark:bg-[#030906] text-zinc-900 dark:text-zinc-100 relative overflow-hidden transition-colors duration-300">
-
-      <div className="absolute top-1/4 left-1/3 h-[500px] w-[500px] rounded-full bg-blue-500/8 dark:bg-blue-500/5 blur-[120px] pointer-events-none z-0 blob-glow-1" />
-      <div className="absolute bottom-10 right-10 h-[500px] w-[500px] rounded-full bg-brand-primary/8 dark:bg-brand-primary/4 blur-[120px] pointer-events-none z-0 blob-glow-2" />
-
-      <div className="flex-1 flex flex-col h-full min-w-0 bg-white/30 dark:bg-[#111b21]/30 backdrop-blur-3xl relative z-10 border-r border-[#e9edef]/40 dark:border-[#222e35]/15">
+    <div className="flex-1 flex h-full min-w-0 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 relative overflow-hidden">
+      <div className="flex-1 flex flex-col h-full min-w-0 relative z-10 border-r border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
         
         <ChatHeader
           chatId={chatId}
-          onToggleProfile={() => setIsProfileOpen(!isProfileOpen)}
-          isProfileOpen={isProfileOpen}
+          onToggleProfile={() => setShowProfilePanel(!showProfilePanel)}
+          isProfileOpen={showProfilePanel}
           isSearchOpen={isSearchOpen}
           setIsSearchOpen={setIsSearchOpen}
           searchQuery={searchQuery}
@@ -284,42 +218,26 @@ export default function ChatDetailPage({ params }: { params: Promise<{ chatId: s
         <MessageList
           chatId={chatId}
           messages={messages}
-          onReply={handleReply}
-          onReact={handleReact}
-          onDelete={handleDeleteMessage}
-          onEdit={handleEditMessage}
-          onForward={handleForwardClick}
           searchQuery={searchQuery}
-          onLoadMore={handleLoadMoreMessages}
+          onLoadMore={loadOlderMessages}
           loadingMore={loadingMore}
-          onRetry={handleRetryMessage}
           isLoading={loading}
         />
 
         {/* Input Bar */}
         <MessageInput
           chatId={chatId}
-          onSendMessage={handleSendMessage}
-          replyingTo={replyingTo}
-          onCancelReply={() => setReplyingTo(null)}
+          onSendMessage={sendMyMessage}
         />
       </div>
 
-      {isProfileOpen && (
-        <div className="absolute inset-0 sm:relative sm:w-80 flex-shrink-0 h-full border-l border-[#e9edef]/60 dark:border-[#222e35]/30 z-30 shadow-2xl bg-white dark:bg-[#111b21]">
+      {showProfilePanel && (
+        <div className="absolute inset-0 sm:relative sm:w-80 flex-shrink-0 h-full border-l border-zinc-200 dark:border-zinc-800 z-30 shadow-md bg-white dark:bg-zinc-900">
           <ProfilePanel
             chatId={chatId}
-            onClose={() => setIsProfileOpen(false)}
+            onClose={() => setShowProfilePanel(false)}
           />
         </div>
-      )}
-      
-      {forwardingMessage && (
-        <ForwardMessageModal
-          messageToForward={forwardingMessage}
-          onClose={() => setForwardingMessage(null)}
-          onForward={handleExecuteForward}
-        />
       )}
     </div>
   );

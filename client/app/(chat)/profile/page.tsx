@@ -124,7 +124,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 select-none overflow-y-auto transition-colors duration-300">
+    <div className="flex-1 flex flex-col h-full bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 select-none overflow-y-auto transition-colors duration-300">
       {/* Header */}
       <div className="p-4 flex items-center justify-between border-b border-[#e9edef] dark:border-[#222e35] bg-[#f0f2f5] dark:bg-[#202c33]">
         <div className="flex items-center gap-3">

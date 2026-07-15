@@ -40,15 +40,14 @@ export default function LoginPage() {
         }
       });
 
-      const { user, accessToken } = res.data.data;
-      setAuth(user, accessToken);
-      connectSocket(accessToken);
+      const { user, token } = res.data.data;
+      setAuth(user, token);
+      connectSocket(token);
       router.push("/chats");
     } catch (err: any) {
       console.warn("Login failed:", err.message || err);
       const msg = err.response?.data?.message || "Invalid credentials — please try again.";
 
-      // If user is unverified, redirect them to verify-email
       if (err.response?.status === 403 && msg.toLowerCase().includes("verify")) {
         setError("Your account is not fully verified. Please register again or request a verification code.");
       } else {
@@ -70,13 +69,13 @@ export default function LoginPage() {
 
         <div className="space-y-1">
           <label className="text-sm font-bold text-zinc-400 uppercase tracking-wider pl-1">
-            Username or Phone
+            Username or Email
           </label>
           <Input
             type="text"
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
-            placeholder="username or +919876543201"
+            placeholder="username or email@example.com"
             required
             disabled={loading}
           />
@@ -143,14 +142,12 @@ function getDeviceDetails() {
   let browser = "Web Client";
   let type = "DESKTOP";
 
-  // OS detection
   if (/windows/i.test(ua)) os = "Windows";
   else if (/macintosh|mac os x/i.test(ua)) os = "macOS";
   else if (/android/i.test(ua)) { os = "Android"; type = "MOBILE"; }
   else if (/iphone|ipad|ipod/i.test(ua)) { os = "iOS"; type = "MOBILE"; }
   else if (/linux/i.test(ua)) os = "Linux";
 
-  // Browser detection
   if (/chrome|crios/i.test(ua) && !/edge|edg/i.test(ua) && !/opr|opera/i.test(ua)) browser = "Chrome";
   else if (/firefox|fxios/i.test(ua)) browser = "Firefox";
   else if (/safari/i.test(ua) && !/chrome|crios/i.test(ua)) browser = "Safari";

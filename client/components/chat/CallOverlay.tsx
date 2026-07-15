@@ -3,10 +3,9 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useCallStore } from "@hooks/useCallStore";
-import { Phone, PhoneOff, Mic, MicOff, Video, VideoOff, Volume2, Volume1, MonitorUp, MonitorOff } from "lucide-react";
+import { Phone, PhoneOff, Mic, MicOff, Video, VideoOff, Volume2, Volume1, VolumeX, MonitorUp, MonitorOff } from "lucide-react";
 import { Avatar } from "@components/ui/Avatar";
-import { motion, AnimatePresence } from "framer-motion";
-
+import { toast } from "sonner";
 // Helper component to bind a MediaStream to a video element
 function VideoStream({ stream, isLocal = false }: { stream: MediaStream, isLocal?: boolean }) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -49,6 +48,8 @@ export function CallOverlay() {
     toggleCamera,
     toggleScreenShare,
     isScreenSharing,
+    ringVolume,
+    setRingVolume,
   } = useCallStore();
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -75,6 +76,39 @@ export function CallOverlay() {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [callState]);
+
+  // Auto-focus window on call state change to guarantee browser keydown capture
+  useEffect(() => {
+    if (callState === "incoming" || callState === "outgoing") {
+      window.focus();
+    }
+  }, [callState]);
+
+  // Handle volume control via keys F2/- (Volume Down) and F3/+/= (Volume Up)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (callState !== "incoming" && callState !== "outgoing") return;
+      
+      if (e.key === "F2" || e.key === "-") {
+        e.preventDefault();
+        const currentVol = useCallStore.getState().ringVolume;
+        const newVol = Math.max(0, currentVol - 0.1);
+        setRingVolume(newVol);
+        toast.info(`Volume: ${Math.round(newVol * 100)}%`, { id: "call-volume", duration: 1500 });
+      } else if (e.key === "F3" || e.key === "+" || e.key === "=") {
+        e.preventDefault();
+        const currentVol = useCallStore.getState().ringVolume;
+        const newVol = Math.min(1, currentVol + 0.1);
+        setRingVolume(newVol);
+        toast.info(`Volume: ${Math.round(newVol * 100)}%`, { id: "call-volume", duration: 1500 });
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [callState, setRingVolume]);
 
   if (callState === "idle" || (!partner && !isGroupCall)) return null;
 
@@ -104,14 +138,11 @@ export function CallOverlay() {
   else if (numStreams > 4) gridCols = "grid-cols-3 grid-rows-2";
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[999] flex flex-col items-center justify-center ios-call-panel text-white select-none overflow-hidden"
+    <React.Fragment>
+      <div
+        className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-white/98 dark:bg-zinc-950/98 backdrop-blur-2xl text-zinc-900 dark:text-white select-none overflow-hidden"
       >
-        <div className="absolute top-1/4 left-1/4 h-[500px] w-[500px] rounded-full bg-blue-600/10 blur-[120px] pointer-events-none animate-pulse-slow z-0" />
+        <div className="absolute top-1/4 left-1/4 h-[500px] w-[500px] rounded-full bg-zinc-300/30 dark:bg-zinc-700/10 blur-[120px] pointer-events-none animate-pulse-slow z-0" />
         <div className="absolute bottom-1/4 right-1/4 h-[500px] w-[500px] rounded-full bg-brand-primary/10 blur-[120px] pointer-events-none animate-pulse z-0" />
 
         {/* Real-time Feeds */}
@@ -163,13 +194,11 @@ export function CallOverlay() {
 
                 {/* Local Video Picture-in-Picture */}
                 {!isCameraOff && localStream && (
-                  <motion.div 
-                    drag
-                    dragConstraints={containerRef}
+                  <div
                     className="absolute top-4 right-4 sm:top-6 sm:right-6 w-24 h-36 sm:w-32 sm:h-44 rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-zinc-900 z-20 cursor-grab active:cursor-grabbing"
                   >
                     <VideoStream stream={localStream} isLocal={true} />
-                  </motion.div>
+                  </div>
                 )}
               </div>
             )}
@@ -200,14 +229,14 @@ export function CallOverlay() {
             </div>
 
             <div className="space-y-1">
-              <h2 className="text-2xl font-bold tracking-tight text-white drop-shadow-md">
+              <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white drop-shadow-md">
                 {displayName}
               </h2>
-              <p className="text-base font-medium text-blue-400 drop-shadow-sm tracking-wide">
+              <p className="text-base font-medium text-zinc-500 dark:text-zinc-400 drop-shadow-sm tracking-wide">
                 {callState === "outgoing" && "Calling..."}
                 {callState === "incoming" && `Incoming ${isGroupCall ? "Group " : ""}${callType === "video" ? "Video" : "Voice"} Call`}
                 {callState === "connected" && (
-                  <span className="text-zinc-300 font-semibold">
+                  <span className="text-zinc-700 dark:text-zinc-300 font-semibold">
                     {callType === "video" ? (isGroupCall ? "Group Video Chat" : "Video Chat") : formatTime(callDuration)}
                   </span>
                 )}
@@ -226,17 +255,17 @@ export function CallOverlay() {
                   <div className="h-16 w-16 rounded-full bg-red-600 hover:bg-red-700 active:scale-95 flex items-center justify-center shadow-lg transition-all duration-150 cursor-pointer">
                     <PhoneOff size={26} className="text-white transform rotate-135" />
                   </div>
-                  <span className="text-base text-zinc-400 group-hover:text-zinc-200 transition-colors font-medium">Decline</span>
+                  <span className="text-base text-zinc-600 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-200 transition-colors font-medium">Decline</span>
                 </button>
 
                 <button
                   onClick={handleAccept}
                   className="flex flex-col items-center gap-2 group focus:outline-none"
                 >
-                  <div className="h-16 w-16 rounded-full bg-blue-500 hover:bg-blue-600 active:scale-95 flex items-center justify-center shadow-lg transition-all duration-150 cursor-pointer animate-bounce">
+                  <div className="h-16 w-16 rounded-full bg-zinc-600 hover:bg-zinc-700 active:scale-95 flex items-center justify-center shadow-lg transition-all duration-150 cursor-pointer animate-bounce">
                     <Phone size={26} className="text-white" />
                   </div>
-                  <span className="text-base text-zinc-400 group-hover:text-zinc-200 transition-colors font-medium">Accept</span>
+                  <span className="text-base text-zinc-600 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-200 transition-colors font-medium">Accept</span>
                 </button>
               </div>
             )}
@@ -250,8 +279,8 @@ export function CallOverlay() {
                     disabled={callState === "outgoing"}
                     className={`h-12 w-12 rounded-full flex items-center justify-center border transition-all duration-150 active:scale-95 cursor-pointer disabled:opacity-40 disabled:pointer-events-none ${
                       isMuted
-                        ? "bg-red-500/80 border-red-500 text-white"
-                        : "bg-white/10 border-white/15 text-white hover:bg-white/20"
+                        ? "bg-red-500/90 border-red-500 text-white"
+                        : "bg-zinc-200/50 dark:bg-white/10 border-zinc-300 dark:border-white/15 text-zinc-700 dark:text-white hover:bg-zinc-300/50 dark:hover:bg-white/20"
                     }`}
                     title={isMuted ? "Unmute Mic" : "Mute Mic"}
                   >
@@ -264,8 +293,8 @@ export function CallOverlay() {
                       disabled={callState === "outgoing"}
                       className={`h-12 w-12 rounded-full flex items-center justify-center border transition-all duration-150 active:scale-95 cursor-pointer disabled:opacity-40 disabled:pointer-events-none ${
                         isCameraOff
-                          ? "bg-red-500/80 border-red-500 text-white"
-                          : "bg-white/10 border-white/15 text-white hover:bg-white/20"
+                          ? "bg-red-500/90 border-red-500 text-white"
+                          : "bg-zinc-200/50 dark:bg-white/10 border-zinc-300 dark:border-white/15 text-zinc-700 dark:text-white hover:bg-zinc-300/50 dark:hover:bg-white/20"
                       }`}
                       title={isCameraOff ? "Turn Camera On" : "Turn Camera Off"}
                     >
@@ -279,8 +308,8 @@ export function CallOverlay() {
                       disabled={callState === "outgoing"}
                       className={`h-12 w-12 rounded-full flex items-center justify-center border transition-all duration-150 active:scale-95 cursor-pointer disabled:opacity-40 disabled:pointer-events-none ${
                         isScreenSharing
-                          ? "bg-brand-primary/80 border-brand-primary text-white"
-                          : "bg-white/10 border-white/15 text-white hover:bg-white/20"
+                          ? "bg-brand-primary/90 border-brand-primary text-white"
+                          : "bg-zinc-200/50 dark:bg-white/10 border-zinc-300 dark:border-white/15 text-zinc-700 dark:text-white hover:bg-zinc-300/50 dark:hover:bg-white/20"
                       }`}
                       title={isScreenSharing ? "Stop Screen Share" : "Share Screen"}
                     >
@@ -294,8 +323,8 @@ export function CallOverlay() {
                       disabled={callState === "outgoing"}
                       className={`h-12 w-12 rounded-full flex items-center justify-center border transition-all duration-150 active:scale-95 cursor-pointer disabled:opacity-40 disabled:pointer-events-none ${
                         isSpeaker
-                          ? "bg-white/10 border-white/15 text-white hover:bg-white/20"
-                          : "bg-red-500/80 border-red-500 text-white"
+                          ? "bg-zinc-200/50 dark:bg-white/10 border-zinc-300 dark:border-white/15 text-zinc-700 dark:text-white hover:bg-zinc-300/50 dark:hover:bg-white/20"
+                          : "bg-red-500/90 border-red-500 text-white"
                       }`}
                       title={isSpeaker ? "Speaker On" : "Speaker Off"}
                     >
@@ -311,7 +340,7 @@ export function CallOverlay() {
                   <div className="h-16 w-16 rounded-full bg-red-600 hover:bg-red-700 active:scale-95 flex items-center justify-center shadow-lg transition-all duration-150 cursor-pointer">
                     <PhoneOff size={26} className="text-white" />
                   </div>
-                  <span className="text-base text-zinc-400 group-hover:text-zinc-200 transition-colors font-medium">
+                  <span className="text-base text-zinc-600 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-200 transition-colors font-medium">
                     {callState === "outgoing" ? "Cancel" : "End Call"}
                   </span>
                 </button>
@@ -323,7 +352,7 @@ export function CallOverlay() {
 
         </div>
 
-      </motion.div>
-    </AnimatePresence>
+      </div>
+    </React.Fragment>
   );
 }

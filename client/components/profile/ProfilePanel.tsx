@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { X, Image, FileText, Download, Plus, Trash2, Edit2, Check, Loader2, LogOut, Search, Ban, Star } from "lucide-react";
+import { X, Image, FileText, Download, Plus, Trash2, Edit2, Check, Loader2, LogOut, Search, Star } from "lucide-react";
 import { Avatar } from "@components/ui/Avatar";
 import { Button } from "@components/ui/Button";
 import { useChatStore } from "@hooks/useChatStore";
@@ -28,7 +28,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
   const chat = chats.find((c) => c.id === chatId);
 
   // Tabs: members (groups only), media, files, starred
-  const [activeTab, setActiveTab] = useState<"members" | "media" | "files" | "starred" | "settings">(
+  const [activeTab, setActiveTab] = useState<"members" | "media" | "files" | "starred">(
     chat?.type === "GROUP" ? "members" : "media"
   );
 
@@ -49,7 +49,6 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
         }
       }
     }
-    list.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     setStarredMessages(list);
   };
 
@@ -65,10 +64,6 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [savingTitle, setSavingTitle] = useState(false);
-
-  // Block contact state (DMs only)
-  const [isBlocked, setIsBlocked] = useState(false);
-  const [loadingBlock, setLoadingBlock] = useState(false);
 
   // Group member adding state
   const [showAddMember, setShowAddMember] = useState(false);
@@ -88,7 +83,6 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
         bio: (partner as any)?.bio || "Hey there! I am using Orbix.",
         id: partner?.id || "",
         email: partner?.email || null,
-        phone: partner?.phone || null,
       };
     }
     return {
@@ -98,7 +92,6 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
       bio: `Group conversation • ${chat?.members.length || 0} members`,
       id: "",
       email: null,
-      phone: null,
     };
   };
 
@@ -109,26 +102,6 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
   const attachments = messages.flatMap((m) => m.attachments || []);
   const mediaFiles = attachments.filter((att) => att.mimeType.startsWith("image/") || att.mimeType.startsWith("video/"));
   const documentFiles = attachments.filter((att) => !att.mimeType.startsWith("image/") && !att.mimeType.startsWith("video/"));
-
-  // Fetch block list on mount for DMs
-  useEffect(() => {
-    if (chat?.type === "DIRECT" && partner.id) {
-      api.get("/users/blocked").then((res) => {
-        const blockedUsers = res.data.data.users || [];
-        const isUserBlocked = blockedUsers.some((u: any) => u.id === partner.id);
-        setIsBlocked(isUserBlocked);
-        
-        // Ensure store is synced
-        if (isUserBlocked) {
-          useAuthStore.getState().addBlockedUser(partner.id);
-        } else {
-          useAuthStore.getState().removeBlockedUser(partner.id);
-        }
-      }).catch((err) => {
-        console.error("Failed to fetch blocked users:", err);
-      });
-    }
-  }, [chat?.type, partner.id]);
 
   // Search users to add to group
   useEffect(() => {
@@ -164,39 +137,13 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
     window.location.href = downloadUrl;
   };
 
-  // Block/Unblock contact action
-  const handleToggleBlock = async () => {
-    setLoadingBlock(true);
-    try {
-      if (isBlocked) {
-        await api.delete(`/users/block/${partner.id}`);
-        setIsBlocked(false);
-        useAuthStore.getState().removeBlockedUser(partner.id);
-      } else {
-        await api.post(`/users/block/${partner.id}`);
-        setIsBlocked(true);
-        useAuthStore.getState().addBlockedUser(partner.id);
-      }
-    } catch (err) {
-      console.error("Toggle block error:", err);
-      alert("Failed to update block status.");
-    } finally {
-      setLoadingBlock(false);
-    }
-  };
-
   // Group roles resolution
-  const myMemberObj = chat.members.find((m) => m.userId === user?.id);
-  const myRole = myMemberObj?.role; // OWNER, ADMIN, MEMBER
-  const isGroupManager = myRole === "OWNER" || myRole === "ADMIN";
+  const myRole = chat.createdBy === user?.id ? "OWNER" : "MEMBER";
+  const isGroupManager = chat.createdBy === user?.id;
 
   const canRemoveMember = (member: any) => {
     if (member.userId === user?.id) return false;
-    if (myRole === "OWNER") return true;
-    if (myRole === "ADMIN") {
-      return member.role === "MEMBER"; // Admin can only remove ordinary members
-    }
-    return false;
+    return chat.createdBy === user?.id; // Only group creator can remove members
   };
 
   // Group Info Edit
@@ -222,32 +169,39 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
   const handleAddMember = async (targetUser: any) => {
     setActionInProgress(targetUser.id);
     try {
-      const res = await api.post(`/chats/${chat.id}/members`, { userId: targetUser.id });
-      const newMember = res.data.data.member;
-      
-      const updatedMembers = [...chat.members, newMember];
-      useChatStore.getState().updateChat(chat.id, { members: updatedMembers });
-      
+      await api.post(`/chats/${chat.id}/members`, { userId: targetUser.id });
+      // Refresh local store members
+      const newMemberObj = {
+        id: `temp-${Date.now()}`,
+        userId: targetUser.id,
+        chatId: chat.id,
+        createdAt: new Date().toISOString(),
+        joinedAt: new Date().toISOString(),
+        user: targetUser,
+      };
+      useChatStore.getState().updateChat(chat.id, {
+        members: [...chat.members, newMemberObj],
+      });
       setMemberSearchQuery("");
-      setShowAddMember(false);
-    } catch (err: any) {
+      setMemberSearchResults([]);
+    } catch (err) {
       console.error("Failed to add member:", err);
-      alert(err.response?.data?.message || "Failed to add member.");
+      alert("Could not add user to the group.");
     } finally {
       setActionInProgress(null);
     }
   };
 
   const handleRemoveMember = async (targetUserId: string) => {
-    if (!confirm("Are you sure you want to remove this member?")) return;
     setActionInProgress(targetUserId);
     try {
       await api.delete(`/chats/${chat.id}/members/${targetUserId}`);
-      const updatedMembers = chat.members.filter((m) => m.userId !== targetUserId);
-      useChatStore.getState().updateChat(chat.id, { members: updatedMembers });
+      useChatStore.getState().updateChat(chat.id, {
+        members: chat.members.filter((m) => m.userId !== targetUserId),
+      });
     } catch (err) {
       console.error("Failed to remove member:", err);
-      alert("Failed to remove member.");
+      alert("Could not remove member from the group.");
     } finally {
       setActionInProgress(null);
     }
@@ -256,7 +210,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
   const handleLeaveGroup = async () => {
     if (!confirm("Are you sure you want to leave this group?")) return;
     try {
-      await api.delete(`/chats/${chat.id}/members/${user?.id}`);
+      await api.delete(`/chats/${chat.id}/leave`);
       useChatStore.getState().deleteChat(chat.id);
       onClose();
       router.push("/chats");
@@ -314,7 +268,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
         ) : (
           <div className="flex items-center gap-2 max-w-full">
             <h4 className="text-xl font-bold truncate text-zinc-950 dark:text-white">{partner.name}</h4>
-            {chat.type === "GROUP" && (!chat.restrictInfoToAdmins || isGroupManager) && (
+            {chat.type === "GROUP" && isGroupManager && (
               <button
                 onClick={() => {
                   setNewTitle(chat.title || "");
@@ -336,7 +290,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
           "{partner.bio}"
         </p>
 
-        {/* Dynamic Partner Details (Email and Phone for DMs) */}
+        {/* Dynamic Partner Details (Email for DMs) */}
         {chat.type === "DIRECT" && (
           <div className="w-full mt-3.5 space-y-2">
             {partner.email && (
@@ -345,30 +299,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
                 <span className="text-base font-semibold truncate w-full text-zinc-800 dark:text-zinc-200 select-all">{partner.email}</span>
               </div>
             )}
-            {partner.phone && (
-              <div className="w-full flex flex-col items-start gap-0.5 px-3 py-2 rounded-xl border border-[#e9edef]/35 dark:border-white/5 bg-white/10 dark:bg-black/10 text-left">
-                <span className="text-base uppercase font-bold tracking-wider text-zinc-400 dark:text-zinc-500">Phone Number</span>
-                <span className="text-base font-semibold truncate w-full text-zinc-800 dark:text-zinc-200 select-all">{partner.phone}</span>
-              </div>
-            )}
-            
             {/* Block / Unblock direct contact */}
-            <div className="pt-2">
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={handleToggleBlock}
-                disabled={loadingBlock}
-                className="w-full border-red-500/20 hover:border-red-500/40 text-red-500 hover:bg-red-500/10 flex items-center justify-center gap-1.5"
-              >
-                {loadingBlock ? (
-                  <Loader2 size={14} className="animate-spin" />
-                ) : (
-                  <Ban size={14} />
-                )}
-                {isBlocked ? "Unblock Contact" : "Block Contact"}
-              </Button>
-            </div>
           </div>
         )}
       </div>
@@ -380,30 +311,18 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
             onClick={() => setActiveTab("members")}
             className={`px-3 py-3 text-center border-b-2 flex-shrink-0 cursor-pointer transition-colors ${
               activeTab === "members"
-                ? "border-[#00a884] text-[#00a884] dark:border-blue-500 dark:text-blue-400"
+                ? "border-[#0284c7] text-[#0284c7] dark:border-blue-500 dark:text-blue-400"
                 : "border-transparent text-[#667781] hover:text-[#111b21] dark:text-zinc-400 dark:hover:text-[#e9edef]"
             }`}
           >
             Members ({chat.members.length})
           </button>
         )}
-        {chat.type === "GROUP" && isGroupManager && (
-          <button
-            onClick={() => setActiveTab("settings")}
-            className={`px-3 py-3 text-center border-b-2 flex-shrink-0 cursor-pointer transition-colors ${
-              activeTab === "settings"
-                ? "border-[#00a884] text-[#00a884] dark:border-blue-500 dark:text-blue-400"
-                : "border-transparent text-[#667781] hover:text-[#111b21] dark:text-zinc-400 dark:hover:text-[#e9edef]"
-            }`}
-          >
-            Settings
-          </button>
-        )}
         <button
           onClick={() => setActiveTab("media")}
           className={`px-3 py-3 text-center border-b-2 flex-shrink-0 cursor-pointer transition-colors ${
             activeTab === "media"
-              ? "border-[#00a884] text-[#00a884] dark:border-blue-500 dark:text-blue-400"
+              ? "border-[#0284c7] text-[#0284c7] dark:border-blue-500 dark:text-blue-400"
               : "border-transparent text-[#667781] hover:text-[#111b21] dark:text-zinc-400 dark:hover:text-[#e9edef]"
           }`}
         >
@@ -413,7 +332,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
           onClick={() => setActiveTab("files")}
           className={`px-3 py-3 text-center border-b-2 flex-shrink-0 cursor-pointer transition-colors ${
             activeTab === "files"
-              ? "border-[#00a884] text-[#00a884] dark:border-blue-500 dark:text-blue-400"
+              ? "border-[#0284c7] text-[#0284c7] dark:border-blue-500 dark:text-blue-400"
               : "border-transparent text-[#667781] hover:text-[#111b21] dark:text-zinc-400 dark:hover:text-[#e9edef]"
           }`}
         >
@@ -423,7 +342,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
           onClick={() => setActiveTab("starred")}
           className={`px-3 py-3 text-center border-b-2 flex-shrink-0 cursor-pointer transition-colors ${
             activeTab === "starred"
-              ? "border-[#00a884] text-[#00a884] dark:border-blue-500 dark:text-blue-400"
+              ? "border-[#0284c7] text-[#0284c7] dark:border-blue-500 dark:text-blue-400"
               : "border-transparent text-[#667781] hover:text-[#111b21] dark:text-zinc-400 dark:hover:text-[#e9edef]"
           }`}
         >
@@ -434,65 +353,6 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
       {/* Tabs Content */}
       <div className="flex-1 overflow-y-auto p-4 scrollbar-thin">
         
-        {/* Settings Tab */}
-        {activeTab === "settings" && chat.type === "GROUP" && isGroupManager && (
-          <div className="space-y-4">
-            <h4 className="text-base font-bold text-zinc-900 dark:text-white">Group Permissions</h4>
-            
-            <div className="flex items-center justify-between p-3 bg-zinc-100 dark:bg-zinc-800/50 rounded-xl border border-zinc-200 dark:border-white/5">
-              <div>
-                <p className="text-base font-semibold text-zinc-900 dark:text-white">Send Messages</p>
-                <p className="text-base text-zinc-500">Allow all participants to send messages</p>
-              </div>
-              <div
-                onClick={async () => {
-                  try {
-                    await api.patch(`/chats/${chat.id}`, { restrictMessagingToAdmins: !chat.restrictMessagingToAdmins });
-                    useChatStore.getState().updateChat(chat.id, { restrictMessagingToAdmins: !chat.restrictMessagingToAdmins });
-                  } catch (err) {
-                    console.error("Failed to update setting", err);
-                  }
-                }}
-                className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
-                  !chat.restrictMessagingToAdmins ? "bg-brand-primary" : "bg-zinc-400 dark:bg-zinc-600"
-                }`}
-              >
-                <div
-                  className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${
-                    !chat.restrictMessagingToAdmins ? "translate-x-4" : ""
-                  }`}
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between p-3 bg-zinc-100 dark:bg-zinc-800/50 rounded-xl border border-zinc-200 dark:border-white/5">
-              <div>
-                <p className="text-base font-semibold text-zinc-900 dark:text-white">Edit Group Info</p>
-                <p className="text-base text-zinc-500">Allow all participants to edit group info</p>
-              </div>
-              <div
-                onClick={async () => {
-                  try {
-                    await api.patch(`/chats/${chat.id}`, { restrictInfoToAdmins: !chat.restrictInfoToAdmins });
-                    useChatStore.getState().updateChat(chat.id, { restrictInfoToAdmins: !chat.restrictInfoToAdmins });
-                  } catch (err) {
-                    console.error("Failed to update setting", err);
-                  }
-                }}
-                className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
-                  !chat.restrictInfoToAdmins ? "bg-brand-primary" : "bg-zinc-400 dark:bg-zinc-600"
-                }`}
-              >
-                <div
-                  className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${
-                    !chat.restrictInfoToAdmins ? "translate-x-4" : ""
-                  }`}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Members Tab */}
         {activeTab === "members" && chat.type === "GROUP" && (
           <div className="space-y-4">
@@ -502,7 +362,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
                 {!showAddMember ? (
                   <button
                     onClick={() => setShowAddMember(true)}
-                    className="flex items-center gap-2 text-base font-bold text-[#00a884] dark:text-blue-400 hover:underline cursor-pointer"
+                    className="flex items-center gap-2 text-base font-bold text-[#0284c7] dark:text-blue-400 hover:underline cursor-pointer"
                   >
                     <Plus size={14} className="stroke-[2.5px]" /> Add Member
                   </button>
@@ -550,7 +410,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
                             </div>
                             <button
                               disabled={actionInProgress === u.id}
-                              className="p-1 rounded bg-[#00a884] text-white hover:bg-[#008f6f] disabled:opacity-55"
+                              className="p-1 rounded bg-[#0284c7] text-white hover:bg-[#0369a1] disabled:opacity-55"
                             >
                               {actionInProgress === u.id ? <Loader2 size={10} className="animate-spin" /> : <Plus size={10} />}
                             </button>
@@ -568,11 +428,10 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
               {chat.members.map((member) => {
                 const isMe = member.userId === user?.id;
                 const canBeRemoved = canRemoveMember(member);
+                const memberRole = member.userId === chat.createdBy ? "OWNER" : "MEMBER";
                 const roleBadgeColor =
-                  member.role === "OWNER"
-                    ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20"
-                    : member.role === "ADMIN"
-                    ? "bg-blue-500/10 text-blue-600 dark:text-blue-450 border border-blue-500/20"
+                  memberRole === "OWNER"
+                    ? "bg-[#06A0F8]/10 text-[#06A0F8] border border-[#06A0F8]/20"
                     : "bg-zinc-200/50 dark:bg-zinc-800/40 text-zinc-550 dark:text-zinc-400";
 
                 return (
@@ -589,7 +448,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
 
                     <div className="flex items-center gap-1.5 flex-shrink-0">
                       <span className={`text-base font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider ${roleBadgeColor}`}>
-                        {member.role}
+                        {memberRole}
                       </span>
                       {canBeRemoved && (
                         <button
@@ -665,7 +524,7 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
                   onClick={() => handleDownload(att.fileUrl, att.fileName)}
                   className="flex items-center gap-3 p-2.5 rounded-lg border border-[#e9edef] dark:border-[#222e35]/35 bg-zinc-50 dark:bg-white/5 hover:bg-zinc-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
                 >
-                  <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-zinc-200 dark:bg-zinc-800 text-[#00a884] dark:text-blue-400">
+                  <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-zinc-200 dark:bg-zinc-800 text-[#0284c7] dark:text-blue-400">
                     <FileText size={16} />
                   </div>
                   <div className="flex-1 min-w-0">

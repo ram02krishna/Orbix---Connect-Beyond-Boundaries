@@ -84,7 +84,7 @@ export function NewGroupModal({ onClose, onGroupCreated }: NewGroupModalProps) {
         
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-zinc-200/50 dark:border-white/5">
-          <div className="flex items-center gap-2 text-blue-500">
+          <div className="flex items-center gap-2 text-zinc-600">
             <Users size={22} />
             <h3 className="text-lg font-bold text-zinc-900 dark:text-[#e9edef]">Create Group</h3>
           </div>
@@ -141,7 +141,7 @@ export function NewGroupModal({ onClose, onGroupCreated }: NewGroupModalProps) {
                   <div
                     key={u.id}
                     onClick={() => toggleSelectUser(u)}
-                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-650 dark:text-blue-400 border border-blue-500/15 text-base font-semibold cursor-pointer hover:bg-blue-500/20 transition-all select-none"
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-600/10 text-blue-650 dark:text-zinc-500 border border-zinc-600/15 text-base font-semibold cursor-pointer hover:bg-zinc-600/20 transition-all select-none"
                   >
                     <Avatar src={u.avatarUrl} name={u.name} size="xs" />
                     <span>{u.name.split(" ")[0]}</span>
@@ -176,7 +176,7 @@ export function NewGroupModal({ onClose, onGroupCreated }: NewGroupModalProps) {
             <div className="flex-1 overflow-y-auto space-y-1.5 scrollbar-thin pr-1">
               {searching ? (
                 <div className="flex items-center justify-center py-6 text-zinc-400">
-                  <Loader2 size={20} className="animate-spin text-blue-500" />
+                  <Loader2 size={20} className="animate-spin text-zinc-600" />
                 </div>
               ) : searchQuery.trim().length >= 2 && searchResults.length === 0 ? (
                 <p className="text-center text-base text-zinc-400 dark:text-zinc-500 py-6">No users found</p>
@@ -193,7 +193,7 @@ export function NewGroupModal({ onClose, onGroupCreated }: NewGroupModalProps) {
                       onClick={() => toggleSelectUser(u)}
                       className={`flex items-center gap-3 px-3 py-2 rounded-xl border transition-all cursor-pointer ${
                         isChecked
-                          ? "bg-blue-500/10 border-blue-500/20 text-zinc-950 dark:text-white"
+                          ? "bg-zinc-600/10 border-zinc-600/20 text-zinc-950 dark:text-white"
                           : "border-transparent hover:bg-zinc-150 dark:hover:bg-white/5 text-zinc-800 dark:text-[#e9edef]"
                       }`}
                     >
@@ -205,7 +205,7 @@ export function NewGroupModal({ onClose, onGroupCreated }: NewGroupModalProps) {
                       <div
                         className={`h-4 w-4 rounded-md border flex items-center justify-center transition-colors ${
                           isChecked
-                            ? "bg-blue-500 border-blue-500 text-white"
+                            ? "bg-zinc-600 border-zinc-600 text-white"
                             : "border-zinc-350 dark:border-white/20"
                         }`}
                       >
@@ -231,7 +231,7 @@ export function NewGroupModal({ onClose, onGroupCreated }: NewGroupModalProps) {
             </Button>
             <Button
               type="submit"
-              className="flex-1 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-bold"
+              className="flex-1 rounded-xl bg-zinc-600 hover:bg-zinc-700 text-white font-bold"
               disabled={creating || !title.trim() || selectedUsers.length < 1}
             >
               {creating ? (

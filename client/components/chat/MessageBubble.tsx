@@ -1,106 +1,30 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
-import { Reply, Smile, Trash2, Download, FileText, Pencil, Check, X, Star, Play, Loader2, AlertCircle, Forward } from "lucide-react";
+import { useState } from "react";
+import { Download, FileText, Play, Loader2, AlertCircle, Check, CheckCheck, Clock } from "lucide-react";
 import { cn } from "@lib/utils";
 import { useAuthStore } from "@hooks/useAuthStore";
+import { useChatStore } from "@hooks/useChatStore";
 import { Avatar } from "@components/ui/Avatar";
-import { Button } from "@components/ui/Button";
-import { motion } from "framer-motion";
 import { API_BASE_URL } from "@lib/api";
 import { CustomAudioPlayer } from "./CustomAudioPlayer";
 import { MediaLightbox } from "./MediaLightbox";
 
 export interface MessageBubbleProps {
   message: any;
-  onReply: (message: any) => void;
-  onReact: (messageId: string, emoji: string) => void;
-  onDelete: (messageId: string, mode: "me" | "everyone") => void;
-  onEdit?: (messageId: string, newContent: string) => Promise<void>;
-  onRetry?: (message: any) => void;
-  onForward?: (message: any) => void;
   searchQuery?: string;
 }
 
-export const MessageBubble = React.memo(function MessageBubble({ message, onReply, onReact, onDelete, onEdit, onRetry, onForward, searchQuery }: MessageBubbleProps) {
+export const MessageBubble = React.memo(function MessageBubble({ message, searchQuery }: MessageBubbleProps) {
   const user = useAuthStore((state) => state.user);
-
-  const [isEditing, setIsEditing] = useState(false);
-  const [editVal, setEditVal] = useState("");
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-  const [isStarred, setIsStarred] = useState(false);
-  const [showOptionsMobile, setShowOptionsMobile] = useState(false);
   
-  const touchTimerRef = React.useRef<NodeJS.Timeout | null>(null);
-  const bubbleRef = React.useRef<HTMLDivElement>(null);
-
   // Lightbox viewer states
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxUrl, setLightboxUrl] = useState("");
   const [lightboxType, setLightboxType] = useState<"IMAGE" | "VIDEO" | "PDF">("IMAGE");
   const [lightboxName, setLightboxName] = useState("");
 
-  useEffect(() => {
-    const starred = localStorage.getItem(`starred:${message.id}`);
-    setIsStarred(!!starred);
-  }, [message.id]);
-
-  const handleToggleStar = () => {
-    if (isStarred) {
-      localStorage.removeItem(`starred:${message.id}`);
-      setIsStarred(false);
-      window.dispatchEvent(new Event("starred-messages-updated"));
-    } else {
-      localStorage.setItem(
-        `starred:${message.id}`,
-        JSON.stringify({
-          id: message.id,
-          chatId: message.chatId,
-          content: message.content,
-          type: message.type,
-          senderName: message.sender.name,
-          createdAt: message.createdAt,
-        })
-      );
-      setIsStarred(true);
-      window.dispatchEvent(new Event("starred-messages-updated"));
-    }
-  };
-
-  useEffect(() => {
-    if (showOptionsMobile) {
-      const handleGlobalClick = (e: MouseEvent | TouchEvent) => {
-        if (bubbleRef.current && !bubbleRef.current.contains(e.target as Node)) {
-          setShowOptionsMobile(false);
-        }
-      };
-      const timeout = setTimeout(() => {
-        document.addEventListener("mousedown", handleGlobalClick);
-        document.addEventListener("touchstart", handleGlobalClick);
-      }, 100);
-      return () => {
-        clearTimeout(timeout);
-        document.removeEventListener("mousedown", handleGlobalClick);
-        document.removeEventListener("touchstart", handleGlobalClick);
-      };
-    }
-  }, [showOptionsMobile]);
-
-  const handleSaveEdit = async () => {
-    if (!editVal.trim() || editVal === message.content) return;
-    try {
-      if (onEdit) {
-        await onEdit(message.id, editVal);
-      }
-      setIsEditing(false);
-    } catch (err) {
-      console.error("Failed to save edit:", err);
-    }
-  };
-
   const isSelf = message.senderId === user?.id;
-  const isDeleted = !!message.deletedAt;
-  const isMediaOnly = !isDeleted && message.attachments && message.attachments.length > 0 &&
+  const isMediaOnly = message.attachments && message.attachments.length > 0 &&
     message.attachments.some((att: any) => att.fileType === "IMAGE" || att.fileType === "VIDEO") &&
     (message.content === message.attachments[0]?.fileName || !message.content);
 
@@ -109,43 +33,18 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
     window.location.href = downloadUrl;
   };
 
-  const handleConfirmDelete = (mode: "me" | "everyone") => {
-    onDelete(message.id, mode);
-    setShowDeleteModal(false);
-  };
-
-  const handleDoubleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (isDeleted || message.id.startsWith("temp-") || isSelf) return;
-    onReact(message.id, "❤️");
-  };
-
-  const handleTouchStart = () => {
-    if (isDeleted || message.id.startsWith("temp-")) return;
-    touchTimerRef.current = setTimeout(() => {
-      setShowOptionsMobile(true);
-    }, 500); // 500ms long press
-  };
-
-  const handleTouchEndOrMove = () => {
-    if (touchTimerRef.current) {
-      clearTimeout(touchTimerRef.current);
-      touchTimerRef.current = null;
-    }
-  };
-
-  const handleBubbleClick = (e: React.MouseEvent) => {
-    if (isDeleted || message.id.startsWith("temp-")) return;
-    
-    // On touch devices or clicks, toggle the options menu
-    setShowOptionsMobile(prev => !prev);
-  };
+  const chat = useChatStore((state) => state.chats.find(c => c.id === message.chatId));
+  const otherMembersCount = chat ? Math.max(1, chat.members.length - 1) : 1;
+  const receipts = message.receipts || [];
+  
+  const deliveredCount = receipts.filter((r: any) => r.deliveredAt || r.readAt).length;
+  const readCount = receipts.filter((r: any) => r.readAt).length;
+  
+  const isRead = readCount >= otherMembersCount;
+  const isDelivered = deliveredCount >= otherMembersCount;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 15, scale: 0.96 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ type: "spring", stiffness: 350, damping: 28 }}
+    <div
       className={cn(
         "flex gap-3 w-full max-w-2xl px-4 py-1.5 transition-all relative group justify-start",
         isSelf ? "ml-auto flex-row-reverse" : "mr-auto flex-row"
@@ -154,152 +53,29 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
 
       <div className={cn("flex flex-col max-w-[85%] sm:max-w-[75%]", isSelf ? "items-end" : "items-start")}>
         {!isSelf && (
-          <span className="text-base font-bold text-blue-600 dark:text-blue-400 pl-2 mb-1">
+          <span className="text-base font-bold text-zinc-700 dark:text-zinc-500 pl-2 mb-1">
             {message.sender.name}
           </span>
         )}
 
         <div
-          ref={bubbleRef}
-          onDoubleClick={handleDoubleClick}
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEndOrMove}
-          onTouchMove={handleTouchEndOrMove}
-          onClick={handleBubbleClick}
           className={cn(
             isMediaOnly
               ? "p-1 rounded-2xl relative border shadow-[0_2px_4px_rgba(0,0,0,0.04)] overflow-hidden"
               : "px-4 py-2.5 rounded-2xl relative border text-base sm:text-base leading-normal font-sans font-normal tracking-wide break-words whitespace-pre-wrap shadow-[0_2px_4px_rgba(0,0,0,0.04)]",
             isSelf
-              ? "ios-bubble-me rounded-tr-none"
-              : "ios-bubble-other rounded-tl-none",
-            isDeleted &&
-            "italic bg-transparent dark:bg-transparent border-[#e9edef] dark:border-[#222e35]/30 shadow-none text-zinc-400 dark:text-zinc-500",
-            message.isSending && "opacity-70 animate-pulse-slow",
+              ? "bg-zinc-600 text-white rounded-tr-none"
+              : "bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 rounded-tl-none",
+            message.isSending && "opacity-70",
             message.hasFailed && "border-red-500/30 bg-red-500/5 dark:bg-red-950/5 text-red-650 dark:text-red-400"
           )}
           style={{
-            borderRadius: isDeleted
-              ? undefined
-              : isSelf
+            borderRadius: isSelf
               ? "var(--bubble-radius, 16px) var(--bubble-radius, 16px) 0px var(--bubble-radius, 16px)"
               : "var(--bubble-radius, 16px) var(--bubble-radius, 16px) var(--bubble-radius, 16px) 0px"
           }}
         >
-          {/* Options Bar & Reaction Picker */}
-          {!isDeleted && (
-            <div
-              onClick={(e) => e.stopPropagation()}
-              className={cn(
-                "absolute top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 flex items-center gap-1.5 bg-white dark:bg-zinc-900/90 border border-zinc-200 dark:border-white/5 backdrop-blur-md rounded-xl p-1 shadow-lg transition-all z-30 select-none",
-                isSelf ? "right-full mr-3" : "left-full ml-3",
-                showOptionsMobile && "opacity-100"
-              )}
-            >
-                <>
-                  {!isSelf && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        onReply(message);
-                        setShowOptionsMobile(false);
-                      }}
-                      className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors cursor-pointer"
-                      title="Reply"
-                    >
-                      <Reply size={14} className="pointer-events-none" />
-                    </button>
-                  )}
-                  
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      if (onForward) onForward(message);
-                      setShowOptionsMobile(false);
-                    }}
-                    className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors cursor-pointer"
-                    title="Forward"
-                  >
-                    <Forward size={14} className="pointer-events-none" />
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      handleToggleStar();
-                      setShowOptionsMobile(false);
-                    }}
-                    className={cn(
-                      "p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors cursor-pointer",
-                      isStarred ? "text-amber-550 dark:text-amber-500" : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200"
-                    )}
-                    title={isStarred ? "Unstar message" : "Star message"}
-                  >
-                    <Star size={13} fill={isStarred ? "currentColor" : "none"} className="pointer-events-none" />
-                  </button>
-
-                  {isSelf && message.type === "TEXT" && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        setIsEditing(true);
-                        setEditVal(message.content || "");
-                        setShowOptionsMobile(false);
-                      }}
-                      className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors cursor-pointer"
-                      title="Edit message"
-                    >
-                      <Pencil size={13} className="pointer-events-none" />
-                    </button>
-                  )}
-
-                  {!isDeleted && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        setShowDeleteModal(true);
-                        setShowOptionsMobile(false);
-                      }}
-                      className="p-1.5 rounded-lg hover:bg-red-500/10 text-[#54656f] dark:text-[#aebac1] hover:text-red-500 dark:hover:text-red-400 transition-all cursor-pointer"
-                      title="Delete message"
-                    >
-                      <Trash2 size={14} className="pointer-events-none" />
-                    </button>
-                  )}
-                </>
-            </div>
-          )}
-          {!isDeleted && message.replyTo && (
-            <div
-              className={cn(
-                "flex items-start gap-2 border-l-4 pl-2 py-1 pr-1 mb-2 rounded text-base select-none",
-                isSelf
-                  ? "border-blue-600 bg-black/5 dark:border-blue-400 dark:bg-black/20"
-                  : "border-blue-500 bg-zinc-100 dark:border-blue-400 dark:bg-[#182229]"
-              )}
-            >
-              <div className="flex-1 min-w-0">
-                <p className={cn("font-bold text-base", isSelf ? "text-blue-800 dark:text-blue-400" : "text-blue-600 dark:text-blue-400")}>
-                  {message.replyTo.sender.name}
-                </p>
-                <p className="truncate max-w-full text-base text-zinc-600 dark:text-zinc-300 mt-0.5">
-                  {message.replyTo.content}
-                </p>
-              </div>
-            </div>
-          )}
-
-          {!isDeleted && message.attachments && message.attachments.length > 0 && (
+          {message.attachments && message.attachments.length > 0 && (
             <div className="space-y-2 mb-2 select-none">
               {message.attachments.map((att: any) => {
                 const isImg = att.mimeType?.startsWith("image/") || att.fileType === "IMAGE";
@@ -357,7 +133,7 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
                     >
                       <video src={att.fileUrl} className="max-h-64 object-contain pointer-events-none" />
                       <div className="absolute inset-0 flex items-center justify-center bg-black/10 hover:bg-black/35 transition-colors">
-                        <span className="p-2.5 rounded-full bg-blue-500 text-white shadow-lg flex items-center justify-center">
+                        <span className="p-2.5 rounded-full bg-zinc-600 text-white shadow-lg flex items-center justify-center">
                           <Play size={16} fill="currentColor" className="ml-0.5" />
                         </span>
                       </div>
@@ -413,7 +189,7 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
                         "flex items-center justify-center h-9 w-9 rounded-lg flex-shrink-0 transition-colors",
                         isSelf
                           ? "bg-white/20 text-white"
-                          : "bg-zinc-200 dark:bg-zinc-800 text-blue-600 dark:text-blue-400"
+                          : "bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-500"
                       )}
                     >
                       <FileText size={18} />
@@ -448,257 +224,76 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
             </div>
           )}
 
-          {isEditing ? (
-            <div className="flex flex-col gap-2.5 min-w-[220px] mt-1 select-none">
-              <input
-                type="text"
-                value={editVal}
-                onChange={(e) => setEditVal(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-white/30 bg-black/10 text-white placeholder-white/50 focus:outline-none focus:bg-black/20 focus:border-white/50 transition-all text-base font-medium"
-                placeholder="Edit your message..."
-                autoFocus
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleSaveEdit();
-                  } else if (e.key === "Escape") {
-                    setIsEditing(false);
-                  }
-                }}
-              />
-              <div className="flex items-center justify-end gap-2 self-end">
-                <button
-                  type="button"
-                  onClick={() => setIsEditing(false)}
-                  className="px-3.5 py-1.5 text-base font-semibold rounded-full bg-white/10 hover:bg-white/25 text-white transition-colors cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={handleSaveEdit}
-                  disabled={!editVal.trim() || editVal === message.content}
-                  className="flex items-center gap-1.5 px-3.5 py-1.5 text-base font-bold rounded-full bg-white text-blue-600 hover:bg-white/90 disabled:opacity-50 disabled:pointer-events-none transition-all cursor-pointer shadow-sm"
-                >
-                  <Check size={14} strokeWidth={3} />
-                  Save
-                </button>
-              </div>
-            </div>
-          ) : (
-            (!message.attachments || message.attachments.length === 0 || message.content !== message.attachments[0]?.fileName || isDeleted) &&
-            message.type !== "AUDIO" && (
-              <div className="flex flex-col gap-2">
-                <p className="select-text">
-                  {isDeleted
-                    ? "This message was deleted."
-                    : (() => {
-                        const text = message.content || "";
-                        if (!searchQuery || !text) return text;
-                        const parts = text.split(
-                          new RegExp(`(${searchQuery.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&")})`, "gi")
-                        );
-                        return (
-                          <span>
-                            {parts.map((part: string, index: number) =>
-                              part.toLowerCase() === searchQuery.toLowerCase() ? (
-                                <mark
-                                  key={index}
-                                  className="bg-amber-300 text-black px-0.5 rounded font-semibold animate-pulse-slow select-text"
-                                >
-                                  {part}
-                                </mark>
-                              ) : (
-                                part
-                              )
-                            )}
-                          </span>
-                        );
-                      })()}
-                </p>
-                {!isDeleted && message.metadata?.type === "link_preview" && (
-                  <a
-                    href={message.metadata.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cn(
-                      "flex flex-col mt-1 mb-1 rounded-xl overflow-hidden border transition-all cursor-pointer hover:opacity-90 active:scale-[0.98]",
-                      isSelf 
-                        ? "bg-black/10 border-white/20 hover:bg-black/20 text-white" 
-                        : "bg-black/5 dark:bg-black/20 border-zinc-200 dark:border-white/10 hover:bg-black/10 dark:hover:bg-black/30 text-zinc-900 dark:text-white"
-                    )}
-                  >
-                    {message.metadata.image && (
-                      <div className="w-full h-32 bg-zinc-200 dark:bg-zinc-800 flex-shrink-0">
-                        <img 
-                          src={message.metadata.image} 
-                          alt="Preview" 
-                          className="w-full h-full object-cover" 
-                          loading="lazy"
-                        />
-                      </div>
-                    )}
-                    <div className="p-3 flex flex-col gap-1">
-                      {message.metadata.siteName && (
-                        <p className={cn("text-xs font-semibold uppercase tracking-wider", isSelf ? "text-white/70" : "text-zinc-500 dark:text-zinc-400")}>
-                          {message.metadata.siteName}
-                        </p>
+          {(!message.attachments || message.attachments.length === 0 || message.content !== message.attachments[0]?.fileName) &&
+          message.type !== "AUDIO" && (
+            <div className="flex flex-col gap-2">
+              <p className="select-text">
+                {(() => {
+                  const text = message.content || "";
+                  if (!searchQuery || !text) return text;
+                  const parts = text.split(
+                    new RegExp(`(${searchQuery.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&")})`, "gi")
+                  );
+                  return (
+                    <span>
+                      {parts.map((part: string, index: number) =>
+                        part.toLowerCase() === searchQuery.toLowerCase() ? (
+                          <mark
+                            key={index}
+                            className="bg-zinc-300 text-black px-0.5 rounded font-semibold animate-pulse-slow select-text"
+                          >
+                            {part}
+                          </mark>
+                        ) : (
+                          part
+                        )
                       )}
-                      <p className="text-sm font-bold line-clamp-2 leading-tight">
-                        {message.metadata.title || message.metadata.url}
-                      </p>
-                      {message.metadata.description && (
-                        <p className={cn("text-xs line-clamp-2 mt-0.5", isSelf ? "text-white/80" : "text-zinc-600 dark:text-zinc-300")}>
-                          {message.metadata.description}
-                        </p>
-                      )}
-                    </div>
-                  </a>
-                )}
-              </div>
-            )
-          )}
-          {!isDeleted && (
-            <div
-              className={cn(
-                "flex items-center justify-end gap-1 mt-1 text-base font-medium select-none",
-                isMediaOnly
-                  ? "absolute bottom-3 right-3 bg-black/50 backdrop-blur-md px-2.5 py-0.5 rounded-full text-white border border-white/5 z-20"
-                  : isSelf
-                  ? "text-white/70"
-                  : "text-zinc-550 dark:text-zinc-400"
-              )}
-            >
-              {isStarred && (
-                <Star size={10} className="text-amber-500 fill-amber-500 mr-0.5 flex-shrink-0" />
-              )}
-              {message.editedAt && (
-                <span className="text-base opacity-75 mr-0.5">edited •</span>
-              )}
-              <span>
-                {new Date(message.createdAt).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </span>
-              {isSelf && (
-                <div className="flex items-center ml-1">
-                  {message.isSending && (
-                    <Loader2 size={11} className="animate-spin text-white/60 dark:text-zinc-500" />
-                  )}
-                  {!message.isSending && message.hasFailed && (
-                    <button
-                      onClick={() => onRetry && onRetry(message)}
-                      className="text-red-500 hover:text-red-600 transition-colors cursor-pointer flex items-center"
-                      title="Sending failed. Click to retry."
-                    >
-                      <AlertCircle size={12} className="fill-red-500/10 animate-bounce" />
-                    </button>
-                  )}
-                  {!message.isSending && !message.hasFailed && (
-                    <span
-                      className={cn(
-                        "text-base font-bold select-none leading-none tracking-tight transition-colors",
-                        (message.reads?.length > 0 || message.status === "SEEN")
-                          ? "text-[#00FFC2] drop-shadow-sm"
-                          : isMediaOnly
-                          ? "text-white/70"
-                          : "text-white/60 dark:text-white/50"
-                      )}
-                      title={
-                        (message.reads?.length > 0 || message.status === "SEEN")
-                          ? "Read"
-                          : message.status === "DELIVERED"
-                          ? "Delivered"
-                          : "Sent"
-                      }
-                    >
-                      {(message.reads?.length > 0 || message.status === "SEEN" || message.status === "DELIVERED") ? "✓✓" : "✓"}
                     </span>
-                  )}
-                </div>
-              )}
+                  );
+                })()}
+              </p>
             </div>
           )}
-        </div>
 
-        {!isDeleted && message.reactions?.length > 0 && (
-          <div className={cn("flex flex-wrap gap-1 mt-1", isSelf ? "pr-1 justify-end" : "pl-1")}>
-            {Object.entries(
-              message.reactions.reduce((acc: Record<string, number>, r: any) => {
-                acc[r.emoji] = (acc[r.emoji] || 0) + 1;
-                return acc;
-              }, {})
-            ).map(([emoji, count]: [string, any]) => (
-              <motion.div
-                key={emoji}
-                initial={{ scale: 0.75, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 450, damping: 20 }}
-                onTap={(e) => {
-                  e.stopPropagation();
-                  onReact(message.id, emoji);
-                }}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#1f2c34] backdrop-blur-md text-zinc-700 dark:text-zinc-300 cursor-pointer select-none hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors shadow-sm"
-              >
-                <span className="text-base leading-none select-none flex items-center justify-center pointer-events-none">{emoji}</span>
-                {count > 1 && <span className="text-base font-bold leading-none text-zinc-500 dark:text-zinc-400 select-none pointer-events-none">{count}</span>}
-              </motion.div>
-            ))}
+          <div
+            className={cn(
+              "flex items-center justify-end gap-1 mt-1 text-base font-medium select-none",
+              isMediaOnly
+                ? "absolute bottom-3 right-3 bg-black/50 backdrop-blur-md px-2.5 py-0.5 rounded-full text-white border border-white/5 z-20"
+                : isSelf
+                ? "text-white/70"
+                : "text-zinc-550 dark:text-zinc-400"
+            )}
+          >
+            <span className="text-[11px]">
+              {new Date(message.createdAt).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </span>
+            {isSelf && (
+              <span className={cn("ml-1 flex items-center", isRead ? "text-blue-400" : (isMediaOnly ? "text-white/90" : "text-white/70"))}>
+                {message.isSending ? (
+                  <Clock size={12} />
+                ) : message.hasFailed ? (
+                  <AlertCircle size={12} className="text-red-400" />
+                ) : isRead ? (
+                  <CheckCheck size={14} />
+                ) : isDelivered ? (
+                  <CheckCheck size={14} />
+                ) : (
+                  <Check size={14} />
+                )}
+              </span>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       {!isSelf ? (
         <Avatar src={message.sender.avatarUrl} name={message.sender.name} size="sm" className="mt-0.5 flex-shrink-0" />
       ) : (
         <div className="w-1 flex-shrink-0" />
-      )}
-
-      {showDeleteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 select-none">
-          <div className="bg-white dark:bg-[#222e35] rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl border border-[#e9edef]/10 dark:border-[#222e35]/30 text-center space-y-5 transform scale-100 transition-transform">
-            <div className="flex justify-center">
-              <div className="p-3 bg-red-500/10 dark:bg-red-500/5 text-red-500 rounded-2xl">
-                <Trash2 size={24} />
-              </div>
-            </div>
-            <div className="space-y-1.5 text-[#111b21] dark:text-[#e9edef]">
-              <h3 className="text-lg font-bold">Delete Message?</h3>
-              <p className="text-base text-[#667781] dark:text-[#8696a0] leading-relaxed">
-                Would you like to delete this message?
-              </p>
-            </div>
-            <div className="flex flex-col gap-2">
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => handleConfirmDelete("me")}
-                className="w-full py-2.5"
-              >
-                Delete for Me
-              </Button>
-              {isSelf && (
-                <Button
-                  size="sm"
-                  onClick={() => handleConfirmDelete("everyone")}
-                  className="w-full py-2.5 bg-red-500 hover:bg-red-600 text-white border-none"
-                >
-                  Delete for Everyone
-                </Button>
-              )}
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowDeleteModal(false)}
-                className="w-full py-2.5"
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </div>
       )}
 
       {lightboxOpen && (
@@ -710,7 +305,7 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
           fileName={lightboxName}
         />
       )}
-    </motion.div>
+    </div>
   );
 }, (prevProps, nextProps) => {
   if (prevProps.searchQuery !== nextProps.searchQuery) return false;
@@ -719,28 +314,17 @@ export const MessageBubble = React.memo(function MessageBubble({ message, onRepl
   const nextMsg = nextProps.message;
   if (prevMsg.id !== nextMsg.id) return false;
   if (prevMsg.content !== nextMsg.content) return false;
-  if (prevMsg.editedAt !== nextMsg.editedAt) return false;
-  if (prevMsg.deletedAt !== nextMsg.deletedAt) return false;
   if (prevMsg.status !== nextMsg.status) return false;
   if (prevMsg.isSending !== nextMsg.isSending) return false;
   if (prevMsg.hasFailed !== nextMsg.hasFailed) return false;
+  
+  const prevReceiptsCount = prevMsg.receipts?.length || 0;
+  const nextReceiptsCount = nextMsg.receipts?.length || 0;
+  if (prevReceiptsCount !== nextReceiptsCount) return false;
+  
+  const prevReadCount = prevMsg.receipts?.filter((r:any) => r.readAt).length || 0;
+  const nextReadCount = nextMsg.receipts?.filter((r:any) => r.readAt).length || 0;
+  if (prevReadCount !== nextReadCount) return false;
 
-  const prevReactions = prevMsg.reactions || [];
-  const nextReactions = nextMsg.reactions || [];
-  if (prevReactions.length !== nextReactions.length) return false;
-  for (let i = 0; i < prevReactions.length; i++) {
-    if (prevReactions[i].emoji !== nextReactions[i].emoji || prevReactions[i].userId !== nextReactions[i].userId) {
-      return false;
-    }
-  }
-
-  const prevReads = prevMsg.reads || [];
-  const nextReads = nextMsg.reads || [];
-  if (prevReads.length !== nextReads.length) return false;
-  for (let i = 0; i < prevReads.length; i++) {
-    if (prevReads[i].userId !== nextReads[i].userId || prevReads[i].readAt !== nextReads[i].readAt) {
-      return false;
-    }
-  }
   return true;
 });

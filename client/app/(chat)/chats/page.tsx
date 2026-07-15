@@ -1,46 +1,40 @@
 "use client";
 
 import * as React from "react";
-import { Lock } from "lucide-react";
-import { motion } from "framer-motion";
+import { Lock, Menu } from "lucide-react";
+import { useUIStore } from "@hooks/useUIStore";
 
 export default function ChatsPage() {
+  const { isSidebarOpen, toggleSidebar } = useUIStore();
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-[#f8f9fa] dark:bg-[#222e35]/15 border-b-4 border-blue-500">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
-        className="max-w-md flex flex-col items-center select-none"
+    <div className="flex-1 flex flex-col relative items-center justify-center p-8 text-center bg-transparent">
+      {/* Sidebar Toggle for Desktop */}
+      <button
+        onClick={toggleSidebar}
+        className="absolute top-4 left-4 p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] hover:text-zinc-950 dark:hover:text-white transition-colors cursor-pointer hidden md:block"
+        title={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
       >
-        {/* WhatsApp Web Style Computer Graphic */}
-        <div className="text-[#667781] dark:text-[#8696a0]/70 mb-8 w-60 h-32 flex items-center justify-center">
-          <svg width="220" height="120" viewBox="0 0 220 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-            <rect x="10" y="5" width="160" height="90" rx="8" fill="currentColor" fillOpacity="0.08" stroke="currentColor" strokeWidth="2" />
-            <rect x="18" y="13" width="144" height="62" rx="2" fill="currentColor" fillOpacity="0.04" />
-            <circle cx="90" cy="85" r="3" fill="currentColor" />
-            <path d="M60 100 L120 100" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-            <path d="M50 108 L130 108" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
-            
-            {/* Phone graphic overlapping */}
-            <rect x="145" y="45" width="38" height="68" rx="6" fill="white" className="dark:fill-[#111b21]" stroke="currentColor" strokeWidth="2" />
-            <rect x="149" y="51" width="30" height="50" rx="2" fill="currentColor" fillOpacity="0.08" />
-            <circle cx="164" cy="107" r="2" fill="currentColor" />
+        <Menu size={20} />
+      </button>
+
+      <div className="max-w-md flex flex-col items-center select-none space-y-4">
+        <div className="w-16 h-16 rounded-full bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center text-zinc-500 mb-2">
+          <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
           </svg>
         </div>
-
-        <h1 className="text-2xl font-light text-[#41525d] dark:text-[#e9edef] tracking-tight">
-          Orbix Web
+        <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100 tracking-tight">
+          Welcome to Orbix
         </h1>
-        <p className="text-base text-[#667781] dark:text-[#8696a0] mt-3 max-w-sm leading-relaxed">
-          Send and receive messages in real-time. Link your phone to chat with friends, create groups, and share media.
+        <p className="text-base text-zinc-500 dark:text-zinc-400 max-w-sm">
+          Select an existing conversation from the sidebar or start a new one to begin messaging.
         </p>
 
-        <div className="mt-12 flex items-center justify-center gap-1.5 text-base text-[#8696a0] dark:text-[#667781]">
-          <Lock size={12} className="text-[#8696a0] dark:text-[#667781]" />
+        <div className="pt-8 flex items-center justify-center gap-1.5 text-sm text-zinc-400">
+          <Lock size={12} />
           <span>End-to-end encrypted</span>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

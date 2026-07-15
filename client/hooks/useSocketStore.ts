@@ -5,6 +5,7 @@ import { useCallStore } from "./useCallStore";
 import api from "@lib/api";
 import { toast } from "sonner";
 import { useAuthStore } from "./useAuthStore";
+
 const WS_BASE_URL = process.env.NEXT_PUBLIC_WS_URL || "http://localhost:5000";
 
 interface SocketState {
@@ -19,13 +20,10 @@ export const useSocketStore = create<SocketState>((set, get) => ({
   isConnected: false,
 
   connectSocket: (token) => {
-    // If socket is already connected, don't create a new one
+    // don't create a new socket if already connected
     if (get().socket?.connected) return;
 
-    // Disconnect any existing socket before reconnecting
-    if (get().socket) {
-      get().socket?.disconnect();
-    }
+    get().socket?.disconnect();
 
     const socket = io(WS_BASE_URL, {
       auth: { token },
@@ -42,8 +40,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       console.log("🔌 Disconnected from Orbix WebSocket");
     });
 
-    // ─── Real-Time Message Listeners ──────────────────────────────────────────
-
+    // message events
     socket.on("message:new", async (message) => {
       const chatExists = useChatStore.getState().chats.some((c) => c.id === message.chatId);
       if (!chatExists) {
@@ -57,48 +54,29 @@ export const useSocketStore = create<SocketState>((set, get) => ({
         }
       }
       useChatStore.getState().addMessage(message.chatId, message);
-      
-      // Trigger dynamic chimes and native push notifications
+
+      // acknowledge delivery for messages from other users
+      const currentUserId = useAuthStore.getState().user?.id;
+      if (message.senderId !== currentUserId) {
+        socket.emit("message:delivered", { messageId: message.id, chatId: message.chatId });
+      }
+
       triggerNotification(message);
     });
 
-    socket.on("message:edited", (message) => {
-      useChatStore.getState().editMessage(
-        message.chatId,
-        message.id,
-        message.content,
-        message.editedAt
-      );
-    });
-
-    socket.on("message:deleted", (payload: { messageId: string; chatId: string; mode?: "me" | "everyone" }) => {
-      useChatStore.getState().deleteMessage(payload.chatId, payload.messageId, payload.mode);
-    });
-
-    socket.on("reaction:change", (payload) => {
-      useChatStore.getState().toggleReaction(payload.chatId || "", payload.messageId, {
-        userId: payload.userId,
-        name: payload.name || "User",
-        emoji: payload.emoji,
-        action: payload.action,
-      });
+    socket.on("message:delivered", (payload) => {
+      useChatStore.getState().updateReceipt(payload.chatId, payload.messageId, payload.receipt);
     });
 
     socket.on("message:read", (payload) => {
-      useChatStore.getState().markMessageRead(
-        payload.chatId,
-        payload.messageId,
-        payload.userId,
-        payload.readAt
-      );
+      useChatStore.getState().updateReceipt(payload.chatId, payload.messageId, payload.receipt);
     });
 
     socket.on("chat:deleted", (payload: { chatId: string }) => {
       useChatStore.getState().deleteChat(payload.chatId);
     });
 
-    // ─── Real-Time Presence & Typing Listeners ─────────────────────────────────
-
+    // presence and typing
     socket.on("presence:change", (payload: { userId: string; status: "online" | "offline"; lastSeen?: string }) => {
       const statusValue = payload.status === "online" ? "online" : (payload.lastSeen || "offline");
       useChatStore.getState().setOnlineStatus(payload.userId, statusValue);
@@ -112,7 +90,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       useChatStore.getState().setUserTyping(payload.chatId, payload.userId, false);
     });
 
-    // ─── WebRTC Call Signal Listeners ──────────────────────────────────────────
+    // 1-to-1 call signals
     socket.on("call:incoming", (payload) => {
       useCallStore.getState().receiveCall(payload);
     });
@@ -135,7 +113,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       useCallStore.getState().handleIceCandidate(payload.candidate, payload.fromUserId);
     });
 
-    // ─── WebRTC Group Call Signal Listeners ────────────────────────────────────
+    // group call signals
     socket.on("call:incoming-group", (payload) => {
       useCallStore.getState().receiveGroupCall(payload);
     });
@@ -180,7 +158,7 @@ const playNotificationSound = (type: "incoming" | "outgoing") => {
 
     if (type === "incoming") {
       const now = ctx.currentTime;
-      // High-pitched sweet double chime
+
       const osc1 = ctx.createOscillator();
       const gain1 = ctx.createGain();
       osc1.type = "sine";
@@ -206,7 +184,6 @@ const playNotificationSound = (type: "incoming" | "outgoing") => {
       const now = ctx.currentTime;
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-      // Fast soft popping bubble ascending tone
       osc.type = "sine";
       osc.frequency.setValueAtTime(350, now);
       osc.frequency.exponentialRampToValueAtTime(650, now + 0.06);
@@ -227,12 +204,10 @@ const triggerNotification = (message: any) => {
 
   const currentUserId = useAuthStore.getState().user?.id;
   if (message.senderId === currentUserId) {
-    // Play outgoing pop sound
     playNotificationSound("outgoing");
     return;
   }
 
-  // Play incoming alert chime
   playNotificationSound("incoming");
 
   const isEnabled = localStorage.getItem("settings-notifications-enabled") !== "false";
@@ -250,10 +225,7 @@ const triggerNotification = (message: any) => {
       const senderName = message.sender?.name || "New Message";
       const body = showPreviews ? message.content || "Sent an attachment" : "New message received";
 
-      const notification = new Notification(senderName, {
-        body,
-        tag: message.chatId,
-      });
+      const notification = new Notification(senderName, { body, tag: message.chatId });
 
       notification.onclick = () => {
         window.focus();

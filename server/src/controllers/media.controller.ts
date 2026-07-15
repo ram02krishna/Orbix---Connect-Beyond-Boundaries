@@ -4,8 +4,7 @@ import * as mediaService from "../services/media.service.js";
 import { sendSuccess } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 
-// GET /api/media/signature
-// Generate a Cloudinary upload signature for direct uploads
+// generate a Cloudinary upload signature for direct client-side uploads
 export async function getSignature(req: Request, res: Response) {
   const folder = req.query.folder as string;
 
@@ -13,15 +12,14 @@ export async function getSignature(req: Request, res: Response) {
     throw new ApiError(400, "Folder is required");
   }
 
-  // Basic validation to restrict where users can upload
   if (!folder.startsWith("chat-app/")) {
     throw new ApiError(400, "Invalid folder path");
   }
 
-  // If uploading to a specific chat, verify membership
+  // if it's a chat-specific folder, verify the user is in that chat
   const isAvatar = folder === "chat-app/avatars";
   const isGeneral = folder === "chat-app/general";
-  
+
   if (!isAvatar && !isGeneral) {
     const chatId = folder.split("chat-app/")[1];
     if (chatId) {
@@ -36,13 +34,11 @@ export async function getSignature(req: Request, res: Response) {
   sendSuccess(res, "Signature generated", signatureData);
 }
 
-// PATCH /api/media/avatar
-// Update the user's avatarUrl in the database after direct upload
+// update user avatar URL after a direct Cloudinary upload
 export async function updateAvatarUrl(req: Request, res: Response) {
   const { avatarUrl } = req.body;
   if (!avatarUrl) throw new ApiError(400, "avatarUrl is required");
 
-  // Update the user's avatarUrl in the database
   await prisma.user.update({
     where: { id: req.user!.id },
     data: { avatarUrl },
@@ -51,31 +47,24 @@ export async function updateAvatarUrl(req: Request, res: Response) {
   sendSuccess(res, "Avatar updated", { avatarUrl });
 }
 
-// GET /api/media/download
-// Proxy file downloads from Cloudinary to enforce original filename and extension download
+// proxy a file download from Cloudinary to set the original filename in the download header
 export async function downloadFile(req: Request, res: Response) {
   const url = req.query.url as string;
   const filename = req.query.name as string;
   const inline = req.query.inline === "true";
 
-  if (!url) {
-    throw new ApiError(400, "URL query parameter is required");
-  }
-  if (!filename) {
-    throw new ApiError(400, "Filename query parameter is required");
-  }
+  if (!url) throw new ApiError(400, "URL query parameter is required");
+  if (!filename) throw new ApiError(400, "Filename query parameter is required");
 
   try {
-    // Fetch the file from Cloudinary using native fetch
     const response = await fetch(url);
     if (!response.ok) {
       throw new ApiError(response.status, `Failed to fetch file from storage: ${response.statusText}`);
     }
 
-    // Set headers to trigger file download or inline view with original filename
     if (inline) {
       res.setHeader("Content-Disposition", `inline; filename="${filename}"`);
-      // Remove frame restrictions set by Helmet so the client on port 3000 can embed this stream
+      // remove Helmet's frame restrictions so the client can embed this stream
       res.removeHeader("X-Frame-Options");
       res.removeHeader("Content-Security-Policy");
       res.removeHeader("x-frame-options");
@@ -83,16 +72,12 @@ export async function downloadFile(req: Request, res: Response) {
     } else {
       res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
     }
-    
+
     const contentType = response.headers.get("content-type");
-    if (contentType) {
-      res.setHeader("Content-Type", contentType);
-    }
-    
+    if (contentType) res.setHeader("Content-Type", contentType);
+
     const contentLength = response.headers.get("content-length");
-    if (contentLength) {
-      res.setHeader("Content-Length", contentLength);
-    }
+    if (contentLength) res.setHeader("Content-Length", contentLength);
 
     if (response.body) {
       const { Readable } = await import("stream");

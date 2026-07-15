@@ -55,7 +55,7 @@ export function ForwardMessageModal({ messageToForward, onClose, onForward }: Fo
         
         <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-white/10">
           <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-            <Forward size={18} className="text-blue-500" />
+            <Forward size={18} className="text-zinc-600" />
             Forward message to
           </h2>
           <button
@@ -66,7 +66,7 @@ export function ForwardMessageModal({ messageToForward, onClose, onForward }: Fo
           </button>
         </div>
 
-        <div className="p-3 border-b border-zinc-100 dark:border-white/5 bg-zinc-50 dark:bg-[#182229]">
+        <div className="p-3 border-b border-zinc-100 dark:border-white/5 bg-white dark:bg-[#182229]">
           <div className="relative">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
             <input
@@ -74,7 +74,7 @@ export function ForwardMessageModal({ messageToForward, onClose, onForward }: Fo
               placeholder="Search chats or contacts..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-[#222e35] border border-zinc-200 dark:border-white/5 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400"
+              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-[#222e35] border border-zinc-200 dark:border-white/5 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-zinc-600/50 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400"
             />
           </div>
         </div>
@@ -91,7 +91,7 @@ export function ForwardMessageModal({ messageToForward, onClose, onForward }: Fo
                   key={chat.id}
                   disabled={isSending}
                   onClick={() => handleForwardClick(chat.id)}
-                  className="flex items-center gap-3 p-3 hover:bg-zinc-50 dark:hover:bg-[#182229] transition-colors cursor-pointer border-b border-zinc-100 dark:border-white/5 last:border-0 text-left disabled:opacity-50"
+                  className="flex items-center gap-3 p-3 hover:bg-white dark:hover:bg-[#182229] transition-colors cursor-pointer border-b border-zinc-100 dark:border-white/5 last:border-0 text-left disabled:opacity-50"
                 >
                   <Avatar src={getChatAvatar(chat)} name={getChatName(chat)} size="md" />
                   <div className="flex-1 min-w-0">
@@ -99,7 +99,7 @@ export function ForwardMessageModal({ messageToForward, onClose, onForward }: Fo
                       {getChatName(chat)}
                     </p>
                   </div>
-                  <div className="p-1.5 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-500 flex-shrink-0">
+                  <div className="p-1.5 rounded-full bg-zinc-100 dark:bg-zinc-600/10 text-zinc-600 flex-shrink-0">
                     <Forward size={14} />
                   </div>
                 </button>
@@ -110,7 +110,7 @@ export function ForwardMessageModal({ messageToForward, onClose, onForward }: Fo
 
         {isSending && (
           <div className="absolute inset-0 bg-white/50 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center z-10">
-            <Loader2 className="animate-spin text-blue-500" size={32} />
+            <Loader2 className="animate-spin text-zinc-600" size={32} />
           </div>
         )}
 

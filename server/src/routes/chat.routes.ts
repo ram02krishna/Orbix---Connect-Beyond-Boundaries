@@ -20,8 +20,6 @@ const createGroupSchema = z.object({
 const updateGroupSchema = z.object({
   title: z.string().min(1, "Group title cannot be empty").max(100, "Title is too long").optional(),
   photoUrl: z.string().url("Invalid photo URL").optional().or(z.literal("")),
-  restrictMessagingToAdmins: z.boolean().optional(),
-  restrictInfoToAdmins: z.boolean().optional(),
 });
 
 const addMemberSchema = z.object({
@@ -31,15 +29,12 @@ const addMemberSchema = z.object({
 // All chat routes require authentication
 router.use(authenticate);
 
-router.get("/", chatController.getMyChats);
-router.post("/direct", validate(openDirectChatSchema), chatController.openDirectChat);
+router.get("/", chatController.getAllMyChats);
+router.post("/direct", validate(openDirectChatSchema), chatController.startNewChat);
 router.post("/group", validate(createGroupSchema), chatController.createGroup);
 
 router.get("/:chatId", chatController.getChat);
-router.post("/:chatId/read", chatController.markChatAsRead);
 router.patch("/:chatId", validate(updateGroupSchema), chatController.updateChat);
-router.patch("/:chatId/archive", chatController.toggleArchive);
-router.patch("/:chatId/pin", chatController.togglePin);
 router.delete("/:chatId", chatController.deleteChat);
 
 router.post("/:chatId/members", validate(addMemberSchema), chatController.addMember);

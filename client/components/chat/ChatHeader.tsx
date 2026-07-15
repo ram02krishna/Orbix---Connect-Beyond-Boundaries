@@ -3,9 +3,10 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Info, Trash2, Phone, Video, Search, X } from "lucide-react";
+import { Search, MoreVertical, Phone, Video, ArrowLeft, Image as ImageIcon, VolumeX, Menu, Info, Trash2, X } from "lucide-react";
 import { useAuthStore } from "@hooks/useAuthStore";
 import { useChatStore } from "@hooks/useChatStore";
+import { useUIStore } from "@hooks/useUIStore";
 import { useCallStore } from "@hooks/useCallStore";
 import { Avatar } from "@components/ui/Avatar";
 import { Button } from "@components/ui/Button";
@@ -67,8 +68,8 @@ export function ChatHeader({
   const [mounted, setMounted] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const user = useAuthStore((state) => state.user);
-  const blockedUserIds = useAuthStore((state) => state.blockedUserIds);
   const chats = useChatStore((state) => state.chats);
+  const { isSidebarOpen, toggleSidebar } = useUIStore();
   const onlineStatuses = useChatStore((state) => state.onlineStatuses);
   const typingStatuses = useChatStore((state) => state.typingStatuses[chatId] ?? EMPTY_TYPING);
   const setChats = useChatStore((state) => state.setChats);
@@ -95,8 +96,7 @@ export function ChatHeader({
   const partner = getPartner();
   const isOnline = chat.type === "DIRECT" && onlineStatuses[partner.id] === "online";
 
-  const myRole = chat.members.find((m) => m.userId === user?.id)?.role;
-  const canDeleteForEveryone = chat.type === "DIRECT" || myRole === "OWNER" || myRole === "ADMIN";
+  const canDeleteForEveryone = chat.type === "DIRECT" || chat.createdBy === user?.id;
 
   const handleDeleteChat = () => {
     setShowDeleteModal(true);
@@ -117,6 +117,14 @@ export function ChatHeader({
     <>
       <div className="flex items-center justify-between px-4 h-[60px] border-b border-[#e9edef]/60 dark:border-[#222e35]/40 bg-[#f0f2f5]/65 dark:bg-[#202c33]/70 backdrop-blur-md relative z-20 text-[#111b21] dark:text-[#e9edef] select-none shadow-sm">
         <div className="flex-1 flex items-center gap-3">
+          <button
+            onClick={toggleSidebar}
+            className={`p-2 sm:p-1.5 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] hover:text-zinc-950 dark:hover:text-white transition-colors cursor-pointer hidden md:block`}
+            title={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
+          >
+            <Menu size={20} />
+          </button>
+          
           <button
             onClick={() => {
               if (isSearchOpen) {
@@ -176,8 +184,8 @@ export function ChatHeader({
                       typing...
                     </span>
                   ) : isOnline ? (
-                    <span className="flex items-center gap-1.5 text-base font-bold text-blue-500">
-                      <span className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse inline-block" />
+                    <span className="flex items-center gap-1.5 text-base font-bold text-zinc-600">
+                      <span className="h-1.5 w-1.5 rounded-full bg-zinc-600 animate-pulse inline-block" />
                       Online
                     </span>
                   ) : (
@@ -198,17 +206,15 @@ export function ChatHeader({
             <>
               <button
                 onClick={() => initiateCall(partner.id, partner.name, partner.avatarUrl, "audio")}
-                disabled={blockedUserIds.includes(partner.id)}
                 className="p-2.5 sm:p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] hover:text-zinc-950 dark:hover:text-white transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
-                title={blockedUserIds.includes(partner.id) ? "Cannot call blocked user" : "Voice Call"}
+                title="Voice Call"
               >
                 <Phone size={18} />
               </button>
               <button
                 onClick={() => initiateCall(partner.id, partner.name, partner.avatarUrl, "video")}
-                disabled={blockedUserIds.includes(partner.id)}
                 className="p-2.5 sm:p-2 rounded-full hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] hover:text-zinc-950 dark:hover:text-white transition-all cursor-pointer mr-1 disabled:opacity-30 disabled:cursor-not-allowed"
-                title={blockedUserIds.includes(partner.id) ? "Cannot call blocked user" : "Video Call"}
+                title="Video Call"
               >
                 <Video size={18} />
               </button>
@@ -258,7 +264,7 @@ export function ChatHeader({
                 onClick={onToggleProfile}
                 className={`p-2.5 sm:p-2 rounded-full transition-all cursor-pointer ${
                   isProfileOpen
-                    ? "bg-blue-500/20 text-blue-600 dark:text-blue-400"
+                    ? "bg-zinc-600/20 text-zinc-700 dark:text-zinc-500"
                     : "hover:bg-zinc-200/50 dark:hover:bg-zinc-700/30 active:bg-zinc-300/50 dark:active:bg-zinc-600/40 text-[#54656f] dark:text-[#aebac1] hover:text-zinc-950 dark:hover:text-white"
                 }`}
                 title="Contact details"

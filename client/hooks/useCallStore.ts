@@ -55,11 +55,11 @@ interface CallStoreState {
   handleIceCandidate: (candidate: any, fromUserId?: string) => void;
   handleAnswer: (sdp: any) => void;
   resetCallStore: () => void;
+  ringVolume: number;
+  setRingVolume: (volume: number) => void;
 }
 
 let audioCtx: AudioContext | null = null;
-let ringOsc1: OscillatorNode | null = null;
-let ringOsc2: OscillatorNode | null = null;
 let ringGain: GainNode | null = null;
 let ringInterval: any = null;
 
@@ -74,27 +74,28 @@ function startRingtone(type: "dial" | "ring") {
     }
     stopRingtone();
     ringGain = audioCtx.createGain();
-    ringGain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    const volume = useCallStore.getState().ringVolume;
+    ringGain.gain.setValueAtTime(volume, audioCtx.currentTime);
     ringGain.connect(audioCtx.destination);
     const playBeep = () => {
       if (!audioCtx || !ringGain) return;
-      ringOsc1 = audioCtx.createOscillator();
-      ringOsc2 = audioCtx.createOscillator();
+      const osc1 = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
       if (type === "dial") {
-        ringOsc1.frequency.setValueAtTime(440, audioCtx.currentTime);
-        ringOsc2.frequency.setValueAtTime(480, audioCtx.currentTime);
+        osc1.frequency.setValueAtTime(440, audioCtx.currentTime);
+        osc2.frequency.setValueAtTime(480, audioCtx.currentTime);
       } else {
-        ringOsc1.frequency.setValueAtTime(400, audioCtx.currentTime);
-        ringOsc2.frequency.setValueAtTime(450, audioCtx.currentTime);
+        osc1.frequency.setValueAtTime(400, audioCtx.currentTime);
+        osc2.frequency.setValueAtTime(450, audioCtx.currentTime);
       }
-      ringOsc1.connect(ringGain);
-      ringOsc2.connect(ringGain);
-      ringOsc1.start();
-      ringOsc2.start();
+      osc1.connect(ringGain);
+      osc2.connect(ringGain);
+      osc1.start();
+      osc2.start();
       setTimeout(() => {
         try {
-          ringOsc1?.stop(); ringOsc2?.stop();
-          ringOsc1?.disconnect(); ringOsc2?.disconnect();
+          osc1.stop(); osc2.stop();
+          osc1.disconnect(); osc2.disconnect();
         } catch {}
       }, type === "dial" ? 1500 : 1200);
     };
@@ -108,11 +109,9 @@ function startRingtone(type: "dial" | "ring") {
 function stopRingtone() {
   if (ringInterval) { clearInterval(ringInterval); ringInterval = null; }
   try {
-    ringOsc1?.stop(); ringOsc2?.stop();
-    ringOsc1?.disconnect(); ringOsc2?.disconnect();
     ringGain?.disconnect();
   } catch {}
-  ringOsc1 = null; ringOsc2 = null; ringGain = null;
+  ringGain = null;
 }
 
 const STUN_SERVERS: RTCConfiguration = {
@@ -199,6 +198,18 @@ export const useCallStore = create<CallStoreState>((set, get) => {
     isMuted: false,
     isCameraOff: false,
     isScreenSharing: false,
+    ringVolume: 0.3,
+    setRingVolume: (volume) => {
+      set({ ringVolume: volume });
+      if (ringGain) {
+        try {
+          ringGain.gain.value = volume;
+          if (audioCtx) {
+            ringGain.gain.setValueAtTime(volume, audioCtx.currentTime);
+          }
+        } catch {}
+      }
+    },
 
     initiateCall: async (targetUserId, targetName, targetAvatar, type) => {
       cleanMedia();
@@ -212,7 +223,12 @@ export const useCallStore = create<CallStoreState>((set, get) => {
       try {
         const constraints = {
           audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
-          video: type === "video" ? { width: { ideal: 640, max: 1280 }, height: { ideal: 480, max: 720 }, frameRate: { ideal: 24, max: 30 }, facingMode: "user" } : false
+          video: type === "video" ? {
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+            frameRate: { ideal: 30 },
+            facingMode: "user"
+          } : false
         };
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
         set({ localStream: stream });
@@ -291,7 +307,12 @@ export const useCallStore = create<CallStoreState>((set, get) => {
       try {
         const constraints = {
           audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
-          video: callType === "video" ? { width: { ideal: 640, max: 1280 }, height: { ideal: 480, max: 720 }, frameRate: { ideal: 24, max: 30 }, facingMode: "user" } : false
+          video: callType === "video" ? {
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+            frameRate: { ideal: 30 },
+            facingMode: "user"
+          } : false
         };
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
         set({ localStream: stream });
@@ -338,7 +359,12 @@ export const useCallStore = create<CallStoreState>((set, get) => {
       try {
         const constraints = {
           audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
-          video: type === "video" ? { width: { ideal: 640 }, height: { ideal: 480 }, frameRate: { ideal: 15, max: 24 }, facingMode: "user" } : false
+          video: type === "video" ? {
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+            frameRate: { ideal: 30 },
+            facingMode: "user"
+          } : false
         };
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
         set({ localStream: stream });

@@ -16,7 +16,7 @@ interface MediaLightboxProps {
 }
 
 export function MediaLightbox({ isOpen, onClose, mediaUrl, mediaType, fileName = "File" }: MediaLightboxProps) {
-  const token = useAuthStore((state) => state.accessToken);
+  const token = useAuthStore((state) => state.token);
   const [iframeLoading, setIframeLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
 
@@ -58,7 +58,7 @@ export function MediaLightbox({ isOpen, onClose, mediaUrl, mediaType, fileName =
       {/* Top Header Bar */}
       <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-black/80 to-transparent flex items-center justify-between px-6 text-white z-50">
         <div className="flex items-center gap-2 min-w-0">
-          {mediaType === "PDF" && <FileText size={18} className="text-blue-400 flex-shrink-0" />}
+          {mediaType === "PDF" && <FileText size={18} className="text-zinc-500 flex-shrink-0" />}
           <span className="text-base font-bold truncate max-w-xs md:max-w-md drop-shadow-md">{fileName}</span>
         </div>
         <div className="flex items-center gap-3">
@@ -107,7 +107,7 @@ export function MediaLightbox({ isOpen, onClose, mediaUrl, mediaType, fileName =
           <div className="w-full h-full max-w-5xl max-h-[85vh] rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-[#1f2c34]/50 backdrop-blur-md p-1.5 animate-scale-up relative">
             {iframeLoading && (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#1f2c34]/80 text-white gap-2 rounded-xl z-20">
-                <Loader2 className="animate-spin text-blue-400" size={32} />
+                <Loader2 className="animate-spin text-zinc-500" size={32} />
                 <span className="text-base font-semibold">Loading document...</span>
               </div>
             )}
