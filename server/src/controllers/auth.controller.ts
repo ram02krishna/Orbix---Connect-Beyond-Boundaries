@@ -63,3 +63,23 @@ export async function resendVerification(req: Request, res: Response) {
   await authService.resendVerification(decryptDeterministic(user.email));
   return sendSuccess(res, "Verification code sent successfully");
 }
+
+export async function forgotPassword(req: Request, res: Response) {
+  const { username } = req.body;
+  if (!username) {
+    return res.status(400).json({ success: false, message: "username is required" });
+  }
+
+  const data = await authService.forgotPassword(username);
+  return sendSuccess(res, "Password reset code sent", data);
+}
+
+export async function resetPassword(req: Request, res: Response) {
+  const { userId, otp, newPassword } = req.body;
+  if (!userId || !otp || !newPassword) {
+    return res.status(400).json({ success: false, message: "userId, otp, and newPassword are required" });
+  }
+
+  await authService.resetPassword(userId, otp, newPassword);
+  return sendSuccess(res, "Password reset successfully");
+}

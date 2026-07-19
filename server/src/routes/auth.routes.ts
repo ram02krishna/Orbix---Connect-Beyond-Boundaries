@@ -35,10 +35,22 @@ const resendSchema = z.object({
   type: z.string().optional(),
 });
 
+const forgotPasswordSchema = z.object({
+  username: z.string().min(1, "Username is required"),
+});
+
+const resetPasswordSchema = z.object({
+  userId: z.string().uuid("Invalid user ID"),
+  otp: z.string().length(6, "OTP must be 6 digits"),
+  newPassword: z.string().min(8, "Password must be at least 8 characters").max(100),
+});
+
 router.post("/register", validate(registerSchema), authController.register);
 router.post("/login", validate(loginSchema), authController.login);
 router.post("/logout", authenticate, authController.logout);
 router.post("/verify-email", validate(verifySchema), authController.verifyEmail);
 router.post("/resend-verification", validate(resendSchema), authController.resendVerification);
+router.post("/forgot-password", validate(forgotPasswordSchema), authController.forgotPassword);
+router.post("/reset-password", validate(resetPasswordSchema), authController.resetPassword);
 
 export default router;

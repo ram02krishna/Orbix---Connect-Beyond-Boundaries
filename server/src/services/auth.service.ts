@@ -31,6 +31,33 @@ async function sendAndStoreOTP(email: string) {
   });
 }
 
+function maskEmail(email: string) {
+  const [local, domain] = email.split('@');
+  if (!domain) return email;
+  const maskedLocal = local.length > 2 ? local.slice(0, 2) + '*'.repeat(local.length - 2) : '*'.repeat(local.length);
+  return `${maskedLocal}@${domain}`;
+}
+
+async function sendPasswordResetOTP(email: string) {
+  const otp = generateOTP();
+  await redis.set(`pwd_reset:${email}`, otp, { ex: 15 * 60 }); // expires in 15 minutes
+
+  await sendMail({
+    to: email,
+    subject: "Reset your Orbix password",
+    html: `
+      <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto;">
+        <h2>Password Reset Request</h2>
+        <p>Please use the following 6-digit code to reset your password. It expires in 15 minutes.</p>
+        <div style="background-color: #f4f4f5; padding: 20px; text-align: center; border-radius: 8px; margin: 24px 0;">
+          <h1 style="margin: 0; letter-spacing: 4px; color: #18181b;">${otp}</h1>
+        </div>
+        <p style="color: #71717a; font-size: 14px;">If you didn't request this, you can ignore this email.</p>
+      </div>
+    `,
+  });
+}
+
 interface RegisterInput {
   name: string;
   username: string;
@@ -143,4 +170,40 @@ export async function login(input: LoginInput) {
       emailVerified: user.emailVerified,
     },
   };
+}
+
+export async function forgotPassword(username: string) {
+  const user = await prisma.user.findUnique({ where: { username } });
+  if (!user) throw new ApiError(404, "User not found");
+
+  const email = decryptDeterministic(user.email);
+  await sendPasswordResetOTP(email);
+
+  return { userId: user.id, email: maskEmail(email) };
+}
+
+export async function resetPassword(userId: string, otp: string, newPassword: string) {
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) throw new ApiError(404, "User not found");
+
+  const email = decryptDeterministic(user.email);
+  const storedOtp = await redis.get(`pwd_reset:${email}`);
+  
+  if (!storedOtp) {
+    throw new ApiError(400, "Verification code expired or not found. Please request a new one.");
+  }
+  
+  if (String(storedOtp) !== otp) {
+    throw new ApiError(400, "Invalid verification code");
+  }
+
+  const passwordHash = await argon2.hash(newPassword);
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { passwordHash },
+  });
+
+  await redis.del(`pwd_reset:${email}`);
+  return { success: true };
 }
