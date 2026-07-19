@@ -1,12 +1,10 @@
 # Orbix - Connect Beyond Boundaries
 
-![Orbix Banner](https://via.placeholder.com/1200x400.png?text=Orbix+-+Connect+Beyond+Boundaries&bg=0284c7&fg=ffffff)
-
 Orbix is a full-stack real-time chat application designed to provide seamless and instant communication. Built with a modern tech stack and a beautifully crafted UI using a cohesive **blue color theme**, Orbix delivers a premium user experience featuring secure authentication, rich media sharing, peer-to-peer calling, and real-time messaging.
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 ### Core Messaging
 - **Real-Time Communication:** Instant message delivery using WebSockets (`Socket.io`) with active typing indicators.
@@ -25,7 +23,7 @@ Orbix is a full-stack real-time chat application designed to provide seamless an
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend (Client)
 - **Framework:** Next.js (v15) & React (v19)
@@ -44,7 +42,7 @@ Orbix is a full-stack real-time chat application designed to provide seamless an
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```text
 Orbix/
@@ -65,7 +63,7 @@ Orbix/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 Follow these instructions to set up the project locally.
 
@@ -132,10 +130,10 @@ The client will be running on `http://localhost:3000` and the server on `http://
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions, issues, and feature requests are welcome! 
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License.
