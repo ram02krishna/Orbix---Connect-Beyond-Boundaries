@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { X, Image, FileText, Download, Plus, Trash2, Edit2, Check, Loader2, LogOut, Search, Star } from "lucide-react";
+import { X, Image, FileText, Download, Plus, Trash2, Edit2, Check, Loader2, LogOut, Search, Star, Play } from "lucide-react";
 import { Avatar } from "@components/ui/Avatar";
 import { Button } from "@components/ui/Button";
 import { useChatStore } from "@hooks/useChatStore";
@@ -493,18 +493,31 @@ export function ProfilePanel({ onClose, chatId }: ProfilePanelProps) {
             </div>
           ) : (
             <div className="grid grid-cols-3 gap-2">
-              {mediaFiles.map((att) => (
+              {mediaFiles.map((att) => {
+                const isVid = att.mimeType?.startsWith("video/") || att.fileType === "VIDEO";
+                return (
                 <div
                   key={att.id}
                   onClick={() => handleDownload(att.fileUrl, att.fileName)}
                   className="aspect-square rounded-lg overflow-hidden border border-[#e9edef] dark:border-white/5 bg-[#f0f2f5] dark:bg-zinc-950 relative group cursor-pointer hover:border-blue-500 transition-colors"
                 >
-                  <img src={att.fileUrl} alt="media" className="h-full w-full object-cover" />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                  {isVid ? (
+                    <video src={att.fileUrl} className="h-full w-full object-cover pointer-events-none" />
+                  ) : (
+                    <img src={att.fileUrl} alt="media" className="h-full w-full object-cover" />
+                  )}
+                  {isVid && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/10">
+                      <span className="p-1.5 rounded-full bg-zinc-600/80 text-white shadow-sm flex items-center justify-center">
+                        <Play size={12} fill="currentColor" className="ml-0.5" />
+                      </span>
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity z-10">
                     <Download size={14} className="text-white" />
                   </div>
                 </div>
-              ))}
+              )})}
             </div>
           )
         )}
