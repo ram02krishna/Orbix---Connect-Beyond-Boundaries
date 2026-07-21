@@ -7,8 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ─── Enums ──────────────────────────────────────────────────────────────────
-
+// Enums
 enum ChatType {
   DIRECT
   GROUP
@@ -23,7 +22,7 @@ enum MessageType {
   SYSTEM
 }
 
-// ─── Models ─────────────────────────────────────────────────────────────────
+// Models
 
 model User {
   id            String   @id @default(uuid())

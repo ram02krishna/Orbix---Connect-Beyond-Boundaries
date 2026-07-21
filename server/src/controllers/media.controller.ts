@@ -64,7 +64,6 @@ export async function downloadFile(req: Request, res: Response) {
 
     if (inline) {
       res.setHeader("Content-Disposition", `inline; filename="${filename}"`);
-      // remove Helmet's frame restrictions so the client can embed this stream
       res.removeHeader("X-Frame-Options");
       res.removeHeader("Content-Security-Policy");
       res.removeHeader("x-frame-options");

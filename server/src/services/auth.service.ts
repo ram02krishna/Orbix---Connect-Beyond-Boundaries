@@ -188,11 +188,11 @@ export async function resetPassword(userId: string, otp: string, newPassword: st
 
   const email = decryptDeterministic(user.email);
   const storedOtp = await redis.get(`pwd_reset:${email}`);
-  
+
   if (!storedOtp) {
     throw new ApiError(400, "Verification code expired or not found. Please request a new one.");
   }
-  
+
   if (String(storedOtp) !== otp) {
     throw new ApiError(400, "Invalid verification code");
   }
